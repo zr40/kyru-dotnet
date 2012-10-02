@@ -38,6 +38,9 @@
     <UseVSHostingProcess>false</UseVSHostingProcess>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="protobuf-net">
+      <HintPath>lib\protobuf-net.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="Microsoft.CSharp" />
@@ -51,6 +54,21 @@
     <Compile Include="Form1.Designer.cs">
       <DependentUpon>Form1.cs</DependentUpon>
     </Compile>
+    <Compile Include="Network\FindNodeRequest.cs" />
+    <Compile Include="Network\FindNodeResponse.cs" />
+    <Compile Include="Network\FindValueRequest.cs" />
+    <Compile Include="Network\FindValueResponse.cs" />
+    <Compile Include="Network\KademliaId.cs" />
+    <Compile Include="Network\KeepObjectRequest.cs" />
+    <Compile Include="Network\KeepObjectResponse.cs" />
+    <Compile Include="Network\KyruObjectMetadata.cs" />
+    <Compile Include="Network\NetworkListener.cs" />
+    <Compile Include="Network\NodeInformation.cs" />
+    <Compile Include="Network\PingRequest.cs" />
+    <Compile Include="Network\StoreRequest.cs" />
+    <Compile Include="Network\StoreResponse.cs" />
+    <Compile Include="Network\IncomingTcpConnection.cs" />
+    <Compile Include="Network\UdpMessage.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <None Include="Form1.resx">
