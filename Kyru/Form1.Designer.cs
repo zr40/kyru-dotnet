@@ -28,91 +28,91 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.components = new System.ComponentModel.Container();
-            this.virtualLocalFileTree = new System.Windows.Forms.TreeView();
-            this.iconList = new System.Windows.Forms.ImageList(this.components);
-            this.topMenu = new System.Windows.Forms.MenuStrip();
-            this.systemToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.addANodeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.configureDiskLimitsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
-            this.quitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.topMenu.SuspendLayout();
-            this.SuspendLayout();
-            // 
-            // virtualLocalFileTree
-            // 
-            this.virtualLocalFileTree.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.virtualLocalFileTree.Location = new System.Drawing.Point(0, 25);
-            this.virtualLocalFileTree.Name = "virtualLocalFileTree";
-            this.virtualLocalFileTree.Size = new System.Drawing.Size(292, 221);
-            this.virtualLocalFileTree.TabIndex = 0;
-            // 
-            // iconList
-            // 
-            this.iconList.ColorDepth = System.Windows.Forms.ColorDepth.Depth8Bit;
-            this.iconList.ImageSize = new System.Drawing.Size(16, 16);
-            this.iconList.TransparentColor = System.Drawing.Color.Transparent;
-            // 
-            // topMenu
-            // 
-            this.topMenu.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+			this.components = new System.ComponentModel.Container();
+			this.virtualLocalFileTree = new System.Windows.Forms.TreeView();
+			this.iconList = new System.Windows.Forms.ImageList(this.components);
+			this.topMenu = new System.Windows.Forms.MenuStrip();
+			this.systemToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+			this.addANodeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+			this.configureDiskLimitsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+			this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
+			this.quitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+			this.topMenu.SuspendLayout();
+			this.SuspendLayout();
+			// 
+			// virtualLocalFileTree
+			// 
+			this.virtualLocalFileTree.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.virtualLocalFileTree.Location = new System.Drawing.Point(0, 24);
+			this.virtualLocalFileTree.Name = "virtualLocalFileTree";
+			this.virtualLocalFileTree.Size = new System.Drawing.Size(292, 242);
+			this.virtualLocalFileTree.TabIndex = 0;
+			// 
+			// iconList
+			// 
+			this.iconList.ColorDepth = System.Windows.Forms.ColorDepth.Depth8Bit;
+			this.iconList.ImageSize = new System.Drawing.Size(16, 16);
+			this.iconList.TransparentColor = System.Drawing.Color.Transparent;
+			// 
+			// topMenu
+			// 
+			this.topMenu.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.systemToolStripMenuItem});
-            this.topMenu.Location = new System.Drawing.Point(0, 0);
-            this.topMenu.Name = "topMenu";
-            this.topMenu.Size = new System.Drawing.Size(292, 25);
-            this.topMenu.TabIndex = 1;
-            this.topMenu.Text = "menuStrip1";
-            // 
-            // systemToolStripMenuItem
-            // 
-            this.systemToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+			this.topMenu.Location = new System.Drawing.Point(0, 0);
+			this.topMenu.Name = "topMenu";
+			this.topMenu.Size = new System.Drawing.Size(292, 24);
+			this.topMenu.TabIndex = 1;
+			this.topMenu.Text = "menuStrip1";
+			// 
+			// systemToolStripMenuItem
+			// 
+			this.systemToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.addANodeToolStripMenuItem,
             this.configureDiskLimitsToolStripMenuItem,
             this.toolStripSeparator1,
             this.quitToolStripMenuItem});
-            this.systemToolStripMenuItem.Name = "systemToolStripMenuItem";
-            this.systemToolStripMenuItem.Size = new System.Drawing.Size(61, 21);
-            this.systemToolStripMenuItem.Text = "System";
-            // 
-            // addANodeToolStripMenuItem
-            // 
-            this.addANodeToolStripMenuItem.Name = "addANodeToolStripMenuItem";
-            this.addANodeToolStripMenuItem.Size = new System.Drawing.Size(199, 22);
-            this.addANodeToolStripMenuItem.Text = "Add a node";
-            // 
-            // configureDiskLimitsToolStripMenuItem
-            // 
-            this.configureDiskLimitsToolStripMenuItem.Name = "configureDiskLimitsToolStripMenuItem";
-            this.configureDiskLimitsToolStripMenuItem.Size = new System.Drawing.Size(199, 22);
-            this.configureDiskLimitsToolStripMenuItem.Text = "Configure Disk Limits";
-            // 
-            // toolStripSeparator1
-            // 
-            this.toolStripSeparator1.Name = "toolStripSeparator1";
-            this.toolStripSeparator1.Size = new System.Drawing.Size(196, 6);
-            // 
-            // quitToolStripMenuItem
-            // 
-            this.quitToolStripMenuItem.Name = "quitToolStripMenuItem";
-            this.quitToolStripMenuItem.Size = new System.Drawing.Size(199, 22);
-            this.quitToolStripMenuItem.Text = "Quit";
-            // 
-            // FrmKyru
-            // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(292, 246);
-            this.Controls.Add(this.virtualLocalFileTree);
-            this.Controls.Add(this.topMenu);
-            this.MainMenuStrip = this.topMenu;
-            this.Name = "FrmKyru";
-            this.Text = "Kyru System";
-            this.WindowState = System.Windows.Forms.FormWindowState.Maximized;
-            this.topMenu.ResumeLayout(false);
-            this.topMenu.PerformLayout();
-            this.ResumeLayout(false);
-            this.PerformLayout();
+			this.systemToolStripMenuItem.Name = "systemToolStripMenuItem";
+			this.systemToolStripMenuItem.Size = new System.Drawing.Size(57, 20);
+			this.systemToolStripMenuItem.Text = "System";
+			// 
+			// addANodeToolStripMenuItem
+			// 
+			this.addANodeToolStripMenuItem.Name = "addANodeToolStripMenuItem";
+			this.addANodeToolStripMenuItem.Size = new System.Drawing.Size(187, 22);
+			this.addANodeToolStripMenuItem.Text = "Add a node";
+			// 
+			// configureDiskLimitsToolStripMenuItem
+			// 
+			this.configureDiskLimitsToolStripMenuItem.Name = "configureDiskLimitsToolStripMenuItem";
+			this.configureDiskLimitsToolStripMenuItem.Size = new System.Drawing.Size(187, 22);
+			this.configureDiskLimitsToolStripMenuItem.Text = "Configure Disk Limits";
+			// 
+			// toolStripSeparator1
+			// 
+			this.toolStripSeparator1.Name = "toolStripSeparator1";
+			this.toolStripSeparator1.Size = new System.Drawing.Size(184, 6);
+			// 
+			// quitToolStripMenuItem
+			// 
+			this.quitToolStripMenuItem.Name = "quitToolStripMenuItem";
+			this.quitToolStripMenuItem.Size = new System.Drawing.Size(187, 22);
+			this.quitToolStripMenuItem.Text = "Quit";
+			// 
+			// FrmKyru
+			// 
+			this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
+			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
+			this.ClientSize = new System.Drawing.Size(292, 266);
+			this.Controls.Add(this.virtualLocalFileTree);
+			this.Controls.Add(this.topMenu);
+			this.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+			this.MainMenuStrip = this.topMenu;
+			this.Name = "FrmKyru";
+			this.Text = "Kyru";
+			this.topMenu.ResumeLayout(false);
+			this.topMenu.PerformLayout();
+			this.ResumeLayout(false);
+			this.PerformLayout();
 
         }
 
