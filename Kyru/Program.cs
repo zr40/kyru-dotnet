@@ -10,7 +10,7 @@ namespace Kyru
 		{
 			Application.EnableVisualStyles();
 			Application.SetCompatibleTextRenderingDefault(false);
-			Application.Run(new FrmKyru());
+			Application.Run(new KyruForm());
 		}
 	}
 }

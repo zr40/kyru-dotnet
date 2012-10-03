@@ -1,6 +1,6 @@
 ﻿namespace Kyru
 {
-    partial class FrmKyru
+    partial class KyruForm
     {
         /// <summary>
         /// Required designer variable.
@@ -98,7 +98,7 @@
 			this.quitToolStripMenuItem.Size = new System.Drawing.Size(187, 22);
 			this.quitToolStripMenuItem.Text = "Quit";
 			// 
-			// FrmKyru
+			// KyruForm
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
@@ -107,7 +107,7 @@
 			this.Controls.Add(this.topMenu);
 			this.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
 			this.MainMenuStrip = this.topMenu;
-			this.Name = "FrmKyru";
+			this.Name = "KyruForm";
 			this.Text = "Kyru";
 			this.topMenu.ResumeLayout(false);
 			this.topMenu.PerformLayout();

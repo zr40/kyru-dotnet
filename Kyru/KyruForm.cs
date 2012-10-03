@@ -2,9 +2,9 @@
 
 namespace Kyru
 {
-	public partial class FrmKyru : Form
+	public partial class KyruForm : Form
 	{
-		public FrmKyru()
+		public KyruForm()
 		{
 			InitializeComponent();
 		}
