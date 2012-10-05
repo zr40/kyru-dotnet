@@ -1,6 +1,6 @@
 using ProtoBuf;
 
-namespace Kyru.Network
+namespace Kyru.Network.Messages
 {
 	[ProtoContract]
 	internal sealed class FindNodeRequest

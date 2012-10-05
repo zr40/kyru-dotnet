@@ -1,12 +1,12 @@
 using ProtoBuf;
 
-namespace Kyru.Network
+namespace Kyru.Network.Messages
 {
 	[ProtoContract]
-	internal sealed class FindValueResponse
+	internal sealed class StoreRequest
 	{
 		[ProtoMember(1)]
-		internal NodeInformation[] Nodes;
+		internal KademliaId ObjectId;
 
 		[ProtoMember(2)]
 		internal KyruObjectMetadata[] Value;
