@@ -1,3 +1,6 @@
+using System;
+using System.Net;
+
 using ProtoBuf;
 
 namespace Kyru.Network
@@ -13,5 +16,12 @@ namespace Kyru.Network
 
 		[ProtoMember(3)]
 		internal ushort Port;
+
+		public NodeInformation(IPEndPoint endPoint, KademliaId nodeId)
+		{
+			NodeId = nodeId;
+			IpAddress = BitConverter.ToUInt32(endPoint.Address.GetAddressBytes(), 0);
+			Port = (ushort) endPoint.Port;
+		}
 	}
 }

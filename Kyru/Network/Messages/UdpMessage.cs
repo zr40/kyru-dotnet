@@ -12,33 +12,36 @@ namespace Kyru.Network.Messages
 		internal KademliaId SenderNodeId;
 
 		[ProtoMember(3)]
-		internal ulong MessageId;
+		internal ulong RequestId;
 
 		[ProtoMember(4)]
-		internal PingRequest PingRequest;
+		internal ulong ResponseId;
 
 		[ProtoMember(5)]
-		internal FindNodeRequest FindNodeRequest;
+		internal PingRequest PingRequest;
 
 		[ProtoMember(6)]
-		internal FindNodeResponse FindNodeResponse;
+		internal FindNodeRequest FindNodeRequest;
 
 		[ProtoMember(7)]
-		internal FindValueRequest FindValueRequest;
+		internal FindNodeResponse FindNodeResponse;
 
 		[ProtoMember(8)]
-		internal FindValueResponse FindValueResponse;
+		internal FindValueRequest FindValueRequest;
 
 		[ProtoMember(9)]
-		internal StoreRequest StoreRequest;
+		internal FindValueResponse FindValueResponse;
 
 		[ProtoMember(10)]
-		internal StoreResponse StoreResponse;
+		internal StoreRequest StoreRequest;
 
 		[ProtoMember(11)]
-		internal KeepObjectRequest KeepObjectRequest;
+		internal StoreResponse StoreResponse;
 
 		[ProtoMember(12)]
+		internal KeepObjectRequest KeepObjectRequest;
+
+		[ProtoMember(13)]
 		internal KeepObjectResponse KeepObjectResponse;
 	}
 }

@@ -1,4 +1,6 @@
-﻿using ProtoBuf;
+﻿using System;
+
+using ProtoBuf;
 
 namespace Kyru.Network
 {
@@ -18,6 +20,23 @@ namespace Kyru.Network
 				result.id[i] = left.id[i] ^ right.id[i];
 			}
 			return result;
+		}
+
+		public static KademliaId RandomId
+		{
+			get
+			{
+				var bytes = Random.Bytes(ArraySize * sizeof(uint));
+
+				var id = new KademliaId();
+
+				for (int i = 0; i < ArraySize; i++)
+				{
+					id.id[i] = BitConverter.ToUInt32(bytes, i * sizeof(uint));
+				}
+
+				return id;
+			}
 		}
 	}
 }
