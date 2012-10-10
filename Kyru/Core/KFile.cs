@@ -7,7 +7,7 @@ namespace Kyru.Core
 {
     class KFile
     {
-        Byte[] Data;
+        public List<Chunk> Chunks;
         public string Name;
         public string Extension;
 
