@@ -51,6 +51,7 @@
     <Reference Include="System.Windows.Forms" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="App.cs" />
     <Compile Include="Random.cs" />
     <Compile Include="KyruForm.cs">
       <SubType>Form</SubType>
