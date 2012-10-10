@@ -1,6 +1,5 @@
 ﻿using System;
 using System.IO;
-using System.Security;
 
 namespace Kyru.Core
 {
@@ -10,10 +9,9 @@ namespace Kyru.Core
 	internal class Session
 	{
 		private byte[] _privateKey;
-		private User _user;
 
 		/// <summary>
-		/// Constructor of Session class
+		/// Constructor of Session class for an existing User
 		/// </summary>
 		/// <param name="username">Username of the user</param>
 		/// <param name="password">Password of the user</param>
@@ -22,6 +20,18 @@ namespace Kyru.Core
 		{
 			throw new NotImplementedException();
 		}
+
+		/// <summary>
+		/// Constructor of Session class for a new User
+		/// </summary>
+		/// <param name="username">Username of the user</param>
+		/// <param name="password">Password of the user</param>
+		internal Session(string username, string password)
+		{
+			throw new NotImplementedException();
+		}
+
+		public User User { get; private set; }
 
 		/// <summary>
 		/// Creates a KFile from a normal file
@@ -47,7 +57,17 @@ namespace Kyru.Core
 		/// </summary>
 		/// <param name="message">message to sign</param>
 		/// <returns>signed message</returns>
-		internal string SignMessage(string message)
+		private byte[] SignMessage(byte[] message)
+		{
+			throw new NotImplementedException();
+		}
+
+		/// <summary>
+		/// decrypts the filekey belonging to a Kfile
+		/// </summary>
+		/// <param name="kFile">Kfile object containing an encrypted filekey</param>
+		/// <returns>the decrypted filekey</returns>
+		private byte[] DecryptFileKey(KFile kFile)
 		{
 			throw new NotImplementedException();
 		}
