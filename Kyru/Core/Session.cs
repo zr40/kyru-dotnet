@@ -31,7 +31,7 @@ namespace Kyru.Core
 			throw new NotImplementedException();
 		}
 
-		public User User { get; private set; }
+		internal User User { get; private set; }
 
 		/// <summary>
 		/// Creates a KFile from a normal file
