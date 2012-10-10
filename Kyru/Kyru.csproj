@@ -51,7 +51,8 @@
     <Reference Include="System.Windows.Forms" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="App.cs" />
+    <Compile Include="Core\App.cs" />
+    <Compile Include="Core\KFile.cs" />
     <Compile Include="Random.cs" />
     <Compile Include="KyruForm.cs">
       <SubType>Form</SubType>
@@ -76,10 +77,13 @@
     <Compile Include="Network\Messages\UdpMessage.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Core\Session.cs" />
+    <Compile Include="Core\User.cs" />
     <None Include="KyruForm.resx">
       <DependentUpon>KyruForm.cs</DependentUpon>
     </None>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
