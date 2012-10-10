@@ -56,6 +56,7 @@
     <Compile Include="Random.cs" />
     <Compile Include="Chunk.cs" />
     <Compile Include="File.cs" />
+    <Compile Include="Core\Chunk.cs" />
     <Compile Include="KyruForm.cs">
       <SubType>Form</SubType>
     </Compile>
