@@ -1,15 +1,10 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-
 using Kyru.Network;
 
-namespace Kyru
+namespace Kyru.Core
 {
-	class App
+	internal class App
 	{
-
 		internal void Start()
 		{
 			throw new NotImplementedException();

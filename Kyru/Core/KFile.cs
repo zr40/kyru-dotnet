@@ -1,40 +1,37 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
 namespace Kyru.Core
 {
-    class KFile
-    {
-        public List<Chunk> Chunks;
-        public string Name;
-        public string Extension;
+	internal class KFile
+	{
+		public List<Chunk> Chunks;
+		public string Extension;
+		public string Name;
 
-        public KFile(List<Chunk> chunks)
-        {
-            throw new NotImplementedException();
-        }
+		public KFile(List<Chunk> chunks)
+		{
+			throw new NotImplementedException();
+		}
 
-        public List<Chunk> Split()
-        {
-            throw new NotImplementedException();
-        }
+		public List<Chunk> Split()
+		{
+			throw new NotImplementedException();
+		}
 
-        public void Rename(string newName)
-        {
-            throw new NotImplementedException();
-        }
+		public void Rename(string newName)
+		{
+			throw new NotImplementedException();
+		}
 
-        public void Load(string Name)
-        {
-            throw new NotImplementedException();
-        }
+		public void Load(string Name)
+		{
+			throw new NotImplementedException();
+		}
 
-        public void Save(string Name)
-        {
-            throw new NotImplementedException();
-        }
-
-    }
+		public void Save(string Name)
+		{
+			throw new NotImplementedException();
+		}
+	}
 }

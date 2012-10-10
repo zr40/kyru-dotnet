@@ -52,7 +52,7 @@ namespace Kyru.Core
 		/// Checks if the signature is valid and, if so, adds it to the deleted file list
 		/// </summary>
 		/// <param name="deletedFile">signature + fileId</param>
-		void AddDeletedFile(Tuple<byte[], KademliaId> deletedFile)
+		private void AddDeletedFile(Tuple<byte[], KademliaId> deletedFile)
 		{
 			throw new NotImplementedException();
 		}
