@@ -54,6 +54,8 @@
     <Compile Include="Core\App.cs" />
     <Compile Include="Core\KFile.cs" />
     <Compile Include="Random.cs" />
+    <Compile Include="Chunk.cs" />
+    <Compile Include="File.cs" />
     <Compile Include="KyruForm.cs">
       <SubType>Form</SubType>
     </Compile>
