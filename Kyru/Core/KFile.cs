@@ -1,15 +1,19 @@
 ﻿using System;
 using System.Collections.Generic;
+using Kyru.Network;
 
 namespace Kyru.Core
 {
 	internal class KFile
 	{
-		internal List<Chunk> Chunks;
-		internal string Extension;
-		internal string Name;
+		internal List<KademliaId> ChunkIds;
+		internal ulong Id;
+		internal byte[] Hash;
+		internal byte[] EncryptedFileKey;
+		internal byte[] EncryptedFileName;
+		
 
-		internal KFile(List<Chunk> chunks)
+		internal KFile(List<KademliaId> chunkIds)
 		{
 			throw new NotImplementedException();
 		}

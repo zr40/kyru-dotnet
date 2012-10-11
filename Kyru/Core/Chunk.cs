@@ -4,9 +4,8 @@ namespace Kyru.Core
 {
 	internal class Chunk
 	{
-		internal Byte[] Data;
-		internal Byte[] Key;
-		internal DateTime Timestamp;
+		internal byte[] Data;
+		internal byte[] Hash;
 
 		internal Chunk()
 		{

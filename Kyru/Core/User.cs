@@ -31,7 +31,7 @@ namespace Kyru.Core
 		}
 
 		/// <summary>
-		/// processes a keep request for a KFile according to the Kyru Spec
+		/// Processes a keep request for a KFile according to the Kyru Spec
 		/// </summary>
 		/// <param name="kFile">file to be kept</param>
 		internal void Keep(KFile kFile)
@@ -49,7 +49,7 @@ namespace Kyru.Core
 		}
 
 		/// <summary>
-		/// Checks if the signature is valid and, if so, adds it to the deleted file list
+		/// Checks if the signature is valid and, if so, adds it to the deleted file list and deletes the KFile object
 		/// </summary>
 		/// <param name="deletedFile">signature + fileId</param>
 		private void AddDeletedFile(Tuple<byte[], KademliaId> deletedFile)
