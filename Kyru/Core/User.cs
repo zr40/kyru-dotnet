@@ -56,5 +56,15 @@ namespace Kyru.Core
 		{
 			throw new NotImplementedException();
 		}
+
+		/// <summary>
+		/// Decrypts the file name of a given KFile
+		/// </summary>
+		/// <param name="kFile">File of which the name is desired</param>
+		/// <returns>The filename</returns>
+		internal string DecryptFileName(KFile kFile)
+		{
+			throw new NotImplementedException();
+		}
 	}
 }
