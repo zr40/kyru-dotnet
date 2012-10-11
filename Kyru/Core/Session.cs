@@ -8,7 +8,7 @@ namespace Kyru.Core
 	/// </summary>
 	internal class Session
 	{
-		private byte[] _privateKey;
+		private byte[] privateKey;
 
 		/// <summary>
 		/// Constructor of Session class for an existing User

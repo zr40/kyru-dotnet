@@ -12,8 +12,8 @@ namespace Kyru.Core
 	{
 		internal readonly string Name;
 		internal KademliaId PublicKey;
-		private List<Tuple<byte[], KademliaId>> _deletedFiles;
-		private List<KFile> _files;
+		private List<Tuple<byte[], KademliaId>> deletedFiles;
+		private List<KFile> files;
 
 		internal User(string name, KademliaId publicKey)
 		{
@@ -22,12 +22,12 @@ namespace Kyru.Core
 
 		internal ReadOnlyCollection<KFile> Files
 		{
-			get { return _files.AsReadOnly(); }
+			get { return files.AsReadOnly(); }
 		}
 
 		internal ReadOnlyCollection<Tuple<byte[], KademliaId>> DeletedFiles
 		{
-			get { return _deletedFiles.AsReadOnly(); }
+			get { return deletedFiles.AsReadOnly(); }
 		}
 
 		/// <summary>

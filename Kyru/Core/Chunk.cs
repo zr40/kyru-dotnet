@@ -4,21 +4,21 @@ namespace Kyru.Core
 {
 	internal class Chunk
 	{
-		public Byte[] Data;
-		public Byte[] key;
-		public DateTime timestamp;
+		internal Byte[] Data;
+		internal Byte[] Key;
+		internal DateTime Timestamp;
 
-		public Chunk()
+		internal Chunk()
 		{
 			throw new NotImplementedException();
 		}
 
-		public void Load()
+		internal void Load()
 		{
 			throw new NotImplementedException();
 		}
 
-		public void Save()
+		internal void Save()
 		{
 			throw new NotImplementedException();
 		}
