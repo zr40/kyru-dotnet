@@ -15,8 +15,8 @@ namespace Kyru.Network
 		private readonly UdpClient udp;
 		private readonly TcpListener tcp;
 
-		private const int ProtocolVersion = 0;
-		private readonly KademliaId id = KademliaId.RandomId;
+		private const uint ProtocolVersion = 0;
+        private readonly KademliaId id = KademliaId.RandomId;
 
 		private readonly Dictionary<RequestIdentifier, RequestInformation> outstandingRequests = new Dictionary<RequestIdentifier, RequestInformation>();
 
@@ -210,6 +210,11 @@ namespace Kyru.Network
         /// <param name="message">Message from the other node</param>
 		private void IncomingPing(NodeInformation ni, UdpMessage message)
 		{
+            UdpMessage reply = new UdpMessage();
+            reply.ProtocolVersion = ProtocolVersion;
+            reply.ResponseId = message.RequestId;
+            reply.SenderNodeId = id;
+            SendUdpMessage(reply, new IPEndPoint(ni.IpAddress, ni.Port));
 			throw new NotImplementedException();
 		}
 
