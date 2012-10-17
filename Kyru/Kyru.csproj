@@ -53,6 +53,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Core\App.cs" />
+    <Compile Include="Core\Config.cs" />
     <Compile Include="Core\KFile.cs" />
     <Compile Include="Random.cs" />
     <Compile Include="Core\Chunk.cs" />

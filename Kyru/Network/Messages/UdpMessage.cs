@@ -17,7 +17,7 @@ namespace Kyru.Network.Messages
 		internal ulong RequestId;
 
 		[ProtoMember(4)]
-		internal ulong ResponseId;
+		internal ulong ResponseId = 0;
 
 		[ProtoMember(5)]
 		internal PingRequest PingRequest;
@@ -46,9 +46,8 @@ namespace Kyru.Network.Messages
 		[ProtoMember(13)]
 		internal KeepObjectResponse KeepObjectResponse;
 
-
         /// <summary>
-        /// Check for various types of errors in the message format.
+        /// Check for various types of errors in the message format. If there is an error it will be printed to the console.
         /// </summary>
         /// <param name="endPoint">(For debugging purposes), a string containing the address where the message is from.</param>
         /// <returns>true when no error is found</returns>
