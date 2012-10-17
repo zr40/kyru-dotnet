@@ -161,26 +161,53 @@ namespace Kyru.Network
 			}
 		}
 
+
+        /// <summary>
+        /// Create a sorted list of nodes of size k, containing the k nodes closest to the object ID. The list is sorted by distance to the object ID, closest first.
+        /// </summary>
+        /// <param name="ni">Information about the other node</param>
+        /// <param name="message">Message from the other node</param>
 		private void IncomingKeepObject(NodeInformation ni, UdpMessage message)
 		{
 			throw new NotImplementedException();
 		}
 
+        /// <summary>
+        /// The STORE method allows nodes to store a value at another node.
+        /// </summary>
+        /// <param name="ni">Information about the other node</param>
+        /// <param name="message">Message from the other node</param>
 		private void IncomingStore(NodeInformation ni, UdpMessage message)
 		{
 			throw new NotImplementedException();
 		}
 
+        /// <summary>
+        /// The FIND_VALUE method acts like FIND_NODE, but if the node contains the value, it will be returned instead.
+        /// </summary>
+        /// <param name="ni">Information about the other node</param>
+        /// <param name="message">Message from the other node</param>
 		private void IncomingFindValue(NodeInformation ni, UdpMessage message)
 		{
 			throw new NotImplementedException();
 		}
 
+        /// <summary>
+        /// The FIND_NODE method requests a node to return the k nodes closest to the given object ID that the node knows about.
+        /// </summary>
+        /// <param name="ni">Information about the other node</param>
+        /// <param name="message">Message from the other node</param>
 		private void IncomingFindNode(NodeInformation ni, UdpMessage message)
 		{
 			throw new NotImplementedException();
 		}
 
+        /// <summary>
+        /// The PING method requests a node to respond. If it responds, the node is known to be alive at this point.
+        /// PING is also used to obtain the node ID from newly discovered nodes.
+        /// </summary>
+        /// <param name="ni">Information about the other node</param>
+        /// <param name="message">Message from the other node</param>
 		private void IncomingPing(NodeInformation ni, UdpMessage message)
 		{
 			throw new NotImplementedException();
@@ -199,6 +226,11 @@ namespace Kyru.Network
 			// TODO
 		}
 
+        /// <summary>
+        /// Send a message.
+        /// </summary>
+        /// <param name="message">The message to be send</param>
+        /// <param name="target">The target to send it to</param>
 		private void SendUdpMessage(UdpMessage message, IPEndPoint target)
 		{
 			message.ProtocolVersion = ProtocolVersion;
