@@ -12,12 +12,15 @@ namespace Kyru.Core
 		internal byte[] EncryptedFileKey;
 		internal byte[] EncryptedFileName;
 		
-
 		internal KFile(List<KademliaId> chunkIds)
 		{
-			throw new NotImplementedException();
+            this.ChunkIds = chunkIds;
 		}
 
+        /// <summary>
+        /// Return all chunks where the file is made of.
+        /// </summary>
+        /// <returns></returns>
 		internal List<Chunk> Split()
 		{
 			throw new NotImplementedException();

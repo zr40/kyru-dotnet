@@ -17,7 +17,10 @@ namespace Kyru.Core
 
 		internal User(string name, KademliaId publicKey)
 		{
-			throw new NotImplementedException();
+            this.Name = name;
+            this.PublicKey = publicKey;
+            this.deletedFiles = new List<Tuple<byte[], KademliaId>>();
+            this.files = new List<KFile>();
 		}
 
 		internal ReadOnlyCollection<KFile> Files
