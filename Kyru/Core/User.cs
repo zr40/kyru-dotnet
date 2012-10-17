@@ -8,17 +8,16 @@ namespace Kyru.Core
 	/// <summary>
 	/// The User class contains public as well as encrypted data
 	/// </summary>
-	internal class User
+	internal class User : KObject
 	{
 		internal readonly string Name;
-		internal KademliaId PublicKey;
 		private List<Tuple<byte[], KademliaId>> deletedFiles;
 		private List<KFile> files;
 
 		internal User(string name, KademliaId publicKey)
 		{
             this.Name = name;
-            this.PublicKey = publicKey;
+            this.id = publicKey;
             this.deletedFiles = new List<Tuple<byte[], KademliaId>>();
             this.files = new List<KFile>();
 		}

@@ -2,7 +2,7 @@
 
 namespace Kyru.Core
 {
-	internal class Chunk
+	internal class Chunk : KObject
 	{
 		internal byte[] Data;
 		internal byte[] Hash;
