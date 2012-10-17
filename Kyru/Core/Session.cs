@@ -15,8 +15,9 @@ namespace Kyru.Core
 		/// </summary>
 		/// <param name="username">Username of the user</param>
 		/// <param name="password">Password of the user</param>
+        /// <param name="config">The configuration settings</param>
 		/// <param name="user">User object corresponding to the User</param>
-		internal Session(string username, string password, User user)
+        internal Session(string username, string password, Config config, User user)
 		{
 			throw new NotImplementedException();
 		}
@@ -26,7 +27,7 @@ namespace Kyru.Core
 		/// </summary>
 		/// <param name="username">Username of the user</param>
 		/// <param name="password">Password of the user</param>
-		internal Session(string username, string password)
+        internal Session(string username, string password, Config config)
 		{
 			throw new NotImplementedException();
 		}
