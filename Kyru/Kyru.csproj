@@ -55,6 +55,7 @@
     <Compile Include="Core\App.cs" />
     <Compile Include="Core\Config.cs" />
     <Compile Include="Core\KFile.cs" />
+    <Compile Include="Core\KObject.cs" />
     <Compile Include="Random.cs" />
     <Compile Include="Core\Chunk.cs" />
     <Compile Include="KyruForm.cs">
