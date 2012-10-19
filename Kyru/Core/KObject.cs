@@ -7,7 +7,7 @@ using Kyru.Network;
 
 namespace Kyru.Core
 {
-    abstract class KObject
+    internal abstract class KObject
     {
         internal KademliaId id;
     }

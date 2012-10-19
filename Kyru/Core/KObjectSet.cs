@@ -11,7 +11,7 @@ namespace Kyru.Core
     /// <summary>
     /// This class keeps track of all kyru objects on the file system. Note that not all objects have to be in memory.
     /// </summary>
-    class KObjectSet
+    internal class KObjectSet
     {
         Dictionary<KademliaId, KObject> cache;
 
@@ -20,7 +20,7 @@ namespace Kyru.Core
         /// </summary>
         /// <param name="id">The id of the object</param>
         /// <returns>The object, or null if he can't find it</returns>
-        public KObject Get(KademliaId id)
+        internal KObject Get(KademliaId id)
         {
             throw new NotImplementedException();
             // TODO: Try to get the object from the file system.
@@ -33,7 +33,7 @@ namespace Kyru.Core
         /// <param name="ids">A list of id's for the given item</param>
         /// <param name="strict">Wheter incomplete lists are allowed</param>
         /// <returns></returns>
-        public List<KObject> GetList(List<KademliaId> ids, bool strict = false)
+        internal List<KObject> GetList(List<KademliaId> ids, bool strict = false)
         {
             List<KObject> returnList = new List<KObject>();
             foreach (var id in ids) {
@@ -52,12 +52,16 @@ namespace Kyru.Core
         /// Add an object to the file system.
         /// </summary>
         /// <param name="obj">The object to be added</param>
-        public void Add(KObject obj)
+        internal void Add(KObject obj)
         {
-            
             throw new NotImplementedException();
         }
 
+        /// <summary>
+        /// Opens / Creates a file given for which the file name is unique for each KademliaId
+        /// </summary>
+        /// <param name="id">Id where the file name is based on</param>
+        /// <returns>A stream for the file</returns>
         private FileStream openFile(KademliaId id) {
             var base64id = id.ToString();
             throw new NotImplementedException();
