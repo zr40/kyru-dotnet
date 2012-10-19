@@ -13,7 +13,17 @@ namespace Kyru.Core
     /// </summary>
     internal class KObjectSet
     {
-        Dictionary<KademliaId, KObject> cache;
+        private Config config;
+
+        /// <summary>
+        /// Currently not in use.
+        /// The cache can give a list of some items that are in memory such that retrieving them is faster.
+        /// </summary>
+        private Dictionary<KademliaId, KObject> cache;
+
+        public KObjectSet(Config config) {
+            this.config = config;
+        }
 
         /// <summary>
         /// Retrieve an object from.

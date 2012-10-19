@@ -10,7 +10,7 @@ namespace Kyru.Core
     {
         internal readonly string storeDirectory;
 
-        Config() {
+        internal Config() {
             storeDirectory = Path.Combine(System.Windows.Forms.Application.UserAppDataPath, "kyru" ,"backups");
         }
     }

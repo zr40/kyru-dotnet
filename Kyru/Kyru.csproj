@@ -56,7 +56,7 @@
     <Compile Include="Core\Config.cs" />
     <Compile Include="Core\KFile.cs" />
     <Compile Include="Core\KObject.cs" />
-    <Compile Include="Core\KObjectList.cs" />
+    <Compile Include="Core\KObjectSet.cs" />
     <Compile Include="Random.cs" />
     <Compile Include="Core\Chunk.cs" />
     <Compile Include="KyruForm.cs">
@@ -88,7 +88,6 @@
     <None Include="KyruForm.resx">
       <DependentUpon>KyruForm.cs</DependentUpon>
     </None>
-    <None Include="Network\ClassDiagram1.cd" />
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

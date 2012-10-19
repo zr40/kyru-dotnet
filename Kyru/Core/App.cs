@@ -5,10 +5,22 @@ namespace Kyru.Core
 {
 	internal class App
 	{
+        internal Config config;
+        internal KObjectSet objectSet;
+        internal Session session;
+        internal Node node;
+
 		internal void Start()
 		{
-			throw new NotImplementedException();
+            config = new Config();
+            objectSet = new KObjectSet(config);
+            node = new Node();
 		}
+
+        internal void Login(string username, string password)
+        {
+            session = new Session(username, password, config);
+        }
 
 		internal int FindCopyCount(KademliaId objectId)
 		{
