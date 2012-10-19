@@ -1,1 +1,62 @@
- 
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Class Name="Kyru.Core.App" Collapsed="true">
+    <Position X="5.5" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAASAAAAAAAAAAAAAAAAAAAAAAAAAAACAAAAA=</HashCode>
+      <FileName>Core\App.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Kyru.Core.Chunk" Collapsed="true">
+    <Position X="0.5" Y="2.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAgIAAAAAAAAAAAAAAAAAAAAAAABAAAAAAAAAAAAA=</HashCode>
+      <FileName>Core\Chunk.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Kyru.Core.User" Collapsed="true">
+    <Position X="2.75" Y="2.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAIAAAIAEAACAAAABAAAAAQAAAAAAAAAAAAAoAAAAIA=</HashCode>
+      <FileName>Core\User.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsCollectionAssociation>
+      <Property Name="Files" />
+    </ShowAsCollectionAssociation>
+  </Class>
+  <Class Name="Kyru.Core.KFile" Collapsed="true">
+    <Position X="2.75" Y="3.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAigIAAAAIAAAAAAAAACAAAAAAAAAAQAAAAAACAgAA=</HashCode>
+      <FileName>Core\KFile.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Kyru.Core.KObject" Collapsed="true">
+    <Position X="0.5" Y="1.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAgA=</HashCode>
+      <FileName>Core\KObject.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Kyru.Core.Session" Collapsed="true">
+    <Position X="5.5" Y="2.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAABAAIAAAAAAAIAAAAAAAAAAAAAAAAAAAEIAAAAACA=</HashCode>
+      <FileName>Core\Session.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="User" />
+    </ShowAsAssociation>
+  </Class>
+  <Class Name="Kyru.Core.KObjectSet" Collapsed="true">
+    <Position X="0.5" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>ACIAAAAAAAAAAABAAAAAAAAAQAAAAAAAAAAAAAAAAAI=</HashCode>
+      <FileName>Core\KObjectSet.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsCollectionAssociation>
+      <Field Name="cache" />
+    </ShowAsCollectionAssociation>
+  </Class>
+  <Font Name="Tahoma" Size="8.25" />
+</ClassDiagram>
