@@ -115,7 +115,7 @@ namespace Kyru.Network
         /// <param name="message">Message from the other node</param>
 		private void IncomingKeepObject(NodeInformation ni, UdpMessage message)
 		{
-            UdpMessage reply = createBaseReply(ni, message);
+            UdpMessage reply = message.baseReply();
             //TODO: reply.KeepObjectResponse
             SendUdpMessage(reply, new IPEndPoint(ni.IpAddress, ni.Port));
 
@@ -129,7 +129,7 @@ namespace Kyru.Network
         /// <param name="message">Message from the other node</param>
 		private void IncomingStore(NodeInformation ni, UdpMessage message)
 		{
-            UdpMessage reply = createBaseReply(ni, message);
+            UdpMessage reply = message.baseReply();
             //TODO: reply.StoreResponse
             SendUdpMessage(reply, new IPEndPoint(ni.IpAddress, ni.Port));
 
@@ -143,7 +143,7 @@ namespace Kyru.Network
         /// <param name="message">Message from the other node</param>
 		private void IncomingFindValue(NodeInformation ni, UdpMessage message)
 		{
-            UdpMessage reply = createBaseReply(ni, message);
+            UdpMessage reply = message.baseReply();
             //TODO: reply.FindValueResponse
             SendUdpMessage(reply, new IPEndPoint(ni.IpAddress, ni.Port));
 
@@ -157,7 +157,7 @@ namespace Kyru.Network
         /// <param name="message">Message from the other node</param>
 		private void IncomingFindNode(NodeInformation ni, UdpMessage message)
 		{
-            UdpMessage reply = createBaseReply(ni, message);
+            UdpMessage reply = message.baseReply();
             //TODO: reply.FindNodeResponse
             SendUdpMessage(reply, new IPEndPoint(ni.IpAddress, ni.Port));
 
@@ -172,21 +172,9 @@ namespace Kyru.Network
         /// <param name="message">Message from the other node</param>
 		private void IncomingPing(NodeInformation ni, UdpMessage message)
 		{
-            UdpMessage reply = createBaseReply(ni, message);
+            UdpMessage reply = message.baseReply();
             SendUdpMessage(reply, new IPEndPoint(ni.IpAddress, ni.Port));
 		}
-
-        /// <summary>
-        /// Many replies require the same data. This method will initialise the non-reply specific fields.
-        /// </summary>
-        /// <param name="ni">Information about the other node</param>
-        /// <param name="message">Message from the other node</param>
-        /// <returns>a base for the reply</returns>
-        private UdpMessage createBaseReply(NodeInformation ni, UdpMessage message) {
-            UdpMessage reply = new UdpMessage();
-            reply.ResponseId = message.RequestId;
-            return reply;
-        }
 
 		private void TcpListen()
 		{

@@ -111,5 +111,16 @@ namespace Kyru.Network.Messages
             }
             return true;
         }
-	}
+
+        /// <summary>
+        /// All replies require the same data. This method will initialise the non-reply specific fields.
+        /// </summary>
+        /// <returns>a base for the reply</returns>
+        internal UdpMessage baseReply()
+        {
+            UdpMessage reply = new UdpMessage();
+            reply.ResponseId = RequestId;
+            return reply;
+        }
+    }
 }
