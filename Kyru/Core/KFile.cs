@@ -23,6 +23,7 @@ namespace Kyru.Core
         /// <returns></returns>
 		internal List<Chunk> Split()
 		{
+            // TIP: Use KObjectSet.GetList
 			throw new NotImplementedException();
 		}
 
@@ -33,11 +34,13 @@ namespace Kyru.Core
 
 		internal void Load(string Name)
 		{
+            // TIP: Use KObjectSet.Add for each chunk
 			throw new NotImplementedException();
 		}
 
 		internal void Save(string Name)
 		{
+            // TIP: Use KObjectSet.GetList
 			throw new NotImplementedException();
 		}
 	}
