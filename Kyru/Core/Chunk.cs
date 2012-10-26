@@ -2,6 +2,7 @@
 
 using Kyru.Network;
 using System.Security.Cryptography;
+using System.IO;
 
 namespace Kyru.Core
 {
@@ -19,14 +20,22 @@ namespace Kyru.Core
             id = new KademliaId(hash);
 		}
 
-		internal void Load()
-		{
-			throw new NotImplementedException();
-		}
+        /// <summary>
+        /// Reads the file from the harddisk
+        /// </summary>
+        /// <param name="f">A stream of the file where the object is in</param>
+        public override void Read(FileStream f)
+        {
+            throw new NotImplementedException();
+        }
 
-		internal void Save()
-		{
-			throw new NotImplementedException();
-		}
+        /// <summary>
+        /// Writes the file to the harddisk
+        /// </summary>
+        /// <param name="f">A stream of the file</param>
+        public override void Write(FileStream f)
+        {
+            throw new NotImplementedException();
+        }
 	}
 }

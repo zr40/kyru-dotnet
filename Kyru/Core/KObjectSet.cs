@@ -30,7 +30,7 @@ namespace Kyru.Core
         /// </summary>
         /// <param name="id">The id of the object</param>
         /// <returns>The object, or null if he can't find it</returns>
-        internal KObject Get(KademliaId id)
+        internal T Get<T>(KademliaId id) where T : KObject
         {
             throw new NotImplementedException();
             // TODO: Try to get the object from the file system.
@@ -43,11 +43,11 @@ namespace Kyru.Core
         /// <param name="ids">A list of id's for the given item</param>
         /// <param name="strict">Wheter incomplete lists are allowed</param>
         /// <returns></returns>
-        internal List<KObject> GetList(List<KademliaId> ids, bool strict = false)
+        internal List<T> GetList<T>(List<KademliaId> ids, bool strict = false) where T : KObject
         {
-            List<KObject> returnList = new List<KObject>();
+            List<T> returnList = new List<T>();
             foreach (var id in ids) {
-                var item = Get(id);
+                var item = Get<T>(id);
                 if (item == null && strict == true)
                     return null;
 
