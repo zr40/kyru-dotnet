@@ -30,11 +30,20 @@ namespace Kyru.Core
         /// </summary>
         /// <param name="id">The id of the object</param>
         /// <returns>The object, or null if he can't find it</returns>
-        internal T Get<T>(KademliaId id) where T : KObject
+        internal T Get<T>(KademliaId id) where T : KObject , new()
         {
-            throw new NotImplementedException();
-            // TODO: Try to get the object from the file system.
-            //return null;
+            var idString = id.ToString();
+            String path = Path.Combine(config.storeDirectory, idString + ".obj");
+            FileStream fs;
+            try
+            {
+                fs = new FileStream(path, FileMode.Open);
+            } catch (FileNotFoundException) {
+                return null;
+            }
+            T returnValue = new T();
+            returnValue.Read(fs);
+            return returnValue;
         }
 
         /// <summary>
@@ -43,7 +52,7 @@ namespace Kyru.Core
         /// <param name="ids">A list of id's for the given item</param>
         /// <param name="strict">Wheter incomplete lists are allowed</param>
         /// <returns></returns>
-        internal List<T> GetList<T>(List<KademliaId> ids, bool strict = false) where T : KObject
+        internal List<T> GetList<T>(List<KademliaId> ids, bool strict = false) where T : KObject, new()
         {
             List<T> returnList = new List<T>();
             foreach (var id in ids) {
@@ -64,17 +73,10 @@ namespace Kyru.Core
         /// <param name="obj">The object to be added</param>
         internal void Add(KObject obj)
         {
-            throw new NotImplementedException();
-        }
-
-        /// <summary>
-        /// Opens / Creates a file given for which the file name is unique for each KademliaId
-        /// </summary>
-        /// <param name="id">Id where the file name is based on</param>
-        /// <returns>A stream for the file</returns>
-        private FileStream openFile(KademliaId id) {
-            var base64id = id.ToString();
-            throw new NotImplementedException();
+            var idString = obj.id.ToString();
+            String path = Path.Combine(config.storeDirectory, idString + ".obj");
+            FileStream fs = new FileStream(path, FileMode.Create);
+            obj.Write(fs);
         }
     }
 }
