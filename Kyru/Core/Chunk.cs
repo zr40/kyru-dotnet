@@ -10,6 +10,13 @@ namespace Kyru.Core
 	{
 		internal readonly byte[] Data;
 
+        /// <summary>
+        /// The KObjectSet requires a constructor with no arguments. You should always follow this call with a Read call.
+        /// </summary>
+        internal Chunk() {
+            
+        }
+
         internal Chunk(byte[] Data)
 		{
             this.Data = Data;
@@ -26,7 +33,8 @@ namespace Kyru.Core
         /// <param name="f">A stream of the file where the object is in</param>
         public override void Read(FileStream f)
         {
-            throw new NotImplementedException();
+            // NOTE: the conversion to int should not give problems because chunks should be 1 MiB or less
+            f.Read(this.Data,0,(int)f.Length);
         }
 
         /// <summary>
@@ -35,7 +43,8 @@ namespace Kyru.Core
         /// <param name="f">A stream of the file</param>
         public override void Write(FileStream f)
         {
-            throw new NotImplementedException();
+            // NOTE: the conversion to int should not give problems because chunks should be 1 MiB or less
+            f.Write(this.Data, 0, (int)f.Length);
         }
 	}
 }
