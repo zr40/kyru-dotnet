@@ -57,6 +57,10 @@ namespace Kyru.Network
 
 		internal int KademliaBucket()
 		{
+			if (id.All(i => i == 0))
+			{
+				throw new InvalidOperationException("BUG: the local node must not be added as a Kademlia contact");
+			}
 			throw new NotImplementedException();
 		}
 

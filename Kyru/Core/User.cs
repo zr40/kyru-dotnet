@@ -6,10 +6,10 @@ using System.IO;
 
 namespace Kyru.Core
 {
-    [Serializable]
 	/// <summary>
 	/// The User class contains public as well as encrypted data
 	/// </summary>
+	[Serializable]
 	internal class User : KObject
 	{
 		internal string Name;
