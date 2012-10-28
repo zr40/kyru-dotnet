@@ -45,5 +45,14 @@ namespace Kyru.Network
 				return new KademliaId(bytes);
 			}
 		}
+
+        public string toString() {
+            string outStr = "";
+            foreach (int value in id)
+            {
+                outStr += String.Format("{0,8:X}", value);
+            }
+            return outStr;
+        }
 	}
 }
