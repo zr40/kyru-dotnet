@@ -15,8 +15,10 @@ namespace Kyru.Network
 		private readonly UdpClient udp;
 		private readonly TcpListener tcp;
 
-		private const uint ProtocolVersion = 0;
-        private readonly KademliaId id = KademliaId.RandomId;
+		private readonly Kademlia kademlia;
+
+		internal const uint ProtocolVersion = 0;
+		private readonly KademliaId id = KademliaId.RandomId;
 
 		private readonly Dictionary<RequestIdentifier, RequestInformation> outstandingRequests = new Dictionary<RequestIdentifier, RequestInformation>();
 
@@ -40,6 +42,7 @@ namespace Kyru.Network
 
 		internal Node(int port)
 		{
+			kademlia = new Kademlia(this);
 			udp = new UdpClient(port);
 			tcp = new TcpListener(IPAddress.Any, port);
 
@@ -60,31 +63,25 @@ namespace Kyru.Network
 
 			var message = Serializer.Deserialize<UdpMessage>(new MemoryStream(data));
 
-            if (!message.validate(endPoint.ToString()))
-                return;
+			if (!message.Validate(endPoint))
+				return;
 
-            if (ProtocolVersion != message.ProtocolVersion)
-            {
-                Console.WriteLine("Ignoring message from {0} with unknown protocol version {1}", endPoint, message.ProtocolVersion);
-                return;
-            }
+			var ni = new NodeInformation(endPoint, message.SenderNodeId);
 
-            var ni = new NodeInformation(endPoint, message.SenderNodeId);
+			if (message.ResponseId != 0)
+			{
+				var identifier = new RequestIdentifier {NodeInformation = ni, RequestId = message.ResponseId};
+				if (!outstandingRequests.ContainsKey(identifier))
+				{
+					Console.WriteLine("Ignoring message from {0} with unknown response ID {1}", endPoint, message.ResponseId);
+					return;
+				}
+				var request = outstandingRequests[identifier];
+				outstandingRequests.Remove(identifier);
 
-            if (message.ResponseId != 0)
-            {
-                var identifier = new RequestIdentifier { NodeInformation = ni, RequestId = message.ResponseId };
-                if (!outstandingRequests.ContainsKey(identifier))
-                {
-                    Console.WriteLine("Ignoring message from {0} with unknown response ID {1}", endPoint, message.ResponseId);
-                    return;
-                }
-                var request = outstandingRequests[identifier];
-                outstandingRequests.Remove(identifier);
-
-                // the callback will deal with handling the actual response
-                request.ResponseCallback(message);
-            }
+				// the callback will deal with handling the actual response
+				request.ResponseCallback(message);
+			}
 
 			if (message.PingRequest != null)
 			{
@@ -108,72 +105,72 @@ namespace Kyru.Network
 			}
 		}
 
-        /// <summary>
-        /// Create a sorted list of nodes of size k, containing the k nodes closest to the object ID. The list is sorted by distance to the object ID, closest first.
-        /// </summary>
-        /// <param name="ni">Information about the other node</param>
-        /// <param name="message">Message from the other node</param>
+		/// <summary>
+		/// 	Create a sorted list of nodes of size k, containing the k nodes closest to the object ID. The list is sorted by distance to the object ID, closest first.
+		/// </summary>
+		/// <param name="ni"> Information about the other node </param>
+		/// <param name="message"> Message from the other node </param>
 		private void IncomingKeepObject(NodeInformation ni, UdpMessage message)
 		{
-            UdpMessage reply = message.baseReply();
-            //TODO: reply.KeepObjectResponse
-            SendUdpMessage(reply, new IPEndPoint(ni.IpAddress, ni.Port));
+			UdpMessage reply = CreateUdpReply(message);
+			//TODO: reply.KeepObjectResponse
+			SendUdpMessage(reply, ni);
 
 			throw new NotImplementedException();
 		}
 
-        /// <summary>
-        /// The STORE method allows nodes to store a value at another node.
-        /// </summary>
-        /// <param name="ni">Information about the other node</param>
-        /// <param name="message">Message from the other node</param>
+		/// <summary>
+		/// 	The STORE method allows nodes to store a value at another node.
+		/// </summary>
+		/// <param name="ni"> Information about the other node </param>
+		/// <param name="message"> Message from the other node </param>
 		private void IncomingStore(NodeInformation ni, UdpMessage message)
 		{
-            UdpMessage reply = message.baseReply();
-            //TODO: reply.StoreResponse
-            SendUdpMessage(reply, new IPEndPoint(ni.IpAddress, ni.Port));
+			UdpMessage reply = CreateUdpReply(message);
+			//TODO: reply.StoreResponse
+			SendUdpMessage(reply, ni);
 
 			throw new NotImplementedException();
 		}
 
-        /// <summary>
-        /// The FIND_VALUE method acts like FIND_NODE, but if the node contains the value, it will be returned instead.
-        /// </summary>
-        /// <param name="ni">Information about the other node</param>
-        /// <param name="message">Message from the other node</param>
+		/// <summary>
+		/// 	The FIND_VALUE method acts like FIND_NODE, but if the node contains the value, it will be returned instead.
+		/// </summary>
+		/// <param name="ni"> Information about the other node </param>
+		/// <param name="message"> Message from the other node </param>
 		private void IncomingFindValue(NodeInformation ni, UdpMessage message)
 		{
-            UdpMessage reply = message.baseReply();
-            //TODO: reply.FindValueResponse
-            SendUdpMessage(reply, new IPEndPoint(ni.IpAddress, ni.Port));
+			UdpMessage reply = CreateUdpReply(message);
+			//TODO: reply.FindValueResponse
+			SendUdpMessage(reply, ni);
 
 			throw new NotImplementedException();
 		}
 
-        /// <summary>
-        /// The FIND_NODE method requests a node to return the k nodes closest to the given object ID that the node knows about.
-        /// </summary>
-        /// <param name="ni">Information about the other node</param>
-        /// <param name="message">Message from the other node</param>
+		/// <summary>
+		/// 	The FIND_NODE method requests a node to return the k nodes closest to the given object ID that the node knows about.
+		/// </summary>
+		/// <param name="ni"> Information about the other node </param>
+		/// <param name="message"> Message from the other node </param>
 		private void IncomingFindNode(NodeInformation ni, UdpMessage message)
 		{
-            UdpMessage reply = message.baseReply();
-            //TODO: reply.FindNodeResponse
-            SendUdpMessage(reply, new IPEndPoint(ni.IpAddress, ni.Port));
+			UdpMessage reply = CreateUdpReply(message);
+			//TODO: reply.FindNodeResponse
+			SendUdpMessage(reply, ni);
 
 			throw new NotImplementedException();
 		}
 
-        /// <summary>
-        /// The PING method requests a node to respond. If it responds, the node is known to be alive at this point.
-        /// PING is also used to obtain the node ID from newly discovered nodes.
-        /// </summary>
-        /// <param name="ni">Information about the other node</param>
-        /// <param name="message">Message from the other node</param>
+		/// <summary>
+		/// 	The PING method requests a node to respond. If it responds, the node is known to be alive at this point.
+		/// 	PING is also used to obtain the node ID from newly discovered nodes.
+		/// </summary>
+		/// <param name="ni"> Information about the other node </param>
+		/// <param name="message"> Message from the other node </param>
 		private void IncomingPing(NodeInformation ni, UdpMessage message)
 		{
-            UdpMessage reply = message.baseReply();
-            SendUdpMessage(reply, new IPEndPoint(ni.IpAddress, ni.Port));
+			UdpMessage reply = CreateUdpReply(message);
+			SendUdpMessage(reply, ni);
 		}
 
 		private void TcpListen()
@@ -189,16 +186,30 @@ namespace Kyru.Network
 			// TODO
 		}
 
-        /// <summary>
-        /// Send a message.
-        /// </summary>
-        /// <param name="message">The message to be send</param>
-        /// <param name="target">The target to send it to</param>
-		private void SendUdpMessage(UdpMessage message, IPEndPoint target)
+		private UdpMessage CreateUdpReply(UdpMessage request)
 		{
+			var response = new UdpMessage();
+			response.ResponseId = request.RequestId;
+
+			// The Kademlia object is interested in all incoming requests in order to maintain the contact list, and all valid requests create a response.
+			// Kademlia might add a Ping request to the response, so this is the place to notify the kademlia object.
+			kademlia.HandleRequest(request, response);
+
+			return response;
+		}
+
+		/// <summary>
+		/// 	Send a message.
+		/// </summary>
+		/// <param name="message"> The message to be sent </param>
+		/// <param name="targetNode"> The node to send it to </param>
+		private void SendUdpMessage(UdpMessage message, NodeInformation targetNode)
+		{
+			var target = new IPEndPoint(targetNode.IpAddress, targetNode.Port);
+
 			message.ProtocolVersion = ProtocolVersion;
 			message.RequestId = Random.UInt64();
-            message.SenderNodeId = id;
+			message.SenderNodeId = id;
 
 			var s = new MemoryStream();
 			Serializer.Serialize(s, message);

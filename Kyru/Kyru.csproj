@@ -57,6 +57,7 @@
     <Compile Include="Core\KFile.cs" />
     <Compile Include="Core\KObject.cs" />
     <Compile Include="Core\KObjectSet.cs" />
+    <Compile Include="Network\Kademlia.cs" />
     <Compile Include="Random.cs" />
     <Compile Include="Core\Chunk.cs" />
     <Compile Include="KyruForm.cs">
