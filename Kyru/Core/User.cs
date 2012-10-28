@@ -6,12 +6,13 @@ using System.IO;
 
 namespace Kyru.Core
 {
+    [Serializable]
 	/// <summary>
 	/// The User class contains public as well as encrypted data
 	/// </summary>
 	internal class User : KObject
 	{
-		internal readonly string Name;
+		internal string Name;
 		private List<Tuple<byte[], KademliaId>> deletedFiles;
 		private List<KFile> files;
 
@@ -76,7 +77,13 @@ namespace Kyru.Core
         /// <param name="f">A stream of the file where the object is in</param>
         public override void Read(FileStream f)
         {
-            throw new NotImplementedException();
+            System.Xml.Serialization.XmlSerializer x = new System.Xml.Serialization.XmlSerializer(this.GetType());
+            User loaded = (User)x.Deserialize(f);
+
+            this.files = loaded.files;
+            this.deletedFiles = loaded.deletedFiles;
+            this.id = loaded.id;
+            this.Name = loaded.Name;
         }
 
         /// <summary>
@@ -85,7 +92,8 @@ namespace Kyru.Core
         /// <param name="f">A stream of the file</param>
         public override void Write(FileStream f)
         {
-            throw new NotImplementedException();
+            System.Xml.Serialization.XmlSerializer x = new System.Xml.Serialization.XmlSerializer(this.GetType());
+            x.Serialize(Console.Out, this);
         }
 	}
 }

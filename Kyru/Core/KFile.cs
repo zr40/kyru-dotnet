@@ -4,6 +4,7 @@ using Kyru.Network;
 
 namespace Kyru.Core
 {
+    [Serializable]
 	internal class KFile
 	{
 		internal List<KademliaId> ChunkIds;
