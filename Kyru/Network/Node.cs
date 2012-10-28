@@ -105,11 +105,9 @@ namespace Kyru.Network
 			}
 		}
 
-		/// <summary>
-		/// 	Create a sorted list of nodes of size k, containing the k nodes closest to the object ID. The list is sorted by distance to the object ID, closest first.
-		/// </summary>
-		/// <param name="ni"> Information about the other node </param>
-		/// <param name="message"> Message from the other node </param>
+		/// <summary>Processes an incoming KeepObject request.</summary>
+		/// <param name="ni">The sending node</param>
+		/// <param name="message">The message received from the sending node</param>
 		private void IncomingKeepObject(NodeInformation ni, UdpMessage message)
 		{
 			UdpMessage reply = CreateUdpReply(message);
@@ -119,11 +117,9 @@ namespace Kyru.Network
 			throw new NotImplementedException();
 		}
 
-		/// <summary>
-		/// 	The STORE method allows nodes to store a value at another node.
-		/// </summary>
-		/// <param name="ni"> Information about the other node </param>
-		/// <param name="message"> Message from the other node </param>
+		/// <summary>Processes an incoming Store request.</summary>
+		/// <param name="ni">The sending node</param>
+		/// <param name="message">The message received from the sending node</param>
 		private void IncomingStore(NodeInformation ni, UdpMessage message)
 		{
 			UdpMessage reply = CreateUdpReply(message);
@@ -133,11 +129,9 @@ namespace Kyru.Network
 			throw new NotImplementedException();
 		}
 
-		/// <summary>
-		/// 	The FIND_VALUE method acts like FIND_NODE, but if the node contains the value, it will be returned instead.
-		/// </summary>
-		/// <param name="ni"> Information about the other node </param>
-		/// <param name="message"> Message from the other node </param>
+		/// <summary>Processes an incoming FindValue request.</summary>
+		/// <param name="ni">The sending node</param>
+		/// <param name="message">The message received from the sending node</param>
 		private void IncomingFindValue(NodeInformation ni, UdpMessage message)
 		{
 			UdpMessage reply = CreateUdpReply(message);
@@ -147,11 +141,9 @@ namespace Kyru.Network
 			throw new NotImplementedException();
 		}
 
-		/// <summary>
-		/// 	The FIND_NODE method requests a node to return the k nodes closest to the given object ID that the node knows about.
-		/// </summary>
-		/// <param name="ni"> Information about the other node </param>
-		/// <param name="message"> Message from the other node </param>
+		/// <summary>Processes an incoming FindNode request.</summary>
+		/// <param name="ni">The sending node</param>
+		/// <param name="message">The message received from the sending node</param>
 		private void IncomingFindNode(NodeInformation ni, UdpMessage message)
 		{
 			UdpMessage reply = CreateUdpReply(message);
@@ -161,12 +153,9 @@ namespace Kyru.Network
 			throw new NotImplementedException();
 		}
 
-		/// <summary>
-		/// 	The PING method requests a node to respond. If it responds, the node is known to be alive at this point.
-		/// 	PING is also used to obtain the node ID from newly discovered nodes.
-		/// </summary>
-		/// <param name="ni"> Information about the other node </param>
-		/// <param name="message"> Message from the other node </param>
+		/// <summary>Processes an incoming Ping request.</summary>
+		/// <param name="ni">The sending node</param>
+		/// <param name="message">The message received from the sending node</param>
 		private void IncomingPing(NodeInformation ni, UdpMessage message)
 		{
 			UdpMessage reply = CreateUdpReply(message);
@@ -183,9 +172,12 @@ namespace Kyru.Network
 			var client = tcp.EndAcceptTcpClient(ar);
 			TcpListen();
 
-			// TODO
+			new IncomingTcpConnection(client).Accept();
 		}
 
+		/// <summary>Creates a template reply UdpMessage with the ResponseId set based on the request message. Also notifies Kademlia about the request message.</summary>
+		/// <param name="request">The incoming request message.</param>
+		/// <returns>The created template reply message.</returns>
 		private UdpMessage CreateUdpReply(UdpMessage request)
 		{
 			var response = new UdpMessage();
@@ -198,11 +190,9 @@ namespace Kyru.Network
 			return response;
 		}
 
-		/// <summary>
-		/// 	Send a message.
-		/// </summary>
-		/// <param name="message"> The message to be sent </param>
-		/// <param name="targetNode"> The node to send it to </param>
+		/// <summary>Sends an UDP message to a given node.</summary>
+		/// <param name="message">The message to be sent.</param>
+		/// <param name="targetNode">The target node.</param>
 		private void SendUdpMessage(UdpMessage message, NodeInformation targetNode)
 		{
 			var target = new IPEndPoint(targetNode.IpAddress, targetNode.Port);
