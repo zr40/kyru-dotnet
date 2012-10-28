@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 
 using ProtoBuf;
 
@@ -12,19 +13,20 @@ namespace Kyru.Network
 		[ProtoMember(1)]
 		private readonly uint[] id = new uint[ArraySize];
 
-        public KademliaId()
-        {
-        }
+		private KademliaId()
+		{
+		}
 
-        public KademliaId(byte[] data) {
-            if (data.Length != ArraySize * sizeof(uint))
-                throw new Exception("160 bits of data is required for creating a kademlia Id");
+		public KademliaId(byte[] bytes)
+		{
+			if (bytes.Length != ArraySize * sizeof(uint))
+				throw new Exception("The array must of size " + ArraySize * sizeof(uint));
 
-            for (int i = 0; i < ArraySize; i++)
-            {
-                id[i] = BitConverter.ToUInt32(data, i * sizeof(uint));
-            }
-        }
+			for (int i = 0; i < ArraySize; i++)
+			{
+				id[i] = BitConverter.ToUInt32(bytes, i * sizeof(uint));
+			}
+		}
 
 		public static KademliaId operator -(KademliaId left, KademliaId right)
 		{
@@ -46,13 +48,9 @@ namespace Kyru.Network
 			}
 		}
 
-        public string toString() {
-            string outStr = "";
-            foreach (int value in id)
-            {
-                outStr += String.Format("{0,8:X}", value);
-            }
-            return outStr;
-        }
+		public override string ToString()
+		{
+			return id.Aggregate("", (s, u) => s + u.ToString("0,8:X"));
+		}
 	}
 }
