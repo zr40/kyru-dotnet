@@ -18,7 +18,7 @@ namespace Kyru.Network
 		private readonly Kademlia kademlia;
 
 		internal const uint ProtocolVersion = 0;
-		private readonly KademliaId id = KademliaId.RandomId;
+		internal readonly KademliaId Id = KademliaId.RandomId;
 
 		private readonly Dictionary<RequestIdentifier, RequestInformation> outstandingRequests = new Dictionary<RequestIdentifier, RequestInformation>();
 
@@ -30,9 +30,8 @@ namespace Kyru.Network
 
 		private struct RequestInformation
 		{
-			internal UdpMessage Message;
+			internal UdpMessage OutgoingMessage;
 			internal bool SecondAttempt;
-			internal Action<UdpMessage> ResponseCallback;
 			internal DateTime SentAtTime;
 		}
 
@@ -61,105 +60,110 @@ namespace Kyru.Network
 			var data = udp.EndReceive(ar, ref endPoint);
 			UdpListen();
 
-			var message = Serializer.Deserialize<UdpMessage>(new MemoryStream(data));
+			var incomingMessage = Serializer.Deserialize<UdpMessage>(new MemoryStream(data));
 
-			if (!message.Validate(endPoint))
+			if (!incomingMessage.Validate(endPoint))
 				return;
 
-			var ni = new NodeInformation(endPoint, message.SenderNodeId);
+			var ni = new NodeInformation(endPoint, incomingMessage.SenderNodeId);
 
-			if (message.ResponseId != 0)
+			if (incomingMessage.ResponseId != 0)
 			{
-				var identifier = new RequestIdentifier {NodeInformation = ni, RequestId = message.ResponseId};
+				var identifier = new RequestIdentifier {NodeInformation = ni, RequestId = incomingMessage.ResponseId};
 				if (!outstandingRequests.ContainsKey(identifier))
 				{
-					Console.WriteLine("Ignoring message from {0} with unknown response ID {1}", endPoint, message.ResponseId);
+					Console.WriteLine("Ignoring message from {0} with unknown response ID {1}", endPoint, incomingMessage.ResponseId);
 					return;
 				}
 				var request = outstandingRequests[identifier];
 				outstandingRequests.Remove(identifier);
 
 				// the callback will deal with handling the actual response
-				request.ResponseCallback(message);
+				request.OutgoingMessage.ResponseCallback(incomingMessage);
 			}
 
-			if (message.PingRequest != null)
+			if (incomingMessage.PingRequest != null)
 			{
-				IncomingPing(ni, message);
+				IncomingPing(ni, incomingMessage);
 			}
-			else if (message.FindNodeRequest != null)
+			else if (incomingMessage.FindNodeRequest != null)
 			{
-				IncomingFindNode(ni, message);
+				IncomingFindNode(ni, incomingMessage);
 			}
-			else if (message.FindValueRequest != null)
+			else if (incomingMessage.FindValueRequest != null)
 			{
-				IncomingFindValue(ni, message);
+				IncomingFindValue(ni, incomingMessage);
 			}
-			else if (message.StoreRequest != null)
+			else if (incomingMessage.StoreRequest != null)
 			{
-				IncomingStore(ni, message);
+				IncomingStore(ni, incomingMessage);
 			}
-			else if (message.KeepObjectRequest != null)
+			else if (incomingMessage.KeepObjectRequest != null)
 			{
-				IncomingKeepObject(ni, message);
+				IncomingKeepObject(ni, incomingMessage);
 			}
 		}
 
 		/// <summary>Processes an incoming KeepObject request.</summary>
-		/// <param name="ni">The sending node</param>
-		/// <param name="message">The message received from the sending node</param>
-		private void IncomingKeepObject(NodeInformation ni, UdpMessage message)
+		/// <param name="node">The sending node</param>
+		/// <param name="request">The message received from the sending node</param>
+		private void IncomingKeepObject(NodeInformation node, UdpMessage request)
 		{
-			UdpMessage reply = CreateUdpReply(message);
-			//TODO: reply.KeepObjectResponse
-			SendUdpMessage(reply, ni);
+			UdpMessage response = CreateUdpReply(request);
+			kademlia.HandleIncomingRequest(node, response);
+			// TODO: reply.KeepObjectResponse
+			// SendUdpMessage(response, node);
 
 			throw new NotImplementedException();
 		}
 
 		/// <summary>Processes an incoming Store request.</summary>
-		/// <param name="ni">The sending node</param>
-		/// <param name="message">The message received from the sending node</param>
-		private void IncomingStore(NodeInformation ni, UdpMessage message)
+		/// <param name="node">The sending node</param>
+		/// <param name="request">The message received from the sending node</param>
+		private void IncomingStore(NodeInformation node, UdpMessage request)
 		{
-			UdpMessage reply = CreateUdpReply(message);
-			//TODO: reply.StoreResponse
-			SendUdpMessage(reply, ni);
+			UdpMessage response = CreateUdpReply(request);
+			kademlia.HandleIncomingRequest(node, response);
+			// TODO: reply.StoreResponse
+			// SendUdpMessage(response, node);
 
 			throw new NotImplementedException();
 		}
 
 		/// <summary>Processes an incoming FindValue request.</summary>
-		/// <param name="ni">The sending node</param>
-		/// <param name="message">The message received from the sending node</param>
-		private void IncomingFindValue(NodeInformation ni, UdpMessage message)
+		/// <param name="node">The sending node</param>
+		/// <param name="request">The message received from the sending node</param>
+		private void IncomingFindValue(NodeInformation node, UdpMessage request)
 		{
-			UdpMessage reply = CreateUdpReply(message);
-			//TODO: reply.FindValueResponse
-			SendUdpMessage(reply, ni);
+			UdpMessage response = CreateUdpReply(request);
+			kademlia.HandleIncomingRequest(node, response);
+			// TODO: reply.FindValueResponse
+			// SendUdpMessage(response, node);
 
 			throw new NotImplementedException();
 		}
 
 		/// <summary>Processes an incoming FindNode request.</summary>
-		/// <param name="ni">The sending node</param>
-		/// <param name="message">The message received from the sending node</param>
-		private void IncomingFindNode(NodeInformation ni, UdpMessage message)
+		/// <param name="node">The sending node</param>
+		/// <param name="request">The message received from the sending node</param>
+		private void IncomingFindNode(NodeInformation node, UdpMessage request)
 		{
-			UdpMessage reply = CreateUdpReply(message);
-			//TODO: reply.FindNodeResponse
-			SendUdpMessage(reply, ni);
+			UdpMessage response = CreateUdpReply(request);
+			kademlia.HandleIncomingRequest(node, response);
+			// TODO: reply.FindNodeResponse
+			// SendUdpMessage(response, node);
 
 			throw new NotImplementedException();
 		}
 
 		/// <summary>Processes an incoming Ping request.</summary>
-		/// <param name="ni">The sending node</param>
-		/// <param name="message">The message received from the sending node</param>
-		private void IncomingPing(NodeInformation ni, UdpMessage message)
+		/// <param name="node">The sending node</param>
+		/// <param name="request">The message received from the sending node</param>
+		private void IncomingPing(NodeInformation node, UdpMessage request)
 		{
-			UdpMessage reply = CreateUdpReply(message);
-			SendUdpMessage(reply, ni);
+			UdpMessage response = CreateUdpReply(request);
+			kademlia.HandleIncomingRequest(node, response);
+			SendUdpMessage(response, node);
 		}
 
 		private void TcpListen()
@@ -180,14 +184,7 @@ namespace Kyru.Network
 		/// <returns>The created template reply message.</returns>
 		private UdpMessage CreateUdpReply(UdpMessage request)
 		{
-			var response = new UdpMessage();
-			response.ResponseId = request.RequestId;
-
-			// The Kademlia object is interested in all incoming requests in order to maintain the contact list, and all valid requests create a response.
-			// Kademlia might add a Ping request to the response, so this is the place to notify the kademlia object.
-			kademlia.HandleRequest(request, response);
-
-			return response;
+			return new UdpMessage {ResponseId = request.RequestId};
 		}
 
 		/// <summary>Sends an UDP message to a given node.</summary>
@@ -199,7 +196,7 @@ namespace Kyru.Network
 
 			message.ProtocolVersion = ProtocolVersion;
 			message.RequestId = Random.UInt64();
-			message.SenderNodeId = id;
+			message.SenderNodeId = Id;
 
 			var s = new MemoryStream();
 			Serializer.Serialize(s, message);

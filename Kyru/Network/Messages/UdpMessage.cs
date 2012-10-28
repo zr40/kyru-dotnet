@@ -47,6 +47,10 @@ namespace Kyru.Network.Messages
 		[ProtoMember(13)]
 		internal KeepObjectResponse KeepObjectResponse;
 
+		internal Action<UdpMessage> ResponseCallback;
+
+		internal Action NoResponseCallback;
+
 		/// <summary>
 		/// 	Check for various types of errors in the message format. If there is an error it will be printed to the console.
 		/// </summary>

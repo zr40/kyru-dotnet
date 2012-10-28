@@ -8,7 +8,9 @@ namespace Kyru.Network
 	[ProtoContract]
 	internal sealed class KademliaId
 	{
-		private const int ArraySize = 160 / 8 / sizeof(uint);
+		internal const int Size = 160;
+
+		private const int ArraySize = Size / 8 / sizeof(uint);
 
 		[ProtoMember(1)]
 		private readonly uint[] id = new uint[ArraySize];
@@ -52,5 +54,46 @@ namespace Kyru.Network
 		{
 			return id.Aggregate("", (s, u) => s + u.ToString("0,8:X"));
 		}
+
+		internal int KademliaBucket()
+		{
+			throw new NotImplementedException();
+		}
+
+		#region Equality (generated code)
+
+		private bool Equals(KademliaId other)
+		{
+			return Equals(id, other.id);
+		}
+
+		public override bool Equals(object obj)
+		{
+			if (ReferenceEquals(null, obj)) return false;
+			if (ReferenceEquals(this, obj)) return true;
+			return obj is KademliaId && Equals((KademliaId) obj);
+		}
+
+		public override int GetHashCode()
+		{
+			int hashCode = 0;
+			foreach (uint n in id)
+			{
+				hashCode = (hashCode * 397) ^ (int) n;
+			}
+			return hashCode;
+		}
+
+		public static bool operator ==(KademliaId left, KademliaId right)
+		{
+			return Equals(left, right);
+		}
+
+		public static bool operator !=(KademliaId left, KademliaId right)
+		{
+			return !Equals(left, right);
+		}
+
+		#endregion
 	}
 }

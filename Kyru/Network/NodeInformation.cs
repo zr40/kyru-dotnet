@@ -9,13 +9,13 @@ namespace Kyru.Network
 	internal sealed class NodeInformation
 	{
 		[ProtoMember(1)]
-		internal KademliaId NodeId;
+		internal readonly KademliaId NodeId;
 
 		[ProtoMember(2)]
-		internal uint IpAddress;
+		internal readonly uint IpAddress;
 
 		[ProtoMember(3)]
-		internal ushort Port;
+		internal readonly ushort Port;
 
 		public NodeInformation(IPEndPoint endPoint, KademliaId nodeId)
 		{
@@ -23,5 +23,42 @@ namespace Kyru.Network
 			IpAddress = BitConverter.ToUInt32(endPoint.Address.GetAddressBytes(), 0);
 			Port = (ushort) endPoint.Port;
 		}
+
+		#region Equality (generated code)
+
+		public override bool Equals(object obj)
+		{
+			if (ReferenceEquals(null, obj)) return false;
+			if (ReferenceEquals(this, obj)) return true;
+			return obj is NodeInformation && Equals((NodeInformation) obj);
+		}
+
+		private bool Equals(NodeInformation other)
+		{
+			return Equals(NodeId, other.NodeId) && IpAddress == other.IpAddress && Port == other.Port;
+		}
+
+		public override int GetHashCode()
+		{
+			unchecked
+			{
+				int hashCode = (NodeId != null ? NodeId.GetHashCode() : 0);
+				hashCode = (hashCode * 397) ^ (int) IpAddress;
+				hashCode = (hashCode * 397) ^ Port.GetHashCode();
+				return hashCode;
+			}
+		}
+
+		public static bool operator ==(NodeInformation left, NodeInformation right)
+		{
+			return Equals(left, right);
+		}
+
+		public static bool operator !=(NodeInformation left, NodeInformation right)
+		{
+			return !Equals(left, right);
+		}
+
+		#endregion
 	}
 }
