@@ -13,7 +13,7 @@ namespace Kyru.Core
         /// <summary>
         /// The KObjectSet requires a constructor with no arguments. You should always follow this call with a Read call.
         /// </summary>
-        internal Chunk() {
+		public Chunk() {
             
         }
 
