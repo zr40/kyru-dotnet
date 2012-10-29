@@ -15,14 +15,14 @@ namespace Kyru.Core
 	internal class User : KObject
 	{
 		internal string Name;
-		private List<Tuple<byte[], KademliaId>> deletedFiles;
+		private List<Tuple<byte[], ulong>> deletedFiles;
 		private List<KFile> files;
 
 		internal User(string name, KademliaId publicKey)
 		{
 			Name = name;
 			id = publicKey;
-			deletedFiles = new List<Tuple<byte[], KademliaId>>();
+			deletedFiles = new List<Tuple<byte[], ulong>>();
 			files = new List<KFile>();
 		}
 
@@ -31,7 +31,7 @@ namespace Kyru.Core
 			get { return files.AsReadOnly(); }
 		}
 
-		internal ReadOnlyCollection<Tuple<byte[], KademliaId>> DeletedFiles
+		internal ReadOnlyCollection<Tuple<byte[], ulong>> DeletedFiles
 		{
 			get { return deletedFiles.AsReadOnly(); }
 		}
@@ -49,14 +49,14 @@ namespace Kyru.Core
 		/// Checks if the signature is valid and, if so, adds it to the deleted file list and deletes the KFile object
 		/// </summary>
 		/// <param name="deletedFile">signature + fileId</param>
-		private void AddDeletedFile(Tuple<byte[], KademliaId> deletedFile)
+		private void AddDeletedFile(Tuple<byte[], ulong> deletedFile)
 		{
 			var rsa = new RSACryptoServiceProvider();
 			rsa.ImportCspBlob(id);
-			if (new KademliaId(rsa.Decrypt(deletedFile.Item1, true)) == deletedFile.Item2)
+			if (Convert.ToUInt64(rsa.Encrypt(deletedFile.Item1, true)) == deletedFile.Item2)
 			{
 				deletedFiles.Add(deletedFile);
-//				files.RemoveAll(kF => kF.Id == deletedFile.Item2);
+				files.RemoveAll(kF => kF.Id == deletedFile.Item2);
 			}
 		}
 
