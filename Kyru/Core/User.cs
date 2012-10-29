@@ -4,6 +4,7 @@ using System.Collections.ObjectModel;
 using System.IO;
 using System.Xml.Serialization;
 using Kyru.Network;
+using System.Security.Cryptography;	
 
 namespace Kyru.Core
 {
@@ -36,15 +37,6 @@ namespace Kyru.Core
 		}
 
 		/// <summary>
-		/// Sends a keep request for all files in the user according to the Kyru spec
-		/// </summary>
-		/// <param name="kFile">file to be kept</param>
-		internal void Keep()
-		{
-			throw new NotImplementedException();
-		}
-
-		/// <summary>
 		/// Adds a file to the file list
 		/// </summary>
 		/// <param name="kFile">file to add</param>
@@ -59,7 +51,13 @@ namespace Kyru.Core
 		/// <param name="deletedFile">signature + fileId</param>
 		private void AddDeletedFile(Tuple<byte[], KademliaId> deletedFile)
 		{
-			throw new NotImplementedException();
+			var rsa = new RSACryptoServiceProvider();
+			rsa.ImportCspBlob(id);
+			if (new KademliaId(rsa.Decrypt(deletedFile.Item1, true)) == deletedFile.Item2)
+			{
+				deletedFiles.Add(deletedFile);
+//				files.RemoveAll(kF => kF.Id == deletedFile.Item2);
+			}
 		}
 
 		/// <summary>
