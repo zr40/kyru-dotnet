@@ -10,10 +10,10 @@ namespace Kyru.Network
 	{
 		internal const int Size = 160;
 
-		private const int ArraySize = Size / 8 / sizeof(uint);
+		private const int ArraySize = Size / 8;
 
 		[ProtoMember(1)]
-		private readonly uint[] id = new uint[ArraySize];
+		private readonly byte[] id = new byte[ArraySize];
 
 		private KademliaId()
 		{
@@ -24,10 +24,7 @@ namespace Kyru.Network
 			if (bytes.Length != ArraySize * sizeof(uint))
 				throw new Exception("The array must of size " + ArraySize * sizeof(uint));
 
-			for (int i = 0; i < ArraySize; i++)
-			{
-				id[i] = BitConverter.ToUInt32(bytes, i * sizeof(uint));
-			}
+			id = bytes;
 		}
 
 		public static KademliaId operator -(KademliaId left, KademliaId right)
@@ -35,7 +32,7 @@ namespace Kyru.Network
 			var result = new KademliaId();
 			for (int i = 0; i < ArraySize; i++)
 			{
-				result.id[i] = left.id[i] ^ right.id[i];
+				result.id[i] = (byte) (left.id[i] ^ right.id[i]);
 			}
 			return result;
 		}
@@ -48,6 +45,13 @@ namespace Kyru.Network
 
 				return new KademliaId(bytes);
 			}
+		}
+
+		public static implicit operator byte[](KademliaId id)
+		{
+			var bytes = new byte[ArraySize];
+			id.id.CopyTo(bytes, ArraySize);
+			return bytes;
 		}
 
 		public override string ToString()
