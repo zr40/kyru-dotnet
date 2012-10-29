@@ -36,10 +36,10 @@ namespace Kyru.Core
 		}
 
 		/// <summary>
-		/// Processes a keep request for a KFile according to the Kyru Spec
+		/// Sends a keep request for all files in the user according to the Kyru spec
 		/// </summary>
 		/// <param name="kFile">file to be kept</param>
-		internal void Keep(KFile kFile)
+		internal void Keep()
 		{
 			throw new NotImplementedException();
 		}
