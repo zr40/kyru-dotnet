@@ -12,15 +12,15 @@ namespace Kyru.Core
 
 		internal void Start()
 		{
-            config = new Config();
-            objectSet = new KObjectSet(config);
-            node = new Node();
+			config = new Config();
+			objectSet = new KObjectSet(config);
+			node = new Node();
 		}
 
-        internal void Login(string username, string password)
-        {
-            session = new Session(username, password, config);
-        }
+		internal void Login(string username, string password)
+		{
+			session = new Session(username, password, config);
+		}
 
 		internal int FindCopyCount(KademliaId objectId)
 		{
