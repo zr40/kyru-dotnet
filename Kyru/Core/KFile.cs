@@ -7,7 +7,7 @@ namespace Kyru.Core
 	[Serializable]
 	internal class KFile
 	{
-		private readonly Config _config;
+		private readonly Config config;
 		internal List<KademliaId> ChunkIds;
 		internal byte[] EncryptedFileKey;
 		internal byte[] EncryptedFileName;
@@ -17,7 +17,7 @@ namespace Kyru.Core
 		internal KFile(List<KademliaId> chunkIds, Config config)
 		{
 			ChunkIds = chunkIds;
-			_config = config;
+			config = config;
 		}
 
 		/// <summary>
@@ -26,7 +26,7 @@ namespace Kyru.Core
 		/// <returns></returns>
 		internal List<Chunk> Split() // Note: the name of this method doesn't correspond well to its docstring description.
 		{
-			return new KObjectSet(_config).GetList<Chunk>(ChunkIds, true);
+			return new KObjectSet(config).GetList<Chunk>(ChunkIds, true);
 		}
 
 		internal void Load(string Name)
