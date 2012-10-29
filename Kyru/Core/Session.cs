@@ -6,7 +6,7 @@ namespace Kyru.Core
 	/// <summary>
 	/// The Session class provides the ability to change a user object in a way that other nodes will accept, by signing it with the appropriate key
 	/// </summary>
-	internal class Session
+	internal sealed class Session
 	{
 		private byte[] privateKey;
 
