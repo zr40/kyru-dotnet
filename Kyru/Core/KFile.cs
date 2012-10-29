@@ -24,24 +24,25 @@ namespace Kyru.Core
         /// <returns></returns>
 		internal List<Chunk> Split()
 		{
-            // TIP: Use KObjectSet.GetList
+			// TIP: Use KObjectSet.GetList
 			throw new NotImplementedException();
 		}
 
 		internal void Rename(string newName)
 		{
+			// Question: Can this one be removed
 			throw new NotImplementedException();
 		}
 
 		internal void Load(string Name)
 		{
-            // TIP: Use KObjectSet.Add for each chunk
+			// TIP: Use KObjectSet.Add for each chunk
 			throw new NotImplementedException();
 		}
 
 		internal void Save(string Name)
 		{
-            // TIP: Use KObjectSet.GetList
+			// TIP: Use KObjectSet.GetList
 			throw new NotImplementedException();
 		}
 	}
