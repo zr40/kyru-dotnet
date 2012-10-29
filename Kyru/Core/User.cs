@@ -1,8 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using Kyru.Network;
 using System.IO;
+using System.Xml.Serialization;
+using Kyru.Network;
 
 namespace Kyru.Core
 {
@@ -18,10 +19,10 @@ namespace Kyru.Core
 
 		internal User(string name, KademliaId publicKey)
 		{
-            this.Name = name;
-            this.id = publicKey;
-            this.deletedFiles = new List<Tuple<byte[], KademliaId>>();
-            this.files = new List<KFile>();
+			Name = name;
+			id = publicKey;
+			deletedFiles = new List<Tuple<byte[], KademliaId>>();
+			files = new List<KFile>();
 		}
 
 		internal ReadOnlyCollection<KFile> Files
@@ -71,29 +72,29 @@ namespace Kyru.Core
 			throw new NotImplementedException();
 		}
 
-        /// <summary>
-        /// Reads the file from the harddisk
-        /// </summary>
-        /// <param name="f">A stream of the file where the object is in</param>
-        public override void Read(FileStream f)
-        {
-            System.Xml.Serialization.XmlSerializer x = new System.Xml.Serialization.XmlSerializer(this.GetType());
-            User loaded = (User)x.Deserialize(f);
+		/// <summary>
+		/// Reads the file from the harddisk
+		/// </summary>
+		/// <param name="f">A stream of the file where the object is in</param>
+		public override void Read(FileStream f)
+		{
+			var x = new XmlSerializer(GetType());
+			var loaded = (User) x.Deserialize(f);
 
-            this.files = loaded.files;
-            this.deletedFiles = loaded.deletedFiles;
-            this.id = loaded.id;
-            this.Name = loaded.Name;
-        }
+			files = loaded.files;
+			deletedFiles = loaded.deletedFiles;
+			id = loaded.id;
+			Name = loaded.Name;
+		}
 
-        /// <summary>
-        /// Writes the file to the harddisk
-        /// </summary>
-        /// <param name="f">A stream of the file</param>
-        public override void Write(FileStream f)
-        {
-            System.Xml.Serialization.XmlSerializer x = new System.Xml.Serialization.XmlSerializer(this.GetType());
-            x.Serialize(Console.Out, this);
-        }
+		/// <summary>
+		/// Writes the file to the harddisk
+		/// </summary>
+		/// <param name="f">A stream of the file</param>
+		public override void Write(FileStream f)
+		{
+			var x = new XmlSerializer(GetType());
+			x.Serialize(Console.Out, this);
+		}
 	}
 }
