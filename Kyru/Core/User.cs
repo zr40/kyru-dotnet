@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IO;
+using System.Security.Cryptography;
 using System.Xml.Serialization;
 using Kyru.Network;
-using System.Security.Cryptography;	
 
 namespace Kyru.Core
 {
@@ -42,7 +42,7 @@ namespace Kyru.Core
 		/// <param name="kFile">file to add</param>
 		internal void Add(KFile kFile)
 		{
-			throw new NotImplementedException();
+			files.Add(kFile);
 		}
 
 		/// <summary>
@@ -67,16 +67,18 @@ namespace Kyru.Core
 		/// <returns>The filename</returns>
 		internal string DecryptFileName(KFile kFile)
 		{
-			throw new NotImplementedException();
+			var rsa = new RSACryptoServiceProvider();
+			rsa.ImportCspBlob(id);
+			return rsa.Decrypt(kFile.EncryptedFileName, true).ToString();
 		}
 
-		/// <summary>
+		/// <summary> // Question: why not do a normal deserialisation? this would also allow Name to be readonly again.
 		/// Reads the file from the harddisk
 		/// </summary>
 		/// <param name="f">A stream of the file where the object is in</param>
 		public override void Read(FileStream f)
 		{
-			var x = new XmlSerializer(GetType());
+			var x = new XmlSerializer(GetType()); // Question: Why XML?
 			var loaded = (User) x.Deserialize(f);
 
 			files = loaded.files;
@@ -91,7 +93,7 @@ namespace Kyru.Core
 		/// <param name="f">A stream of the file</param>
 		public override void Write(FileStream f)
 		{
-			var x = new XmlSerializer(GetType());
+			var x = new XmlSerializer(GetType()); // Question: Why XML?
 			x.Serialize(Console.Out, this);
 		}
 	}
