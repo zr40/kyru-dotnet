@@ -21,8 +21,8 @@ namespace Kyru.Network
 
 		public KademliaId(byte[] bytes)
 		{
-			if (bytes.Length != ArraySize * sizeof(uint))
-				throw new Exception("The array must of size " + ArraySize * sizeof(uint));
+			if (bytes.Length != ArraySize)
+				throw new Exception("The array must of size " + ArraySize);
 
 			id = bytes;
 		}
