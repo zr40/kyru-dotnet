@@ -2,26 +2,32 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IO;
+using System.Runtime.Serialization.Formatters.Binary;
 using System.Security.Cryptography;
 using System.Xml.Serialization;
 using Kyru.Network;
+using ProtoBuf;
+
 
 namespace Kyru.Core
 {
 	/// <summary>
 	/// The User class contains public as well as encrypted data
 	/// </summary>
-	[Serializable]
+	[ProtoContract]
 	internal class User : KObject
 	{
+		[ProtoMember(1)]
 		internal string Name;
+		[ProtoMember(2)]
 		private List<Tuple<byte[], ulong>> deletedFiles;
+		[ProtoMember(3)]
 		private List<UserFile> files;
 
 		internal User(string name, KademliaId publicKey)
 		{
 			Name = name;
-			id = publicKey;
+			Id = publicKey;
 			deletedFiles = new List<Tuple<byte[], ulong>>();
 			files = new List<UserFile>();
 		}
@@ -52,37 +58,13 @@ namespace Kyru.Core
 		private void AddDeletedFile(Tuple<byte[], ulong> deletedFile)
 		{
 			var rsa = new RSACryptoServiceProvider();
-			rsa.ImportCspBlob(id.Bytes);
+			rsa.ImportCspBlob(Id.Bytes);
 			if (Convert.ToUInt64(rsa.Encrypt(deletedFile.Item1, true)) == deletedFile.Item2)
 			{
 				deletedFiles.Add(deletedFile);
 				files.Remove(files.Find(kF => kF.Id == deletedFile.Item2));
 			}
 		}
-
-		/// <summary> // TODO: Change to binary serialization
-		/// Reads the file from the harddisk
-		/// </summary>
-		/// <param name="f">A stream of the file where the object is in</param>
-		public override void Read(FileStream f)
-		{
-			var x = new XmlSerializer(GetType()); // Question: Why XML?
-			var loaded = (User) x.Deserialize(f);
-
-			files = loaded.files;
-			deletedFiles = loaded.deletedFiles;
-			id = loaded.id;
-			Name = loaded.Name;
-		}
-
-		/// <summary>  // TODO: Change to binary serialization
-		/// Writes the file to the harddisk
-		/// </summary>
-		/// <param name="f">A stream of the file</param>
-		public override void Write(FileStream f)
-		{
-			var x = new XmlSerializer(GetType()); // Question: Why XML?
-			x.Serialize(Console.Out, this);
-		}
+		// todo: protobuf (de)serialization, see UDPMessage for declaration and Node for usage
 	}
 }

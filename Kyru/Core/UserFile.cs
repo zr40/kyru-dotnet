@@ -4,7 +4,6 @@ using Kyru.Network;
 
 namespace Kyru.Core
 {
-	[Serializable]
 	internal class UserFile
 	{
 		private readonly Config config;

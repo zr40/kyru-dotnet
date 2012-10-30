@@ -10,6 +10,9 @@ namespace Kyru.Core
 	internal sealed class Session
 	{
 		private byte[] privateKey;
+		private Config config;
+		private User user;
+
 
 		/// <summary>
 		/// Constructor of Session class for an existing User
@@ -20,6 +23,8 @@ namespace Kyru.Core
 		/// <param name="user">User object corresponding to the User</param>
 		internal Session(string username, string password, Config config, User user)
 		{
+			this.config = config;
+			this.user = user;
 			throw new NotImplementedException();
 		}
 
