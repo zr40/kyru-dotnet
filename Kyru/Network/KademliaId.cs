@@ -47,11 +47,14 @@ namespace Kyru.Network
 			}
 		}
 
-		public static implicit operator byte[](KademliaId id)
+		internal byte[] Bytes
+		{
+			get
 		{
 			var bytes = new byte[ArraySize];
-			id.id.CopyTo(bytes, ArraySize);
+				id.CopyTo(bytes, ArraySize);
 			return bytes;
+		}
 		}
 
 		public override string ToString()

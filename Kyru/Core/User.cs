@@ -52,7 +52,7 @@ namespace Kyru.Core
 		private void AddDeletedFile(Tuple<byte[], ulong> deletedFile)
 		{
 			var rsa = new RSACryptoServiceProvider();
-			rsa.ImportCspBlob(id);
+			rsa.ImportCspBlob(id.Bytes);
 			if (Convert.ToUInt64(rsa.Encrypt(deletedFile.Item1, true)) == deletedFile.Item2)
 			{
 				deletedFiles.Add(deletedFile);
@@ -68,7 +68,7 @@ namespace Kyru.Core
 		internal string DecryptFileName(KFile kFile)
 		{
 			var rsa = new RSACryptoServiceProvider();
-			rsa.ImportCspBlob(id);
+			rsa.ImportCspBlob(id.Bytes);
 			return rsa.Decrypt(kFile.EncryptedFileName, true).ToString();
 		}
 
