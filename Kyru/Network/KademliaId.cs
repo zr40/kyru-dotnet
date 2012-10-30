@@ -37,7 +37,7 @@ namespace Kyru.Network
 			return result;
 		}
 
-		public static KademliaId RandomId
+		internal static KademliaId RandomId
 		{
 			get
 			{
@@ -50,11 +50,11 @@ namespace Kyru.Network
 		internal byte[] Bytes
 		{
 			get
-		{
-			var bytes = new byte[ArraySize];
+			{
+				var bytes = new byte[ArraySize];
 				id.CopyTo(bytes, ArraySize);
-			return bytes;
-		}
+				return bytes;
+			}
 		}
 
 		public override string ToString()
@@ -68,6 +68,21 @@ namespace Kyru.Network
 			{
 				throw new InvalidOperationException("BUG: the local node must not be added as a Kademlia contact");
 			}
+
+			int bucket = 159;
+
+			foreach (byte b in id)
+			{
+				for (int i = 7; i >= 0; i--)
+				{
+					if (b >> i != 0)
+					{
+						return bucket;
+					}
+					bucket--;
+				}
+			}
+
 			throw new NotImplementedException();
 		}
 
