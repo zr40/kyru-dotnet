@@ -16,17 +16,17 @@ namespace Kyru.Core
 	{
 		internal string Name;
 		private List<Tuple<byte[], ulong>> deletedFiles;
-		private List<KFile> files;
+		private List<UserFile> files;
 
 		internal User(string name, KademliaId publicKey)
 		{
 			Name = name;
 			id = publicKey;
 			deletedFiles = new List<Tuple<byte[], ulong>>();
-			files = new List<KFile>();
+			files = new List<UserFile>();
 		}
 
-		internal ReadOnlyCollection<KFile> Files
+		internal ReadOnlyCollection<UserFile> Files
 		{
 			get { return files.AsReadOnly(); }
 		}
@@ -39,14 +39,14 @@ namespace Kyru.Core
 		/// <summary>
 		/// Adds a file to the file list
 		/// </summary>
-		/// <param name="kFile">file to add</param>
-		internal void Add(KFile kFile)
+		/// <param name="userFile">file to add</param>
+		internal void Add(UserFile userFile)
 		{
-			files.Add(kFile);
+			files.Add(userFile);
 		}
 
 		/// <summary>
-		/// Checks if the signature is valid and, if so, adds it to the deleted file list and deletes the KFile object
+		/// Checks if the signature is valid and, if so, adds it to the deleted file list and deletes the UserFile object
 		/// </summary>
 		/// <param name="deletedFile">signature + fileId</param>
 		private void AddDeletedFile(Tuple<byte[], ulong> deletedFile)
@@ -56,23 +56,11 @@ namespace Kyru.Core
 			if (Convert.ToUInt64(rsa.Encrypt(deletedFile.Item1, true)) == deletedFile.Item2)
 			{
 				deletedFiles.Add(deletedFile);
-				files.RemoveAll(kF => kF.Id == deletedFile.Item2);
+				files.Remove(files.Find(kF => kF.Id == deletedFile.Item2));
 			}
 		}
 
-		/// <summary>
-		/// Decrypts the file name of a given KFile
-		/// </summary>
-		/// <param name="kFile">File of which the name is desired</param>
-		/// <returns>The filename</returns>
-		internal string DecryptFileName(KFile kFile)
-		{
-			var rsa = new RSACryptoServiceProvider();
-			rsa.ImportCspBlob(id.Bytes);
-			return rsa.Decrypt(kFile.EncryptedFileName, true).ToString();
-		}
-
-		/// <summary> // Question: why not do a normal deserialisation? this would also allow Name to be readonly again.
+		/// <summary> // TODO: Change to binary serialization
 		/// Reads the file from the harddisk
 		/// </summary>
 		/// <param name="f">A stream of the file where the object is in</param>
@@ -87,7 +75,7 @@ namespace Kyru.Core
 			Name = loaded.Name;
 		}
 
-		/// <summary>
+		/// <summary>  // TODO: Change to binary serialization
 		/// Writes the file to the harddisk
 		/// </summary>
 		/// <param name="f">A stream of the file</param>

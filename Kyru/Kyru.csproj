@@ -55,7 +55,7 @@
   <ItemGroup>
     <Compile Include="Core\App.cs" />
     <Compile Include="Core\Config.cs" />
-    <Compile Include="Core\KFile.cs" />
+    <Compile Include="Core\UserFile.cs" />
     <Compile Include="Core\KObject.cs" />
     <Compile Include="Core\KObjectSet.cs" />
     <Compile Include="Network\Kademlia.cs" />
