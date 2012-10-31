@@ -73,7 +73,7 @@ namespace Kyru.Core
 		/// <param name="obj">The object to be added</param>
 		internal void Store(KObject obj)
 		{
-			var idString = obj.id.ToString();
+			var idString = obj.Id.ToString();
 			String path = Path.Combine(config.storeDirectory, idString + ".obj");
 			FileStream fs = new FileStream(path, FileMode.Create);
 			obj.Write(fs);

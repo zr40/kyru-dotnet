@@ -2,31 +2,37 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IO;
+using System.Runtime.Serialization.Formatters.Binary;
 using System.Security.Cryptography;
 using System.Xml.Serialization;
 using Kyru.Network;
+using ProtoBuf;
+
 
 namespace Kyru.Core
 {
 	/// <summary>
 	/// The User class contains public as well as encrypted data
 	/// </summary>
-	[Serializable]
+	[ProtoContract]
 	internal class User : KObject
 	{
+		[ProtoMember(1)]
 		internal string Name;
+		[ProtoMember(2)]
 		private List<Tuple<byte[], ulong>> deletedFiles;
-		private List<KFile> files;
+		[ProtoMember(3)]
+		private List<UserFile> files;
 
 		internal User(string name, KademliaId publicKey)
 		{
 			Name = name;
-			id = publicKey;
+			Id = publicKey;
 			deletedFiles = new List<Tuple<byte[], ulong>>();
-			files = new List<KFile>();
+			files = new List<UserFile>();
 		}
 
-		internal ReadOnlyCollection<KFile> Files
+		internal ReadOnlyCollection<UserFile> Files
 		{
 			get { return files.AsReadOnly(); }
 		}
@@ -39,62 +45,26 @@ namespace Kyru.Core
 		/// <summary>
 		/// Adds a file to the file list
 		/// </summary>
-		/// <param name="kFile">file to add</param>
-		internal void Add(KFile kFile)
+		/// <param name="userFile">file to add</param>
+		internal void Add(UserFile userFile)
 		{
-			files.Add(kFile);
+			files.Add(userFile);
 		}
 
 		/// <summary>
-		/// Checks if the signature is valid and, if so, adds it to the deleted file list and deletes the KFile object
+		/// Checks if the signature is valid and, if so, adds it to the deleted file list and deletes the UserFile object
 		/// </summary>
 		/// <param name="deletedFile">signature + fileId</param>
 		private void AddDeletedFile(Tuple<byte[], ulong> deletedFile)
 		{
 			var rsa = new RSACryptoServiceProvider();
-			rsa.ImportCspBlob(id.Bytes);
+			rsa.ImportCspBlob(Id.Bytes);
 			if (Convert.ToUInt64(rsa.Encrypt(deletedFile.Item1, true)) == deletedFile.Item2)
 			{
 				deletedFiles.Add(deletedFile);
-				files.RemoveAll(kF => kF.Id == deletedFile.Item2);
+				files.Remove(files.Find(kF => kF.Id == deletedFile.Item2));
 			}
 		}
-
-		/// <summary>
-		/// Decrypts the file name of a given KFile
-		/// </summary>
-		/// <param name="kFile">File of which the name is desired</param>
-		/// <returns>The filename</returns>
-		internal string DecryptFileName(KFile kFile)
-		{
-			var rsa = new RSACryptoServiceProvider();
-			rsa.ImportCspBlob(id.Bytes);
-			return rsa.Decrypt(kFile.EncryptedFileName, true).ToString();
-		}
-
-		/// <summary> // Question: why not do a normal deserialisation? this would also allow Name to be readonly again.
-		/// Reads the file from the harddisk
-		/// </summary>
-		/// <param name="f">A stream of the file where the object is in</param>
-		public override void Read(FileStream f)
-		{
-			var x = new XmlSerializer(GetType()); // Question: Why XML?
-			var loaded = (User) x.Deserialize(f);
-
-			files = loaded.files;
-			deletedFiles = loaded.deletedFiles;
-			id = loaded.id;
-			Name = loaded.Name;
-		}
-
-		/// <summary>
-		/// Writes the file to the harddisk
-		/// </summary>
-		/// <param name="f">A stream of the file</param>
-		public override void Write(FileStream f)
-		{
-			var x = new XmlSerializer(GetType()); // Question: Why XML?
-			x.Serialize(Console.Out, this);
-		}
+		// todo: protobuf (de)serialization, see UDPMessage for declaration and Node for usage
 	}
 }
