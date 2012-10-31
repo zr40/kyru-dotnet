@@ -41,9 +41,10 @@ namespace Kyru.Core
 			} catch (FileNotFoundException) {
 				return null;
 			}
-			T returnValue = new T();
-			returnValue.Read(fs);
-			return returnValue;
+			throw new NotImplementedException();
+			//T returnValue = new T();
+			//returnValue.Read(fs);
+			//return returnValue;
 		}
 
 		/// <summary>
@@ -75,8 +76,9 @@ namespace Kyru.Core
 		{
 			var idString = obj.Id.ToString();
 			String path = Path.Combine(config.storeDirectory, idString + ".obj");
-			FileStream fs = new FileStream(path, FileMode.Create);
-			obj.Write(fs);
+			throw new NotImplementedException();
+			//FileStream fs = new FileStream(path, FileMode.Create);
+			//obj.Write(fs);
 		}
 
 		/// <summary>
