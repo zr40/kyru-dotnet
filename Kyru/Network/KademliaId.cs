@@ -5,7 +5,7 @@ using ProtoBuf;
 
 namespace Kyru.Network
 {
-	[ProtoContract]
+	[ProtoContract(SkipConstructor = true)]
 	internal sealed class KademliaId
 	{
 		internal const int Size = 160;
@@ -13,11 +13,7 @@ namespace Kyru.Network
 		private const int ArraySize = Size / 8;
 
 		[ProtoMember(1)]
-		private readonly byte[] id = new byte[ArraySize];
-
-		private KademliaId()
-		{
-		}
+		private readonly byte[] id;
 
 		public KademliaId(byte[] bytes)
 		{
@@ -29,19 +25,19 @@ namespace Kyru.Network
 
 		public static KademliaId operator -(KademliaId left, KademliaId right)
 		{
-			var result = new KademliaId();
+			var result = new byte[ArraySize];
 			for (int i = 0; i < ArraySize; i++)
 			{
-				result.id[i] = (byte) (left.id[i] ^ right.id[i]);
+				result[i] = (byte) (left.id[i] ^ right.id[i]);
 			}
-			return result;
+			return new KademliaId(result);
 		}
 
 		internal static KademliaId RandomId
 		{
 			get
 			{
-				var bytes = Random.Bytes(ArraySize * sizeof(uint));
+				var bytes = Random.Bytes(ArraySize);
 
 				return new KademliaId(bytes);
 			}
@@ -59,7 +55,7 @@ namespace Kyru.Network
 
 		public override string ToString()
 		{
-			return id.Aggregate("", (s, u) => s + u.ToString("0,8:X"));
+			return id.Aggregate("", (s, u) => s + u.ToString("X2"));
 		}
 
 		internal int KademliaBucket()
