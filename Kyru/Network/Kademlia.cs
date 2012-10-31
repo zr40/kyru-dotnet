@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Net;
 
 using Kyru.Network.Messages;
 
@@ -25,6 +27,14 @@ namespace Kyru.Network
 		private readonly Node node;
 
 		private readonly List<KnownNode>[] buckets = new List<KnownNode>[KademliaId.Size];
+
+		internal int CurrentContacts
+		{
+			get
+			{
+				return buckets.Sum(l => l.Count);
+			}
+		}
 
 		internal Kademlia(Node node)
 		{
@@ -54,9 +64,19 @@ namespace Kyru.Network
 			}
 		}
 
+		internal void AddNode(IPEndPoint ep)
+		{
+			var ping = new UdpMessage();
+			ping.PingRequest = new PingRequest();
+			ping.ResponseCallback = response => AddContact(new NodeInformation(ep, response.SenderNodeId));
+			node.SendUdpMessage(ping, ep);
+		}
+
 		private void AddContact(NodeInformation contact)
 		{
-			RemoveContact(contact);
+			if (!RemoveContact(contact))
+				Console.WriteLine("Kademlia: Adding contact {0} ({1})", contact.NodeId, new IPEndPoint(contact.IpAddress, contact.Port));
+
 			var bucket = (node.Id - contact.NodeId).KademliaBucket();
 			if (buckets[bucket].Count >= k)
 			{
@@ -65,19 +85,18 @@ namespace Kyru.Network
 			buckets[bucket].Add(new KnownNode(contact));
 		}
 
-		/// <summary>
-		/// Returns whether the contact needs to be pinged.
-		/// </summary>
+		/// <returns>Whether the contact needs to be pinged.</returns>
 		private bool PingRequired(NodeInformation contact)
 		{
 			var bucket = buckets[(node.Id - contact.NodeId).KademliaBucket()];
 			return bucket.Find(n => n.Node == contact) == null;
 		}
 
-		private void RemoveContact(NodeInformation contact)
+		/// <returns>Whether the contact was known.</returns>
+		private bool RemoveContact(NodeInformation contact)
 		{
 			var bucket = (node.Id - contact.NodeId).KademliaBucket();
-			buckets[bucket].RemoveAll(n => n.Node == contact);
+			return buckets[bucket].RemoveAll(n => n.Node == contact) != 0;
 		}
 	}
 }

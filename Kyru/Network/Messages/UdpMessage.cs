@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Net;
+using System.Text;
 
 using ProtoBuf;
 
@@ -51,6 +52,67 @@ namespace Kyru.Network.Messages
 
 		internal Action NoResponseCallback;
 
+		internal string Inspect()
+		{
+			var sb = new StringBuilder();
+			if (FindNodeRequest != null)
+			{
+				sb.Append("FindNode request");
+			}
+			if (FindValueRequest != null)
+			{
+				sb.Append("FindValue request");
+			}
+			if (StoreRequest != null)
+			{
+				sb.Append("Store request");
+			}
+			if (KeepObjectRequest != null)
+			{
+				sb.Append("KeepObject request");
+			}
+
+			if (FindNodeResponse != null)
+			{
+				sb.Append("FindNode response");
+			}
+			if (FindValueResponse!= null)
+			{
+				sb.Append("FindValue response");
+			}
+			if (StoreResponse != null)
+			{
+				sb.Append("Store response");
+			}
+			if (KeepObjectResponse != null)
+			{
+				sb.Append("KeepObject response");
+			}
+
+			if (PingRequest != null)
+			{
+				if (sb.Length != 0)
+				{
+					sb.Append(" with ");
+				}
+				sb.Append("Ping request");
+			}
+
+			if (sb.Length == 0)
+			{
+				if (ResponseId == 0)
+				{
+					sb.Append("empty message");
+				}
+				else
+				{
+					sb.Append("Ping response");
+				}
+			}
+
+			return sb.ToString();
+		}
+
 		/// <summary>
 		/// 	Check for various types of errors in the message format. If there is an error it will be printed to the console.
 		/// </summary>
@@ -69,22 +131,22 @@ namespace Kyru.Network.Messages
 				// responses may not contain any requests besides ping
 				if (FindNodeRequest != null)
 				{
-					Console.WriteLine("Ignoring response from {0} with response ID {1} containing a find node request", endPoint, ResponseId);
+					Console.WriteLine("Ignoring response from {0} with response ID {1:X16} containing a find node request", endPoint, ResponseId);
 					return false;
 				}
 				if (FindValueRequest != null)
 				{
-					Console.WriteLine("Ignoring response from {0} with response ID {1} containing a find value request", endPoint, ResponseId);
+					Console.WriteLine("Ignoring response from {0} with response ID {1:X16} containing a find value request", endPoint, ResponseId);
 					return false;
 				}
 				if (KeepObjectRequest != null)
 				{
-					Console.WriteLine("Ignoring response from {0} with response ID {1} containing a keep object request", endPoint, ResponseId);
+					Console.WriteLine("Ignoring response from {0} with response ID {1:X16} containing a keep object request", endPoint, ResponseId);
 					return false;
 				}
 				if (StoreRequest != null)
 				{
-					Console.WriteLine("Ignoring response from {0} with response ID {1} containing a store request", endPoint, ResponseId);
+					Console.WriteLine("Ignoring response from {0} with response ID {1:X16} containing a store request", endPoint, ResponseId);
 					return false;
 				}
 			}
@@ -113,12 +175,12 @@ namespace Kyru.Network.Messages
 
 			if (requests > 1)
 			{
-				Console.WriteLine("Ignoring message from {0} with request ID {1} containing multiple requests", endPoint, ResponseId);
+				Console.WriteLine("Ignoring message from {0} with request ID {1:X16} containing multiple requests", endPoint, ResponseId);
 				return false;
 			}
 			if (requests == 0 && ResponseId == 0)
 			{
-				Console.WriteLine("Ignoring empty message from {0} with request ID {1}.", endPoint, ResponseId);
+				Console.WriteLine("Ignoring empty message from {0} with request ID {1:X16}.", endPoint, ResponseId);
 				return false;
 			}
 			return true;

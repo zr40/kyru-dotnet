@@ -37,6 +37,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="KademliaIdTest.cs" />
+    <Compile Include="KademliaTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
