@@ -64,8 +64,7 @@ namespace Kyru.Core
 			Chunk chunk = new Chunk(data);
 			idList.Add(chunk.Id);
 			UserFile userFile = new UserFile(idList);
-			userFile.EncryptedFileName = new byte[file.Name.Length * sizeof(char)];
-			System.Buffer.BlockCopy(file.Name.ToCharArray(), 0, userFile.EncryptedFileName, 0, file.Name.Length);
+			userFile.EncryptedFileName = System.Text.Encoding.UTF8.GetBytes(file.Name.ToCharArray());
 			User.Add(userFile);
 
 			app.objectSet.Store(chunk);

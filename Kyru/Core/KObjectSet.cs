@@ -53,7 +53,6 @@ namespace Kyru.Core
 				if (fs != null)
 					fs.Close();
 			}
-			
 		}
 
 		/// <summary>
