@@ -76,7 +76,7 @@ namespace Kyru.Network.Messages
 			{
 				sb.Append("FindNode response");
 			}
-			if (FindValueResponse!= null)
+			if (FindValueResponse != null)
 			{
 				sb.Append("FindValue response");
 			}

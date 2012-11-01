@@ -7,7 +7,7 @@ using Kyru.Network.Messages;
 
 namespace Kyru.Network
 {
-	internal sealed class Kademlia
+	internal sealed class Kademlia : ITimerListener
 	{
 		private const int k = 20;
 		private const int α = 3;
@@ -68,7 +68,7 @@ namespace Kyru.Network
 			var ping = new UdpMessage();
 			ping.PingRequest = new PingRequest();
 			ping.ResponseCallback = response => AddContact(new NodeInformation(ep, response.SenderNodeId));
-			node.SendUdpMessage(ping, ep);
+			node.SendUdpMessage(ping, ep, null);
 		}
 
 		/// <summary>
@@ -77,7 +77,10 @@ namespace Kyru.Network
 		internal void RemoveNode(KademliaId nodeId)
 		{
 			var bucket = (node.Id - nodeId).KademliaBucket();
-			buckets[bucket].RemoveAll(n => n.Node.NodeId == nodeId);
+			if (buckets[bucket].RemoveAll(n => n.Node.NodeId == nodeId) != 0)
+			{
+				Console.WriteLine("Kademlia: Removing contact {0}", nodeId);
+			}
 		}
 
 		private void AddContact(NodeInformation contact)
@@ -112,6 +115,11 @@ namespace Kyru.Network
 				return false;
 			}
 			return bucket.Find(n => n.Node == contact) == null;
+		}
+
+		public void TimerElapsed()
+		{
+			// TODO
 		}
 	}
 }

@@ -58,6 +58,7 @@
     <Compile Include="Core\UserFile.cs" />
     <Compile Include="Core\KObject.cs" />
     <Compile Include="Core\KObjectSet.cs" />
+    <Compile Include="ITimerListener.cs" />
     <Compile Include="Network\Kademlia.cs" />
     <Compile Include="Random.cs" />
     <Compile Include="Core\Chunk.cs" />
@@ -86,6 +87,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Core\Session.cs" />
     <Compile Include="Core\User.cs" />
+    <Compile Include="KyruTimer.cs" />
     <None Include="Core\ClassDiagram.cd" />
     <None Include="KyruForm.resx">
       <DependentUpon>KyruForm.cs</DependentUpon>
