@@ -86,7 +86,7 @@ namespace Kyru.Network
 
 		private bool Equals(KademliaId other)
 		{
-			return Equals(id, other.id);
+			return id.SequenceEqual(other.id);
 		}
 
 		public override bool Equals(object obj)

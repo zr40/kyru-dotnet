@@ -10,7 +10,7 @@ using ProtoBuf;
 
 namespace Kyru.Network
 {
-	internal sealed class Node : IDisposable
+	internal sealed class Node : ITimerListener, IDisposable
 	{
 		private readonly UdpClient udp;
 		private readonly TcpListener tcp;
@@ -19,6 +19,7 @@ namespace Kyru.Network
 		private bool running;
 
 		internal const uint ProtocolVersion = 0;
+		internal const uint TimeoutTicks = 2 + 1;
 		internal readonly KademliaId Id = KademliaId.RandomId;
 
 		private readonly Dictionary<RequestIdentifier, RequestInformation> outstandingRequests = new Dictionary<RequestIdentifier, RequestInformation>();
@@ -29,11 +30,12 @@ namespace Kyru.Network
 			internal ulong RequestId;
 		}
 
-		private struct RequestInformation
+		private sealed class RequestInformation
 		{
 			internal UdpMessage OutgoingMessage;
 			internal bool SecondAttempt;
-			internal DateTime SentAtTime;
+			internal uint Age;
+			internal KademliaId NodeId;
 		}
 
 		internal Node() : this(12045)
@@ -83,17 +85,19 @@ namespace Kyru.Network
 
 			if (incomingMessage.ResponseId != 0)
 			{
-				var identifier = new RequestIdentifier {EndPoint = new IPEndPoint(ni.IpAddress, ni.Port), RequestId = incomingMessage.ResponseId};
+				var identifier = new RequestIdentifier {EndPoint = ni.EndPoint, RequestId = incomingMessage.ResponseId};
 				if (!outstandingRequests.ContainsKey(identifier))
 				{
-					Console.WriteLine("Ignoring {2} from {0} with unknown response ID {1:X16}", endPoint, incomingMessage.ResponseId, incomingMessage.Inspect());
-					return;
+					Console.WriteLine("{2} from {0} has unknown response ID {1:X16}", endPoint, incomingMessage.ResponseId, incomingMessage.Inspect());
 				}
-				var request = outstandingRequests[identifier];
-				outstandingRequests.Remove(identifier);
+				else
+				{
+					var request = outstandingRequests[identifier];
+					outstandingRequests.Remove(identifier);
 
-				// the callback will deal with handling the actual response
-				request.OutgoingMessage.ResponseCallback(incomingMessage);
+					// the callback will deal with handling the actual response
+					request.OutgoingMessage.ResponseCallback(incomingMessage);
+				}
 			}
 
 			if (incomingMessage.PingRequest != null)
@@ -209,28 +213,33 @@ namespace Kyru.Network
 		/// <param name="targetNode">The target node.</param>
 		private void SendUdpMessage(UdpMessage message, NodeInformation targetNode)
 		{
-			var target = new IPEndPoint(targetNode.IpAddress, targetNode.Port);
-			SendUdpMessage(message, target);
+			SendUdpMessage(message, targetNode.EndPoint, targetNode.NodeId);
 		}
 
 		/// <summary>Sends an UDP message to a given node.</summary>
 		/// <param name="message">The message to be sent.</param>
 		/// <param name="target">The address of the target node.</param>
-		internal void SendUdpMessage(UdpMessage message, IPEndPoint target)
+		/// <param name="targetNodeId">The target node ID.</param>
+		internal void SendUdpMessage(UdpMessage message, IPEndPoint target, KademliaId targetNodeId)
 		{
 			message.ProtocolVersion = ProtocolVersion;
 			message.RequestId = Random.UInt64();
 			message.SenderNodeId = Id;
 
+			var requestIdentifier = new RequestIdentifier {EndPoint = target, RequestId = message.RequestId};
+			var requestInformation = new RequestInformation {OutgoingMessage = message, SecondAttempt = false, NodeId = targetNodeId};
+			outstandingRequests.Add(requestIdentifier, requestInformation);
+
+			SendUdp(message, target);
+		}
+
+		private void SendUdp(UdpMessage message, IPEndPoint target)
+		{
 			var s = new MemoryStream();
 			Serializer.Serialize(s, message);
 
-			var requestIdentifier = new RequestIdentifier {EndPoint = target, RequestId = message.RequestId};
-			var requestInformation = new RequestInformation {OutgoingMessage = message, SecondAttempt = false, SentAtTime = DateTime.Now};
-			outstandingRequests.Add(requestIdentifier, requestInformation);
-
 			Console.WriteLine("Sending {4} with length {0} with request ID {1:X16} to {2} (response ID {3:X16})", s.Length, message.RequestId, target, message.ResponseId, message.Inspect());
-			udp.Send(s.GetBuffer(), (int)s.Length, target);
+			udp.Send(s.GetBuffer(), (int) s.Length, target);
 		}
 
 		public void Dispose()
@@ -238,6 +247,42 @@ namespace Kyru.Network
 			running = false;
 			udp.Close();
 			tcp.Stop();
+		}
+
+		public void TimerElapsed()
+		{
+			var toRemove = new List<RequestIdentifier>();
+
+			foreach (var outstandingRequest in outstandingRequests)
+			{
+				var key = outstandingRequest.Key;
+				var ri = outstandingRequest.Value;
+
+				ri.Age++;
+
+				if (ri.Age >= TimeoutTicks)
+				{
+					if (ri.SecondAttempt)
+					{
+						Console.WriteLine("Node: {0} does not respond", key.EndPoint);
+						toRemove.Add(key);
+						ri.OutgoingMessage.NoResponseCallback();
+						if (ri.NodeId != null)
+							kademlia.RemoveNode(ri.NodeId);
+					}
+					else
+					{
+						Console.WriteLine("Node: Resending message to {0}", key.EndPoint);
+						ri.Age = 0;
+						ri.SecondAttempt = true;
+						SendUdp(ri.OutgoingMessage, key.EndPoint);
+					}
+				}
+			}
+			foreach (var key in toRemove)
+			{
+				outstandingRequests.Remove(key);
+			}
 		}
 	}
 }

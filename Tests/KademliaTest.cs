@@ -37,13 +37,18 @@ namespace Tests
 		{
 			for (int i = 0; i < 10; i++)
 			{
-				var ni = new NodeInformation(new IPEndPoint(i + 1, i + 1), KademliaId.RandomId);
+				var id = KademliaId.RandomId;
+				var ni = new NodeInformation(new IPEndPoint(i + 1, i + 1), id);
 				var message = new UdpMessage();
 				kademlia.HandleIncomingRequest(ni, message);
 				Assert.AreEqual(i, kademlia.CurrentContacts);
 				Assert.IsNotNull(message.PingRequest);
 
-				message.ResponseCallback(null); // response message isn't needed for the kademlia object
+				var response = new UdpMessage();
+				response.ResponseId = message.RequestId;
+				response.SenderNodeId = id;
+
+				message.ResponseCallback(response);
 				Assert.AreEqual(i + 1, kademlia.CurrentContacts);
 			}
 		}

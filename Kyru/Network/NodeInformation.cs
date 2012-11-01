@@ -17,6 +17,14 @@ namespace Kyru.Network
 		[ProtoMember(3)]
 		internal readonly ushort Port;
 
+		internal IPEndPoint EndPoint
+		{
+			get
+			{
+				return new IPEndPoint(IpAddress, Port);
+			}
+		}
+
 		public NodeInformation(IPEndPoint endPoint, KademliaId nodeId)
 		{
 			NodeId = nodeId;
