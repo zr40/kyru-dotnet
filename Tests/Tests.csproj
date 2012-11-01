@@ -38,10 +38,14 @@
   <ItemGroup>
     <Compile Include="KademliaContactPingTest.cs" />
     <Compile Include="KademliaIdTest.cs" />
+    <Compile Include="KademliaNearestTest.cs" />
     <Compile Include="KademliaTest.cs" />
+    <Compile Include="NodeCommunicationTest.cs" />
     <Compile Include="NodeTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="TestHelper.cs" />
     <Compile Include="TestParameters.cs" />
+    <Compile Include="Timeout.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Kyru\Kyru.csproj">

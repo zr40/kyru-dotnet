@@ -152,5 +152,40 @@ namespace Kyru.Network
 			ping.NoResponseCallback = () => bucket.Remove(contact);
 			node.SendUdpMessage(ping, contact.Node.EndPoint, null);
 		}
+
+		internal List<NodeInformation> NearestContactsTo(KademliaId id)
+		{
+			var bucketId = id.KademliaBucket();
+
+			var contacts = new List<NodeInformation>();
+			foreach (var contact in buckets[bucketId])
+			{
+				contacts.Add(contact.Node);
+				if (contacts.Count == k)
+					return contacts;
+			}
+
+			for (int i = bucketId - 1; i >= 0; i--)
+			{
+				foreach (var contact in buckets[i])
+				{
+					contacts.Add(contact.Node);
+					if (contacts.Count == k)
+						return contacts;
+				}
+			}
+
+			for (int i = bucketId + 1; i < KademliaId.Size; i++)
+			{
+				foreach (var contact in buckets[i])
+				{
+					contacts.Add(contact.Node);
+					if (contacts.Count == k)
+						return contacts;
+				}
+			}
+
+			return contacts;
+		}
 	}
 }
