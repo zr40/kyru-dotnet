@@ -44,21 +44,22 @@ namespace Tests
 		}
 
 		[Test]
-		public void testToString() {
+		public void TestToString()
+		{
 			var bytes = new byte[20];
 			var id = new KademliaId(bytes);
 
 			// Length must be okay
-			Assert.AreEqual("00000000000000000000000000000000000000000000", id.ToString().ToLower());
+			Assert.AreEqual("0000000000000000000000000000000000000000", id.ToString().ToLower());
 
 			bytes[0] = 0xff;
 			id = new KademliaId(bytes);
-			Assert.AreEqual("ff000000000000000000000000000000000000000000", id.ToString().ToLower());
+			Assert.AreEqual("ff00000000000000000000000000000000000000", id.ToString().ToLower());
 
 			bytes[0] = 0x00;
 			bytes[19] = 0xff;
 			id = new KademliaId(bytes);
-			Assert.AreEqual("000000000000000000000000000000000000000000ff", id.ToString().ToLower());
+			Assert.AreEqual("00000000000000000000000000000000000000ff", id.ToString().ToLower());
 		}
 	}
 }
