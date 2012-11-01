@@ -36,10 +36,12 @@
     <UseVSHostingProcess>false</UseVSHostingProcess>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="KademliaContactPingTest.cs" />
     <Compile Include="KademliaIdTest.cs" />
     <Compile Include="KademliaTest.cs" />
     <Compile Include="NodeTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="TestParameters.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Kyru\Kyru.csproj">

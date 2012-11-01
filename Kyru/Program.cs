@@ -11,6 +11,8 @@ namespace Kyru
 			Console.WriteLine("Kyru debug console");
 			Console.WriteLine();
 
+			KyruTimer.Start();
+
 			Application.EnableVisualStyles();
 			Application.SetCompatibleTextRenderingDefault(false);
 			Application.Run(new KyruForm());

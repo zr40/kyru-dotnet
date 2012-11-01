@@ -53,6 +53,7 @@
     <Reference Include="System.XML" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Logging.cs" />
     <Compile Include="Core\App.cs" />
     <Compile Include="Core\Config.cs" />
     <Compile Include="Core\UserFile.cs" />
