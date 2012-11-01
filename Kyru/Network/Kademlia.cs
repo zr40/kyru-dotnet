@@ -153,39 +153,41 @@ namespace Kyru.Network
 			node.SendUdpMessage(ping, contact.Node.EndPoint, null);
 		}
 
-		internal List<NodeInformation> NearestContactsTo(KademliaId id)
+		internal List<NodeInformation> NearestContactsTo(KademliaId nearToId, KademliaId ignoreId)
 		{
-			var bucketId = id.KademliaBucket();
+			var bucketId = nearToId.KademliaBucket();
 
 			var contacts = new List<NodeInformation>();
-			foreach (var contact in buckets[bucketId])
-			{
-				contacts.Add(contact.Node);
-				if (contacts.Count == k)
-					return contacts;
-			}
+			if (GetKContacts(contacts, bucketId, ignoreId))
+				return contacts;
 
 			for (int i = bucketId - 1; i >= 0; i--)
 			{
-				foreach (var contact in buckets[i])
-				{
-					contacts.Add(contact.Node);
-					if (contacts.Count == k)
-						return contacts;
-				}
+				if (GetKContacts(contacts, i, ignoreId))
+					return contacts;
 			}
 
 			for (int i = bucketId + 1; i < KademliaId.Size; i++)
 			{
-				foreach (var contact in buckets[i])
-				{
-					contacts.Add(contact.Node);
-					if (contacts.Count == k)
-						return contacts;
-				}
+				if (GetKContacts(contacts, i, ignoreId))
+					return contacts;
 			}
 
 			return contacts;
+		}
+
+		private bool GetKContacts(List<NodeInformation> contacts, int bucket, KademliaId ignoreId)
+		{
+			foreach (var contact in buckets[bucket])
+			{
+				if (contact.Node.NodeId == ignoreId)
+					continue;
+
+				contacts.Add(contact.Node);
+				if (contacts.Count == k)
+					return true;
+			}
+			return false;
 		}
 	}
 }

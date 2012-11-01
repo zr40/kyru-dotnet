@@ -173,10 +173,10 @@ namespace Kyru.Network
 		{
 			UdpMessage response = CreateUdpReply(request);
 			kademlia.HandleIncomingRequest(node, response);
-			// TODO: reply.FindNodeResponse
-			// SendUdpMessage(response, node);
-
-			throw new NotImplementedException();
+			var contacts = kademlia.NearestContactsTo(request.FindNodeRequest.NodeId, node.NodeId);
+			response.FindNodeResponse = new FindNodeResponse();
+			response.FindNodeResponse.Nodes = contacts.ToArray();
+			SendUdpMessage(response, node);
 		}
 
 		/// <summary>Processes an incoming Ping request.</summary>
@@ -208,7 +208,7 @@ namespace Kyru.Network
 		/// <summary>Creates a template reply UdpMessage with the ResponseId set based on the request message. Also notifies Kademlia about the request message.</summary>
 		/// <param name="request">The incoming request message.</param>
 		/// <returns>The created template reply message.</returns>
-		private UdpMessage CreateUdpReply(UdpMessage request)
+		private static UdpMessage CreateUdpReply(UdpMessage request)
 		{
 			return new UdpMessage {ResponseId = request.RequestId};
 		}

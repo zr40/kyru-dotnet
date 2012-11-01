@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Net;
 
+using Kyru;
 using Kyru.Network;
 using Kyru.Network.Messages;
 
@@ -29,28 +30,12 @@ namespace Tests
 		[Test]
 		internal void TestNearest([Column(0, 1, 2, 19, 20, 21, 100)] int contacts)
 		{
-			Prepare(contacts);
-			var result = kademlia.NearestContactsTo(KademliaId.RandomId);
+			TestHelper.PrepareFakeContacts(kademlia, contacts);
+
+			var result = kademlia.NearestContactsTo(KademliaId.RandomId, null);
+			result.ForEach(n => this.Log(n.NodeId.ToString()));
 			Assert.AreEqual(Math.Min(contacts, 20), result.Count);
 		}
 
-		private void Prepare(int contacts)
-		{
-			for (int i = 0; i < contacts; i++)
-			{
-				var id = KademliaId.RandomId;
-				var ni = new NodeInformation(new IPEndPoint(IPAddress.Loopback, 12345), id);
-				var message = new UdpMessage();
-				kademlia.HandleIncomingRequest(ni, message);
-
-				if (message.ResponseCallback == null)
-					continue;
-
-				var response = new UdpMessage();
-				response.ResponseId = message.RequestId;
-				response.SenderNodeId = id;
-				message.ResponseCallback(response);
-			}
-		}
 	}
 }

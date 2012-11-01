@@ -2,7 +2,7 @@
 
 namespace Tests
 {
-	internal sealed class Timeout
+	internal sealed class CallbackTimeout
 	{
 		private ManualResetEventSlim ev = new ManualResetEventSlim();
 

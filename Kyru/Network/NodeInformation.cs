@@ -5,7 +5,7 @@ using ProtoBuf;
 
 namespace Kyru.Network
 {
-	[ProtoContract]
+	[ProtoContract(SkipConstructor = true)]
 	internal sealed class NodeInformation
 	{
 		[ProtoMember(1)]
