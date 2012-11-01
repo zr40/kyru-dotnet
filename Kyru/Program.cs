@@ -11,9 +11,14 @@ namespace Kyru
 			Console.WriteLine("Kyru debug console");
 			Console.WriteLine();
 
+			Core.App app = new Core.App();
+
 			Application.EnableVisualStyles();
 			Application.SetCompatibleTextRenderingDefault(false);
-			Application.Run(new KyruForm());
+
+			// TODO: Login
+
+			Application.Run(new KyruForm(app));
 		}
 	}
 }
