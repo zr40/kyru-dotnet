@@ -8,6 +8,7 @@ using System.IO;
 
 namespace Kyru.Core
 {
+	[Serializable]
     internal abstract class KObject
     {
         internal KademliaId Id;

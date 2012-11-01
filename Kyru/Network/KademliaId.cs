@@ -5,7 +5,7 @@ using ProtoBuf;
 
 namespace Kyru.Network
 {
-	[ProtoContract(SkipConstructor = true)]
+	[ProtoContract(SkipConstructor = true),Serializable]
 	internal sealed class KademliaId
 	{
 		internal const int Size = 160;
