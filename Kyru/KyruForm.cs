@@ -25,7 +25,7 @@ namespace Kyru
 				return;
 			}
 			var user = session.User;
-			if (session == null)
+			if (user == null)
 			{
 				System.Console.WriteLine("Error in KyruForm: Session has no user");
 				return;

@@ -19,7 +19,7 @@ namespace Kyru.Core
 
 		internal void Login(string username, string password)
 		{
-			session = new Session(username, password, config);
+			session = new Session(username, password, this);
 		}
 
 		internal int FindCopyCount(KademliaId objectId)

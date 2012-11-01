@@ -13,6 +13,9 @@ namespace Kyru
 
 			Core.App app = new Core.App();
 
+			app.Start();
+			app.Login("username", "password");
+
 			Application.EnableVisualStyles();
 			Application.SetCompatibleTextRenderingDefault(false);
 

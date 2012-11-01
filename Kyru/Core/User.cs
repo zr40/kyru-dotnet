@@ -24,6 +24,10 @@ namespace Kyru.Core
 		[ProtoMember(3)]
 		private List<UserFile> files;
 
+		public User() {
+		
+		}
+
 		internal User(string name, KademliaId publicKey)
 		{
 			Name = name;

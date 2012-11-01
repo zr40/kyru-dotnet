@@ -10,32 +10,27 @@ namespace Kyru.Core
 	internal sealed class Session
 	{
 		private byte[] privateKey;
-		private Config config;
+		private App app;
 		private User user;
-
-
-		/// <summary>
-		/// Constructor of Session class for an existing User
-		/// </summary>
-		/// <param name="username">Username of the user</param>
-		/// <param name="password">Password of the user</param>
-		/// <param name="config">The configuration settings</param>
-		/// <param name="user">User object corresponding to the User</param>
-		internal Session(string username, string password, Config config, User user)
-		{
-			this.config = config;
-			this.user = user;
-			throw new NotImplementedException();
-		}
 
 		/// <summary>
 		/// Constructor of Session class for a new User
 		/// </summary>
 		/// <param name="username">Username of the user</param>
 		/// <param name="password">Password of the user</param>
-		internal Session(string username, string password, Config config)
+		internal Session(string username, string password, App app)
 		{
-			throw new NotImplementedException();
+			var bytes = new byte[20];
+			var id = new Network.KademliaId(bytes);
+			this.app = app;
+			this.user = app.objectSet.Get<User>(id);
+			if (this.user == null) {
+				// A new user
+				this.user = new User(username,id);
+			}
+
+			// TODO: Fill KademliaId correctly;
+			// TODO: Create privateKey to encrypt/decrypt files
 		}
 
 		/// <summary>
@@ -45,7 +40,8 @@ namespace Kyru.Core
 		/// <returns>The filename</returns>
 		internal string DecryptFileName(UserFile userFile)
 		{
-			throw new NotImplementedException();
+			return System.Text.Encoding.UTF8.GetString(userFile.EncryptedFileName);
+			//TODO: encryption;
 		}
 
 		internal User User { get; private set; }
@@ -86,7 +82,8 @@ namespace Kyru.Core
 		/// <returns>the decrypted filekey</returns>
 		private byte[] DecryptFileKey(UserFile userFile)
 		{
-			throw new NotImplementedException();
+			return userFile.EncryptedFileKey;
+			//TODO: encryption;
 		}
 
 
@@ -94,10 +91,15 @@ namespace Kyru.Core
 		/// Decrypts a kfile and outputs the result in file
 		/// </summary>
 		/// <param name="userFile">the file to decrypt</param>
-		/// <param name="file">the destination of the decrypted file</param>
-		internal void DecryptFile(UserFile userFile, FileStream file)
+		/// <param name="fileStream">the destination of the decrypted file</param>
+		internal void DecryptFile(UserFile userFile, FileStream fileStream)
 		{
-			throw new NotImplementedException();
+			var files = app.objectSet.GetList<Chunk>(userFile.ChunkIds);
+			foreach (var afile in files){
+				fileStream.Write(afile.Data, 0, afile.Data.Length);
+			}
+			// TODO: Encryption
+			// TODO: Work with chunks
 		}
 	}
 }
