@@ -15,7 +15,7 @@ namespace Kyru.Network
 		private class KnownNode
 		{
 			internal readonly NodeInformation Node;
-			internal readonly DateTime LastSeen;
+			internal DateTime LastSeen;
 
 			internal KnownNode(NodeInformation node)
 			{
@@ -52,11 +52,10 @@ namespace Kyru.Network
 		/// <param name="outgoingMessage">The message object that will be sent.</param>
 		internal void HandleIncomingRequest(NodeInformation sendingNode, UdpMessage outgoingMessage)
 		{
-			if (PingRequired(sendingNode))
+			if (IsNewContact(sendingNode))
 			{
 				outgoingMessage.PingRequest = new PingRequest();
-				outgoingMessage.ResponseCallback = message => AddContact(sendingNode);
-				outgoingMessage.NoResponseCallback = () => RemoveContact(sendingNode);
+				outgoingMessage.ResponseCallback = message => AddContact(new NodeInformation(sendingNode.EndPoint, message.SenderNodeId));
 			}
 			else
 			{
@@ -72,31 +71,47 @@ namespace Kyru.Network
 			node.SendUdpMessage(ping, ep);
 		}
 
+		/// <summary>
+		/// Removes a node that didn't respond from the Kademlia contact list.
+		/// </summary>
+		internal void RemoveNode(KademliaId nodeId)
+		{
+			var bucket = (node.Id - nodeId).KademliaBucket();
+			buckets[bucket].RemoveAll(n => n.Node.NodeId == nodeId);
+		}
+
 		private void AddContact(NodeInformation contact)
 		{
-			if (!RemoveContact(contact))
-				Console.WriteLine("Kademlia: Adding contact {0} ({1})", contact.NodeId, contact.EndPoint);
+			var bucketIndex = (node.Id - contact.NodeId).KademliaBucket();
+			var bucket = buckets[bucketIndex];
 
-			var bucket = (node.Id - contact.NodeId).KademliaBucket();
-			if (buckets[bucket].Count >= k)
+			var existingContact = bucket.FirstOrDefault(n => n.Node == contact);
+			if (existingContact == null)
 			{
-				buckets[bucket].RemoveAt(0);
+				if (bucket.Count >= k)
+				{
+					// the bucket is full
+					return;
+				}
+				Console.WriteLine("Kademlia: Adding contact {0} ({1})", contact.NodeId, contact.EndPoint);
+				bucket.Add(new KnownNode(contact));
 			}
-			buckets[bucket].Add(new KnownNode(contact));
+			else
+			{
+				existingContact.LastSeen = DateTime.Now;
+			}
 		}
 
 		/// <returns>Whether the contact needs to be pinged.</returns>
-		private bool PingRequired(NodeInformation contact)
+		private bool IsNewContact(NodeInformation contact)
 		{
 			var bucket = buckets[(node.Id - contact.NodeId).KademliaBucket()];
+			if (bucket.Count >= k)
+			{
+				// the bucket is full
+				return false;
+			}
 			return bucket.Find(n => n.Node == contact) == null;
-		}
-
-		/// <returns>Whether the contact was known.</returns>
-		private bool RemoveContact(NodeInformation contact)
-		{
-			var bucket = (node.Id - contact.NodeId).KademliaBucket();
-			return buckets[bucket].RemoveAll(n => n.Node == contact) != 0;
 		}
 	}
 }
