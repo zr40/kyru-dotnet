@@ -83,7 +83,7 @@ namespace Kyru.Network
 
 			if (incomingMessage.ResponseId != 0)
 			{
-				var identifier = new RequestIdentifier {EndPoint = new IPEndPoint(ni.IpAddress, ni.Port), RequestId = incomingMessage.ResponseId};
+				var identifier = new RequestIdentifier {EndPoint = ni.EndPoint, RequestId = incomingMessage.ResponseId};
 				if (!outstandingRequests.ContainsKey(identifier))
 				{
 					Console.WriteLine("Ignoring {2} from {0} with unknown response ID {1:X16}", endPoint, incomingMessage.ResponseId, incomingMessage.Inspect());
@@ -209,8 +209,7 @@ namespace Kyru.Network
 		/// <param name="targetNode">The target node.</param>
 		private void SendUdpMessage(UdpMessage message, NodeInformation targetNode)
 		{
-			var target = new IPEndPoint(targetNode.IpAddress, targetNode.Port);
-			SendUdpMessage(message, target);
+			SendUdpMessage(message, targetNode.EndPoint);
 		}
 
 		/// <summary>Sends an UDP message to a given node.</summary>

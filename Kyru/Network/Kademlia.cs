@@ -75,7 +75,7 @@ namespace Kyru.Network
 		private void AddContact(NodeInformation contact)
 		{
 			if (!RemoveContact(contact))
-				Console.WriteLine("Kademlia: Adding contact {0} ({1})", contact.NodeId, new IPEndPoint(contact.IpAddress, contact.Port));
+				Console.WriteLine("Kademlia: Adding contact {0} ({1})", contact.NodeId, contact.EndPoint);
 
 			var bucket = (node.Id - contact.NodeId).KademliaBucket();
 			if (buckets[bucket].Count >= k)
