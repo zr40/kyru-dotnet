@@ -5,6 +5,7 @@ using System.Text;
 using System.IO;
 
 using Kyru.Network;
+using System.Runtime.Serialization;
 
 namespace Kyru.Core
 {
@@ -20,6 +21,7 @@ namespace Kyru.Core
 		/// The cache can give a list of some items that are in memory such that retrieving them is faster.
 		/// </summary>
 		private Dictionary<KademliaId, KObject> cache;
+		private System.Runtime.Serialization.Formatters.Binary.BinaryFormatter formatter = new System.Runtime.Serialization.Formatters.Binary.BinaryFormatter();
 
 		public KObjectSet(Config config) {
 			this.config = config;
@@ -41,10 +43,7 @@ namespace Kyru.Core
 			} catch (FileNotFoundException) {
 				return null;
 			}
-			throw new NotImplementedException();
-			//T returnValue = new T();
-			//returnValue.Read(fs);
-			//return returnValue;
+			return (T)formatter.Deserialize(fs);
 		}
 
 		/// <summary>
@@ -76,9 +75,8 @@ namespace Kyru.Core
 		{
 			var idString = obj.Id.ToString();
 			String path = Path.Combine(config.storeDirectory, idString + ".obj");
-			throw new NotImplementedException();
-			//FileStream fs = new FileStream(path, FileMode.Create);
-			//obj.Write(fs);
+			FileStream fs = new FileStream(path, FileMode.Create);
+			formatter.Serialize(fs, obj);
 		}
 
 		/// <summary>

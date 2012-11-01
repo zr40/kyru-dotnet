@@ -63,7 +63,7 @@ namespace Kyru.Core
 			file.Read(data,0,(int)file.Length);
 			Chunk chunk = new Chunk(data);
 			idList.Add(chunk.Id);
-			UserFile userFile = new UserFile(idList, app.config);
+			UserFile userFile = new UserFile(idList);
 			User.Add(userFile);
 
 			app.objectSet.Store(chunk);

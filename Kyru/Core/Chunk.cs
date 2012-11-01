@@ -6,6 +6,7 @@ using System.IO;
 
 namespace Kyru.Core
 {
+	[Serializable]
 	internal class Chunk : KObject
 	{
 		internal readonly byte[] Data;
