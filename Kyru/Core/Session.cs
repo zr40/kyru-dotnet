@@ -1,6 +1,7 @@
 ﻿using System;
 using System.IO;
 using System.Security.Cryptography;
+using System.Collections.Generic;
 
 namespace Kyru.Core
 {
@@ -44,7 +45,11 @@ namespace Kyru.Core
 			//TODO: encryption;
 		}
 
-		internal User User { get; private set; }
+		internal User User {
+			get {
+				return user;
+			}
+		}
 
 		/// <summary>
 		/// Creates a UserFile from a normal file
@@ -53,7 +58,17 @@ namespace Kyru.Core
 		/// <returns></returns>
 		internal UserFile AddFile(FileStream file)
 		{
-			throw new NotImplementedException();
+			byte[] data = new byte[file.Length];
+			var idList = new List<Network.KademliaId>();
+			file.Read(data,0,(int)file.Length);
+			Chunk chunk = new Chunk(data);
+			idList.Add(chunk.Id);
+			UserFile userFile = new UserFile(idList, app.config);
+			User.Add(userFile);
+
+			app.objectSet.Store(chunk);
+			app.objectSet.Store(user);
+			return userFile;
 		}
 
 		/// <summary>
@@ -72,7 +87,7 @@ namespace Kyru.Core
 		/// <returns>signed message</returns>
 		private byte[] SignMessage(byte[] message)
 		{
-			throw new NotImplementedException();
+			return message;
 		}
 
 		/// <summary>

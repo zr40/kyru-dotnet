@@ -1,6 +1,7 @@
 ﻿using System.Windows.Forms;
 
 using Kyru.Core;
+using System.IO;
 
 namespace Kyru
 {
@@ -19,21 +20,25 @@ namespace Kyru
 		internal void virtualLocalFileTreeInit()
 		{
 			var session = app.session;
-			if (session == null)
+			foreach (var fileToShow in session.User.Files)
 			{
-				System.Console.WriteLine("Error in KyruForm: App has no session");
-				return;
+				showFile(session, fileToShow);
 			}
-			var user = session.User;
-			if (user == null)
-			{
-				System.Console.WriteLine("Error in KyruForm: Session has no user");
-				return;
-			}
+		}
 
-			foreach(var afile in user.Files){
-				string fileName = session.DecryptFileName(afile);
-				virtualLocalFileTree.Nodes.Add(fileName);
+		internal void showFile(Session session, UserFile fileToShow) {
+			string fileName = session.DecryptFileName(fileToShow);
+			virtualLocalFileTree.Nodes.Add(fileName);
+		}
+
+		private void addAFileToolStripMenuItem_Click(object sender, System.EventArgs e)
+		{
+			OpenFileDialog dialog = new OpenFileDialog();
+			dialog.ShowDialog();
+			foreach (string filename in dialog.FileNames)
+			{
+				FileStream fs = new FileStream(filename, FileMode.Open);
+				app.session.AddFile(fs);
 			}
 		}
 	}
