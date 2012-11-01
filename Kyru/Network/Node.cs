@@ -40,6 +40,7 @@ namespace Kyru.Network
 
 		internal Node() : this(12045)
 		{
+			KyruTimer.Register(this, 1);
 		}
 
 		internal Node(int port)
@@ -86,17 +87,21 @@ namespace Kyru.Network
 			if (incomingMessage.ResponseId != 0)
 			{
 				var identifier = new RequestIdentifier {EndPoint = ni.EndPoint, RequestId = incomingMessage.ResponseId};
-				if (!outstandingRequests.ContainsKey(identifier))
-				{
-					Console.WriteLine("{2} from {0} has unknown response ID {1:X16}", endPoint, incomingMessage.ResponseId, incomingMessage.Inspect());
-				}
-				else
-				{
-					var request = outstandingRequests[identifier];
-					outstandingRequests.Remove(identifier);
 
-					// the callback will deal with handling the actual response
-					request.OutgoingMessage.ResponseCallback(incomingMessage);
+				lock (outstandingRequests)
+				{
+					if (!outstandingRequests.ContainsKey(identifier))
+					{
+						this.Log("{2} from {0} has unknown response ID {1:X16}", endPoint, incomingMessage.ResponseId, incomingMessage.Inspect());
+					}
+					else
+					{
+						var request = outstandingRequests[identifier];
+						outstandingRequests.Remove(identifier);
+
+						// the callback will deal with handling the actual response
+						request.OutgoingMessage.ResponseCallback(incomingMessage);
+					}
 				}
 			}
 
@@ -228,7 +233,14 @@ namespace Kyru.Network
 
 			var requestIdentifier = new RequestIdentifier {EndPoint = target, RequestId = message.RequestId};
 			var requestInformation = new RequestInformation {OutgoingMessage = message, SecondAttempt = false, NodeId = targetNodeId};
-			outstandingRequests.Add(requestIdentifier, requestInformation);
+
+			if (message.IsRequest)
+			{
+				lock (outstandingRequests)
+				{
+					outstandingRequests.Add(requestIdentifier, requestInformation);
+				}
+			}
 
 			SendUdp(message, target);
 		}
@@ -238,7 +250,7 @@ namespace Kyru.Network
 			var s = new MemoryStream();
 			Serializer.Serialize(s, message);
 
-			Console.WriteLine("Sending {4} with length {0} with request ID {1:X16} to {2} (response ID {3:X16})", s.Length, message.RequestId, target, message.ResponseId, message.Inspect());
+			this.Log("Sending {4} with length {0} with request ID {1:X16} to {2} (response ID {3:X16})", s.Length, message.RequestId, target, message.ResponseId, message.Inspect());
 			udp.Send(s.GetBuffer(), (int) s.Length, target);
 		}
 
@@ -252,36 +264,38 @@ namespace Kyru.Network
 		public void TimerElapsed()
 		{
 			var toRemove = new List<RequestIdentifier>();
-
-			foreach (var outstandingRequest in outstandingRequests)
+			lock (outstandingRequests)
 			{
-				var key = outstandingRequest.Key;
-				var ri = outstandingRequest.Value;
-
-				ri.Age++;
-
-				if (ri.Age >= TimeoutTicks)
+				foreach (var outstandingRequest in outstandingRequests)
 				{
-					if (ri.SecondAttempt)
+					var key = outstandingRequest.Key;
+					var ri = outstandingRequest.Value;
+
+					ri.Age++;
+
+					if (ri.Age >= TimeoutTicks)
 					{
-						Console.WriteLine("Node: {0} does not respond", key.EndPoint);
-						toRemove.Add(key);
-						ri.OutgoingMessage.NoResponseCallback();
-						if (ri.NodeId != null)
-							kademlia.RemoveNode(ri.NodeId);
-					}
-					else
-					{
-						Console.WriteLine("Node: Resending message to {0}", key.EndPoint);
-						ri.Age = 0;
-						ri.SecondAttempt = true;
-						SendUdp(ri.OutgoingMessage, key.EndPoint);
+						if (ri.SecondAttempt)
+						{
+							this.Log("{0} does not respond to message {1:X8}", key.EndPoint, key.RequestId);
+							toRemove.Add(key);
+							ri.OutgoingMessage.NoResponseCallback();
+							if (ri.NodeId != null)
+								kademlia.RemoveNode(ri.NodeId);
+						}
+						else
+						{
+							this.Log("Resending message {1:X8} to {0}", key.EndPoint, key.RequestId);
+							ri.Age = 0;
+							ri.SecondAttempt = true;
+							SendUdp(ri.OutgoingMessage, key.EndPoint);
+						}
 					}
 				}
-			}
-			foreach (var key in toRemove)
-			{
-				outstandingRequests.Remove(key);
+				foreach (var key in toRemove)
+				{
+					outstandingRequests.Remove(key);
+				}
 			}
 		}
 	}

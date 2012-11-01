@@ -1,4 +1,5 @@
-﻿using System.Net;
+﻿using System;
+using System.Net;
 using System.Threading;
 
 using Kyru.Network;
@@ -56,17 +57,19 @@ namespace Tests
 		[Test]
 		internal void AddContact()
 		{
-			var node2 = new Node(65432);
-			var kademlia2 = (Kademlia) Mirror.ForObject(node2)["kademlia"].Value;
+			using (var node2 = new Node(65432))
+			{
+				var kademlia2 = (Kademlia) Mirror.ForObject(node2)["kademlia"].Value;
 
-			node.Start();
-			node2.Start();
+				node.Start();
+				node2.Start();
 
-			kademlia.AddNode(new IPEndPoint(IPAddress.Loopback, 65432));
-			Thread.Sleep(100); // long enough to allow the two test nodes to communicate through localhost
+				kademlia.AddNode(new IPEndPoint(IPAddress.Loopback, 65432));
+				Thread.Sleep(TestParameters.LocalhostCommunicationTimeout);
 
-			Assert.AreEqual(1, kademlia.CurrentContacts);
-			Assert.AreEqual(1, kademlia2.CurrentContacts);
+				Assert.AreEqual(1, kademlia.CurrentContacts);
+				Assert.AreEqual(1, kademlia2.CurrentContacts);
+			}
 		}
 	}
 }

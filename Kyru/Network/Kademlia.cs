@@ -36,6 +36,17 @@ namespace Kyru.Network
 			}
 		}
 
+		/// <remarks>Used by tests</remarks>
+		private KnownNode FirstContact()
+		{
+			var nodes = new List<KnownNode>();
+			foreach (var bucket in buckets)
+			{
+				nodes.AddRange(bucket);
+			}
+			return nodes[0];
+		}
+
 		internal Kademlia(Node node)
 		{
 			this.node = node;
@@ -43,6 +54,8 @@ namespace Kyru.Network
 			{
 				buckets[i] = new List<KnownNode>();
 			}
+
+			KyruTimer.Register(this, 60);
 		}
 
 		/// <summary>
@@ -79,7 +92,7 @@ namespace Kyru.Network
 			var bucket = (node.Id - nodeId).KademliaBucket();
 			if (buckets[bucket].RemoveAll(n => n.Node.NodeId == nodeId) != 0)
 			{
-				Console.WriteLine("Kademlia: Removing contact {0}", nodeId);
+				this.Log("Removing contact {0}", nodeId);
 			}
 		}
 
@@ -96,7 +109,7 @@ namespace Kyru.Network
 					// the bucket is full
 					return;
 				}
-				Console.WriteLine("Kademlia: Adding contact {0} ({1})", contact.NodeId, contact.EndPoint);
+				this.Log("Adding contact {0} ({1})", contact.NodeId, contact.EndPoint);
 				bucket.Add(new KnownNode(contact));
 			}
 			else
@@ -119,7 +132,25 @@ namespace Kyru.Network
 
 		public void TimerElapsed()
 		{
-			// TODO
+			foreach (var bucket in buckets)
+			{
+				foreach (var contact in bucket)
+				{
+					if ((DateTime.Now - contact.LastSeen).TotalHours > 1)
+					{
+						CheckAlive(contact, bucket);
+					}
+				}
+			}
+		}
+
+		private void CheckAlive(KnownNode contact, List<KnownNode> bucket)
+		{
+			var ping = new UdpMessage();
+			ping.PingRequest = new PingRequest();
+			ping.ResponseCallback = response => contact.LastSeen = DateTime.Now;
+			ping.NoResponseCallback = () => bucket.Remove(contact);
+			node.SendUdpMessage(ping, contact.Node.EndPoint, null);
 		}
 	}
 }

@@ -9,14 +9,27 @@ namespace Tests
 {
 	internal sealed class NodeTest
 	{
+		private Node node;
+		private Kademlia kademlia;
+
+		[SetUp]
+		internal void PrepareKademlia()
+		{
+			node = new Node();
+			kademlia = (Kademlia)Mirror.ForObject(node)["kademlia"].Value;
+		}
+
+		[TearDown]
+		internal void TearDown()
+		{
+			node.Dispose();
+		}
+
 		[Test]
 		internal void RemoveFromKademliaWhenRequestTimeout()
 		{
-			var node = new Node();
-			var kademlia = (Kademlia) Mirror.ForObject(node)["kademlia"].Value;
-
 			var id = KademliaId.RandomId;
-			var ni = new NodeInformation(new IPEndPoint(IPAddress.None, 65432), id);
+			var ni = new NodeInformation(new IPEndPoint(IPAddress.Loopback, 65432), id);
 			var message = new UdpMessage();
 			kademlia.HandleIncomingRequest(ni, message);
 			var response = new UdpMessage();

@@ -11,6 +11,8 @@ namespace Kyru
 			Console.WriteLine("Kyru debug console");
 			Console.WriteLine();
 
+			KyruTimer.Start();
+
 			Core.App app = new Core.App();
 
 			app.Start();
