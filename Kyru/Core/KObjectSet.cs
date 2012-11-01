@@ -36,14 +36,24 @@ namespace Kyru.Core
 		{
 			var idString = id.ToString();
 			String path = Path.Combine(config.storeDirectory, idString + ".obj");
-			FileStream fs;
+			FileStream fs = null;
 			try
 			{
 				fs = new FileStream(path, FileMode.Open);
-			} catch (FileNotFoundException) {
+				var returnValue = (T)formatter.Deserialize(fs);
+				fs.Close();
+				return returnValue;
+			}
+			catch (FileNotFoundException)
+			{
 				return null;
 			}
-			return (T)formatter.Deserialize(fs);
+			finally
+			{
+				if (fs != null)
+					fs.Close();
+			}
+			
 		}
 
 		/// <summary>
@@ -77,6 +87,7 @@ namespace Kyru.Core
 			String path = Path.Combine(config.storeDirectory, idString + ".obj");
 			FileStream fs = new FileStream(path, FileMode.Create);
 			formatter.Serialize(fs, obj);
+			fs.Close();
 		}
 
 		/// <summary>

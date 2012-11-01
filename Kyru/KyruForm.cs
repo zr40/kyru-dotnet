@@ -38,7 +38,8 @@ namespace Kyru
 			foreach (string filename in dialog.FileNames)
 			{
 				FileStream fs = new FileStream(filename, FileMode.Open);
-				app.session.AddFile(fs);
+				var file = app.session.AddFile(fs);
+				showFile(app.session, file);
 			}
 		}
 	}
