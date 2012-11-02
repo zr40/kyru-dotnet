@@ -9,10 +9,10 @@ using System.Windows.Forms;
 
 namespace Kyru
 {
-    public partial class Register : Form
+	internal partial class Register : Form
     {
         Login logger;
-        public Register(Login Logger)
+		  internal Register(Login Logger)
         {
             logger = Logger;
             InitializeComponent();

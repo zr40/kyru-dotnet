@@ -9,10 +9,12 @@ using System.Windows.Forms;
 
 namespace Kyru
 {
-    public partial class Login : Form
+	internal partial class Login : Form
     {
-        public Login()
+		 Kyru.Core.App app;
+        internal Login(Kyru.Core.App app)
         {
+			  this.app = app;
             InitializeComponent();
         }
 
