@@ -15,6 +15,7 @@ namespace Kyru
 			InitializeComponent();
 
 			virtualLocalFileTreeInit();
+			this.Text = app.session.User.Name + " - " + this.Text;
 		}
 
 		internal void virtualLocalFileTreeInit()
@@ -39,6 +40,7 @@ namespace Kyru
 			{
 				FileStream fs = new FileStream(filename, FileMode.Open);
 				var file = app.session.AddFile(fs);
+				fs.Close();
 				showFile(app.session, file);
 			}
 		}
