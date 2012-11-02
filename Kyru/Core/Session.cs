@@ -21,7 +21,8 @@ namespace Kyru.Core
 		/// <param name="password">Password of the user</param>
 		internal Session(string username, string password, App app)
 		{
-			var bytes = new byte[20];
+			var sha1 = SHA1.Create();
+			var bytes = sha1.ComputeHash(System.Text.Encoding.UTF8.GetBytes(username.ToCharArray()));
 			var id = new Network.KademliaId(bytes);
 			this.app = app;
 			this.user = app.objectSet.Get<User>(id);

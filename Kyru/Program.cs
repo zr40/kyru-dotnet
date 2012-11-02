@@ -23,6 +23,7 @@ namespace Kyru
 
 			// TODO: Login
 
+			Application.Run(new Login(app));
 			Application.Run(new KyruForm(app));
 		}
 	}

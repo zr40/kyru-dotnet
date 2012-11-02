@@ -48,6 +48,7 @@
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
     <Reference Include="System.Drawing" />
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.XML" />
@@ -60,6 +61,12 @@
     <Compile Include="Core\KObject.cs" />
     <Compile Include="Core\KObjectSet.cs" />
     <Compile Include="ITimerListener.cs" />
+    <Compile Include="Login.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Login.Designer.cs">
+      <DependentUpon>Login.cs</DependentUpon>
+    </Compile>
     <Compile Include="Network\Kademlia.cs" />
     <Compile Include="Random.cs" />
     <Compile Include="Core\Chunk.cs" />
@@ -89,12 +96,25 @@
     <Compile Include="Core\Session.cs" />
     <Compile Include="Core\User.cs" />
     <Compile Include="KyruTimer.cs" />
+    <Compile Include="Register.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Register.Designer.cs">
+      <DependentUpon>Register.cs</DependentUpon>
+    </Compile>
     <None Include="Core\ClassDiagram.cd" />
     <None Include="KyruForm.resx">
       <DependentUpon>KyruForm.cs</DependentUpon>
     </None>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <EmbeddedResource Include="Login.resx">
+      <DependentUpon>Login.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Register.resx">
+      <DependentUpon>Register.cs</DependentUpon>
+    </EmbeddedResource>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
