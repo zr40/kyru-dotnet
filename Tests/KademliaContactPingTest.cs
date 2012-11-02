@@ -29,14 +29,8 @@ namespace Tests
 			targetId = node2.Id;
 
 			var ni = new NodeInformation(new IPEndPoint(IPAddress.Loopback, 12345), targetId);
-			var message = new UdpMessage();
-			kademlia.HandleIncomingRequest(ni, message);
-
-			var response = new UdpMessage();
-			response.ResponseId = message.RequestId;
-			response.SenderNodeId = targetId;
-			message.ResponseCallback(response);
-
+			TestHelper.RegisterFakeContact(kademlia, ni);
+			
 			// set LastSeen to a time beyond the ping interval
 			var contact = Mirror.ForObject(kademlia)["FirstContact"].Invoke();
 			Mirror.ForObject(contact)["LastSeen"].Value = DateTime.Now - TimeSpan.FromHours(1.1);

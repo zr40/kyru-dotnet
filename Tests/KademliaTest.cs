@@ -42,14 +42,15 @@ namespace Tests
 				var ni = new NodeInformation(new IPEndPoint(i + 1, i + 1), id);
 				var message = new UdpMessage();
 				kademlia.HandleIncomingRequest(ni, message);
+
 				Assert.AreEqual(i, kademlia.CurrentContacts);
 				Assert.IsNotNull(message.PingRequest);
 
 				var response = new UdpMessage();
 				response.ResponseId = message.RequestId;
 				response.SenderNodeId = id;
-
 				message.ResponseCallback(response);
+
 				Assert.AreEqual(i + 1, kademlia.CurrentContacts);
 			}
 		}
