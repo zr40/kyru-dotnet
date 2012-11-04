@@ -1,49 +1,45 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.IO;
-using System.Runtime.Serialization.Formatters.Binary;
-using System.Security.Cryptography;
-using System.Xml.Serialization;
-using Kyru.Network;
+
 using ProtoBuf;
 
-
-namespace Kyru.Core
+namespace Kyru.Network.Objects
 {
 	/// <summary>
 	/// The User class contains public as well as encrypted data
 	/// </summary>
-	[ProtoContract, Serializable]
-	internal class User : KObject
+	[ProtoContract(SkipConstructor = true), Serializable]
+	internal class User : KyruObject
 	{
-		[ProtoMember(1)]
 		internal string Name;
-		[ProtoMember(2)]
+
+		[ProtoMember(1)]
 		private List<Tuple<byte[], ulong>> deletedFiles;
-		[ProtoMember(3)]
+
+		[ProtoMember(2)]
 		private List<UserFile> files;
 
-		public User() {
-		
-		}
-
-		internal User(string name, KademliaId publicKey)
+		internal User(string name)
 		{
 			Name = name;
-			Id = publicKey;
 			deletedFiles = new List<Tuple<byte[], ulong>>();
 			files = new List<UserFile>();
 		}
 
-		internal ReadOnlyCollection<UserFile> Files
+		internal IList<UserFile> Files
 		{
-			get { return files.AsReadOnly(); }
+			get
+			{
+				return files.AsReadOnly();
+			}
 		}
 
-		internal ReadOnlyCollection<Tuple<byte[], ulong>> DeletedFiles
+		internal IList<Tuple<byte[], ulong>> DeletedFiles
 		{
-			get { return deletedFiles.AsReadOnly(); }
+			get
+			{
+				return deletedFiles.AsReadOnly();
+			}
 		}
 
 		/// <summary>
@@ -61,14 +57,16 @@ namespace Kyru.Core
 		/// <param name="deletedFile">signature + fileId</param>
 		private void AddDeletedFile(Tuple<byte[], ulong> deletedFile)
 		{
-			var rsa = new RSACryptoServiceProvider();
+			throw new NotImplementedException();
+			/*var rsa = new RSACryptoServiceProvider();
 			rsa.ImportCspBlob(Id.Bytes);
 			if (Convert.ToUInt64(rsa.Encrypt(deletedFile.Item1, true)) == deletedFile.Item2)
 			{
 				deletedFiles.Add(deletedFile);
-				files.Remove(files.Find(kF => kF.Id == deletedFile.Item2));
-			}
+				files.Remove(files.Find(kF => kF.FileId == deletedFile.Item2));
+			}*/
 		}
+
 		// todo: protobuf (de)serialization, see UDPMessage for declaration and Node for usage
 	}
 }

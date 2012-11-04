@@ -1,11 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.IO;
+using System.Runtime.Serialization.Formatters.Binary;
 
 using Kyru.Network;
-using System.Runtime.Serialization;
+using Kyru.Network.Objects;
 
 namespace Kyru.Core
 {
@@ -20,10 +19,12 @@ namespace Kyru.Core
 		/// Currently not in use.
 		/// The cache can give a list of some items that are in memory such that retrieving them is faster.
 		/// </summary>
-		private Dictionary<KademliaId, KObject> cache;
-		private System.Runtime.Serialization.Formatters.Binary.BinaryFormatter formatter = new System.Runtime.Serialization.Formatters.Binary.BinaryFormatter();
+		private Dictionary<KademliaId, KyruObject> cache;
 
-		public KObjectSet(Config config) {
+		private BinaryFormatter formatter = new BinaryFormatter();
+
+		public KObjectSet(Config config)
+		{
 			this.config = config;
 		}
 
@@ -32,7 +33,7 @@ namespace Kyru.Core
 		/// </summary>
 		/// <param name="id">The id of the object</param>
 		/// <returns>The object, or null if he can't find it</returns>
-		internal T Get<T>(KademliaId id) where T : KObject , new()
+		internal KyruObject Get(KademliaId id)
 		{
 			var idString = id.ToString();
 			String path = Path.Combine(config.storeDirectory, idString + ".obj");
@@ -40,7 +41,7 @@ namespace Kyru.Core
 			try
 			{
 				fs = new FileStream(path, FileMode.Open);
-				var returnValue = (T)formatter.Deserialize(fs);
+				var returnValue = (KyruObject) formatter.Deserialize(fs);
 				fs.Close();
 				return returnValue;
 			}
@@ -61,15 +62,17 @@ namespace Kyru.Core
 		/// <param name="ids">A list of id's for the given item</param>
 		/// <param name="strict">Wheter incomplete lists are allowed</param>
 		/// <returns></returns>
-		internal List<T> GetList<T>(List<KademliaId> ids, bool strict = false) where T : KObject, new()
+		internal List<KyruObject> GetList(List<KademliaId> ids, bool strict = false)
 		{
-			List<T> returnList = new List<T>();
-			foreach (var id in ids) {
-				var item = Get<T>(id);
+			var returnList = new List<KyruObject>();
+			foreach (var id in ids)
+			{
+				var item = Get(id);
 				if (item == null && strict == true)
 					return null;
 
-				if (item != null) {
+				if (item != null)
+				{
 					returnList.Add(item);
 				}
 			}
@@ -80,11 +83,11 @@ namespace Kyru.Core
 		/// Add an object to the file system.
 		/// </summary>
 		/// <param name="obj">The object to be added</param>
-		internal void Store(KObject obj)
+		internal void Store(KyruObject obj)
 		{
-			var idString = obj.Id.ToString();
+			var idString = obj.ObjectId.ToString();
 			String path = Path.Combine(config.storeDirectory, idString + ".obj");
-			FileStream fs = new FileStream(path, FileMode.Create);
+			var fs = new FileStream(path, FileMode.Create);
 			formatter.Serialize(fs, obj);
 			fs.Close();
 		}

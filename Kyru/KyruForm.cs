@@ -3,6 +3,8 @@
 using Kyru.Core;
 using System.IO;
 
+using Kyru.Network.Objects;
+
 namespace Kyru
 {
 	public partial class KyruForm : Form
