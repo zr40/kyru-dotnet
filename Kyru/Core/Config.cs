@@ -9,7 +9,7 @@ namespace Kyru.Core
 
 		internal Config()
 		{
-			storeDirectory = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "Kyru", "objects");
+			storeDirectory = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData), "Kyru", "objects");
 		}
 	}
 }
