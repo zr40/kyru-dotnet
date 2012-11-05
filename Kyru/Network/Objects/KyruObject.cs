@@ -26,5 +26,11 @@ namespace Kyru.Network.Objects
 				return this as Chunk;
 			}
 		}
+
+		internal bool VerifyData()
+		{
+			// TODO
+			return true;
+		}
 	}
 }

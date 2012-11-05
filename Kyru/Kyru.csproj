@@ -67,12 +67,23 @@
     <Compile Include="Login.Designer.cs">
       <DependentUpon>Login.cs</DependentUpon>
     </Compile>
+    <Compile Include="Network\TcpMessages\ServerState\GetObjectState.cs" />
+    <Compile Include="Network\TcpMessages\ServerState\HandshakeState.cs" />
     <Compile Include="Network\Kademlia.cs" />
     <Compile Include="Network\MetadataStorage.cs" />
     <Compile Include="Network\Objects\Chunk.cs" />
     <Compile Include="Network\Objects\KyruObject.cs" />
     <Compile Include="Network\Objects\User.cs" />
     <Compile Include="Network\Objects\UserFile.cs" />
+    <Compile Include="Network\TcpMessages\ServerState\StoreObjectState.cs" />
+    <Compile Include="Network\TcpMessages\Error.cs" />
+    <Compile Include="Network\TcpMessages\GetObjectRequest.cs" />
+    <Compile Include="Network\TcpMessages\ServerHandshake.cs" />
+    <Compile Include="Network\TcpMessages\ClientHandshake.cs" />
+    <Compile Include="Network\TcpMessages\GetObjectResponse.cs" />
+    <Compile Include="Network\TcpMessages\StoreObjectResponse.cs" />
+    <Compile Include="Network\TcpMessages\ServerState\IServerState.cs" />
+    <Compile Include="Network\TcpMessages\StoreObjectRequest.cs" />
     <Compile Include="Random.cs" />
     <Compile Include="KyruForm.cs">
       <SubType>Form</SubType>

@@ -104,7 +104,7 @@ namespace Kyru.Network
 					{
 						var request = outstandingRequests[identifier];
 
-						if (request.NodeId != incomingMessage.SenderNodeId)
+						if (request.NodeId != null && request.NodeId != incomingMessage.SenderNodeId)
 						{
 							this.Log("In {0}, node ID from {1} does not match (expected {2}, received {3})", incomingMessage.Inspect(), endPoint, request.NodeId, incomingMessage.SenderNodeId);
 						}
@@ -231,7 +231,7 @@ namespace Kyru.Network
 			var client = tcp.EndAcceptTcpClient(ar);
 			TcpListen();
 
-			new IncomingTcpConnection(client).Accept();
+			new IncomingTcpConnection(app, client).Accept();
 		}
 
 		/// <summary>Creates a template reply UdpMessage with the ResponseId set based on the request message. Also notifies Kademlia about the request message.</summary>
