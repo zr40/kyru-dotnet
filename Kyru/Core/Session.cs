@@ -34,6 +34,7 @@ namespace Kyru.Core
 			{
 				// A new user
 				user = new User(username);
+				user.ObjectId = id;
 			}
 
 			// TODO: Fill KademliaId correctly;
@@ -70,6 +71,9 @@ namespace Kyru.Core
 			var idList = new List<KademliaId>();
 			file.Read(data, 0, (int) file.Length);
 			var chunk = new Chunk(data);
+			SHA1 sha1 = SHA1.Create();
+			byte[] hash = sha1.ComputeHash(data);
+			chunk.ObjectId = new KademliaId(hash);
 			idList.Add(chunk.ObjectId);
 			var userFile = new UserFile(idList);
 			userFile.EncryptedFileName = Encoding.UTF8.GetBytes(file.Name.ToCharArray());

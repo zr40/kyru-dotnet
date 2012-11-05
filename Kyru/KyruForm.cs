@@ -37,6 +37,7 @@ namespace Kyru
 		private void addAFileToolStripMenuItem_Click(object sender, System.EventArgs e)
 		{
 			OpenFileDialog dialog = new OpenFileDialog();
+			dialog.Multiselect = true;
 			dialog.ShowDialog();
 			foreach (string filename in dialog.FileNames)
 			{

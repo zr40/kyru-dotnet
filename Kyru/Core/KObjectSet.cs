@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Runtime.Serialization.Formatters.Binary;
 
 using Kyru.Network;
 using Kyru.Network.Objects;
@@ -10,6 +9,7 @@ namespace Kyru.Core
 {
 	/// <summary>
 	/// This class keeps track of all kyru objects on the file system. Note that not all objects have to be in memory.
+	/// This class is Deprecated and will be replaced by LocalObjectStorage
 	/// </summary>
 	internal class KObjectSet
 	{
@@ -19,9 +19,9 @@ namespace Kyru.Core
 		/// Currently not in use.
 		/// The cache can give a list of some items that are in memory such that retrieving them is faster.
 		/// </summary>
-		private Dictionary<KademliaId, KyruObject> cache;
 
-		private BinaryFormatter formatter = new BinaryFormatter();
+		private Dictionary<KademliaId, KyruObject> cache;
+		private ProtoBuf.Meta.TypeModel formatter = ProtoBuf.Meta.TypeModel.Create();
 
 		public KObjectSet(Config config)
 		{
@@ -41,7 +41,7 @@ namespace Kyru.Core
 			try
 			{
 				fs = new FileStream(path, FileMode.Open);
-				var returnValue = (KyruObject) formatter.Deserialize(fs);
+				var returnValue = (KyruObject)formatter.Deserialize(fs, null, typeof(KyruObject));
 				fs.Close();
 				return returnValue;
 			}
