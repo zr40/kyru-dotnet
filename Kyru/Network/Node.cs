@@ -142,8 +142,6 @@ namespace Kyru.Network
 			response.KeepObjectResponse.HasObject = app.LocalObjectStorage.KeepObject(request.KeepObjectRequest.ObjectId);
 
 			SendUdpMessage(response, node);
-
-			throw new NotImplementedException();
 		}
 
 		/// <summary>Processes an incoming Store request.</summary>
