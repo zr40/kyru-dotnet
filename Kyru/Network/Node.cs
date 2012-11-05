@@ -4,6 +4,7 @@ using System.IO;
 using System.Net;
 using System.Net.Sockets;
 
+using Kyru.Core;
 using Kyru.Network.Messages;
 
 using ProtoBuf;
@@ -12,6 +13,7 @@ namespace Kyru.Network
 {
 	internal sealed class Node : ITimerListener, IDisposable
 	{
+		private readonly App app;
 		private readonly UdpClient udp;
 		private readonly TcpListener tcp;
 
@@ -38,16 +40,17 @@ namespace Kyru.Network
 			internal KademliaId NodeId;
 		}
 
-		internal Node() : this(12045)
+		internal Node(App app) : this(12045, app)
 		{
-			KyruTimer.Register(this, 1);
 		}
 
-		internal Node(int port)
+		internal Node(int port, App app)
 		{
+			this.app = app;
 			kademlia = new Kademlia(this);
 			udp = new UdpClient(port);
 			tcp = new TcpListener(IPAddress.Any, port);
+			KyruTimer.Register(this, 1);
 		}
 
 		internal void Start()
@@ -134,8 +137,11 @@ namespace Kyru.Network
 		{
 			UdpMessage response = CreateUdpReply(request);
 			kademlia.HandleIncomingRequest(node, response);
-			// TODO: reply.KeepObjectResponse
-			// SendUdpMessage(response, node);
+
+			response.KeepObjectResponse = new KeepObjectResponse();
+			response.KeepObjectResponse.HasObject = app.LocalObjectStorage.KeepObject(request.KeepObjectRequest.ObjectId);
+
+			SendUdpMessage(response, node);
 
 			throw new NotImplementedException();
 		}
@@ -173,9 +179,11 @@ namespace Kyru.Network
 		{
 			UdpMessage response = CreateUdpReply(request);
 			kademlia.HandleIncomingRequest(node, response);
+
 			var contacts = kademlia.NearestContactsTo(request.FindNodeRequest.NodeId, node.NodeId);
 			response.FindNodeResponse = new FindNodeResponse();
 			response.FindNodeResponse.Nodes = contacts.ToArray();
+
 			SendUdpMessage(response, node);
 		}
 

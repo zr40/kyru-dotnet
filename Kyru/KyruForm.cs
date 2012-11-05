@@ -17,12 +17,12 @@ namespace Kyru
 			InitializeComponent();
 
 			virtualLocalFileTreeInit();
-			this.Text = app.session.User.Name + " - " + this.Text;
+			this.Text = app.Session.User.Name + " - " + this.Text;
 		}
 
 		internal void virtualLocalFileTreeInit()
 		{
-			var session = app.session;
+			var session = app.Session;
 			foreach (var fileToShow in session.User.Files)
 			{
 				showFile(session, fileToShow);
@@ -41,9 +41,9 @@ namespace Kyru
 			foreach (string filename in dialog.FileNames)
 			{
 				FileStream fs = new FileStream(filename, FileMode.Open);
-				var file = app.session.AddFile(fs);
+				var file = app.Session.AddFile(fs);
 				fs.Close();
-				showFile(app.session, file);
+				showFile(app.Session, file);
 			}
 		}
 	}

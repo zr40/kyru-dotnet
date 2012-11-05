@@ -20,10 +20,10 @@ namespace Tests
 		[SetUp]
 		internal void PrepareKademlia()
 		{
-			node = new Node();
+			node = new Node(null);
 			kademlia = (Kademlia) Mirror.ForObject(node)["kademlia"].Value;
 
-			node2 = new Node(12345);
+			node2 = new Node(12345, null);
 			kademlia2 = (Kademlia) Mirror.ForObject(node)["kademlia"].Value;
 
 			targetId = node2.Id;

@@ -1,25 +1,32 @@
 ﻿using System;
+
 using Kyru.Network;
 
 namespace Kyru.Core
 {
-	internal class App
+	internal sealed class App
 	{
-        internal Config config;
-        internal KObjectSet objectSet;
-        internal Session session;
-        internal Node node;
+		internal readonly Config Config;
+		//internal KObjectSet objectSet;
+		internal readonly LocalObjectStorage LocalObjectStorage;
+		internal Session Session;
+		internal readonly Node Node;
+
+		internal App()
+		{
+			Config = new Config();
+			LocalObjectStorage = new LocalObjectStorage(Config);
+			Node = new Node(this);
+		}
 
 		internal void Start()
 		{
-			config = new Config();
-			objectSet = new KObjectSet(config);
-			node = new Node();
+			Node.Start();
 		}
 
 		internal void Login(string username, string password)
 		{
-			session = new Session(username, password, this);
+			Session = new Session(username, password, this);
 		}
 
 		internal int FindCopyCount(KademliaId objectId)

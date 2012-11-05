@@ -1,5 +1,4 @@
-﻿using System;
-using System.Net;
+﻿using System.Net;
 using System.Threading;
 
 using Kyru.Network;
@@ -17,7 +16,7 @@ namespace Tests
 		[SetUp]
 		internal void PrepareKademlia()
 		{
-			node = new Node();
+			node = new Node(null);
 			kademlia = (Kademlia) Mirror.ForObject(node)["kademlia"].Value;
 		}
 
@@ -58,7 +57,7 @@ namespace Tests
 		[Test]
 		internal void AddContact()
 		{
-			using (var node2 = new Node(65432))
+			using (var node2 = new Node(65432, null))
 			{
 				var kademlia2 = (Kademlia) Mirror.ForObject(node2)["kademlia"].Value;
 

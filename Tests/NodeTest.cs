@@ -15,7 +15,7 @@ namespace Tests
 		[SetUp]
 		internal void PrepareKademlia()
 		{
-			node = new Node();
+			node = new Node(null);
 			kademlia = (Kademlia)Mirror.ForObject(node)["kademlia"].Value;
 		}
 

@@ -27,8 +27,9 @@ namespace Kyru.Core
 			var bytes = sha1.ComputeHash(System.Text.Encoding.UTF8.GetBytes(username.ToCharArray()));
 			var id = new Network.KademliaId(bytes);
 			this.app = app;
-			this.user = app.objectSet.Get(id).User;
-			if (this.user == null) {
+			this.user = app.LocalObjectStorage.Get(id).User;
+			if (this.user == null)
+			{
 				// A new user
 				this.user = new User(username);
 			}
@@ -48,8 +49,10 @@ namespace Kyru.Core
 			//TODO: encryption;
 		}
 
-		internal User User {
-			get {
+		internal User User
+		{
+			get
+			{
 				return user;
 			}
 		}
@@ -63,15 +66,15 @@ namespace Kyru.Core
 		{
 			byte[] data = new byte[file.Length];
 			var idList = new List<Network.KademliaId>();
-			file.Read(data,0,(int)file.Length);
+			file.Read(data, 0, (int) file.Length);
 			Chunk chunk = new Chunk(data);
 			idList.Add(chunk.ObjectId);
 			UserFile userFile = new UserFile(idList);
 			userFile.EncryptedFileName = System.Text.Encoding.UTF8.GetBytes(file.Name.ToCharArray());
 			User.Add(userFile);
 
-			app.objectSet.Store(chunk);
-			app.objectSet.Store(user);
+			app.LocalObjectStorage.Store(chunk);
+			app.LocalObjectStorage.Store(user);
 			return userFile;
 		}
 
@@ -113,9 +116,10 @@ namespace Kyru.Core
 		/// <param name="fileStream">the destination of the decrypted file</param>
 		internal void DecryptFile(UserFile userFile, FileStream fileStream)
 		{
-			var files = app.objectSet.GetList(userFile.ChunkList);
-			foreach (var afile in files){
-				fileStream.Write(afile.Chunk.Data, 0, afile.Chunk.Data.Length);
+			foreach (var afile in userFile.ChunkList)
+			{
+				var chunk = app.LocalObjectStorage.Get(afile).Chunk;
+				fileStream.Write(chunk.Data, 0, chunk.Data.Length);
 			}
 			// TODO: Encryption
 			// TODO: Work with chunks
