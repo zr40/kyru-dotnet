@@ -176,10 +176,21 @@ namespace Kyru.Network
 		{
 			UdpMessage response = CreateUdpReply(request);
 			kademlia.HandleIncomingRequest(node, response);
-			// TODO: reply.FindValueResponse
-			// SendUdpMessage(response, node);
 
-			throw new NotImplementedException();
+			response.FindValueResponse = new FindValueResponse();
+
+			var metadata = metadataStorage.Get(request.FindValueRequest.ObjectId);
+			if (metadata == null)
+			{
+				var contacts = kademlia.NearestContactsTo(request.FindValueRequest.ObjectId, request.SenderNodeId);
+				response.FindValueResponse.Nodes = contacts.ToArray();
+			}
+			else
+			{
+				response.FindValueResponse.Data = metadata;
+			}
+
+			SendUdpMessage(response, node);
 		}
 
 		/// <summary>Processes an incoming FindNode request.</summary>
