@@ -1,9 +1,9 @@
 using ProtoBuf;
 
-namespace Kyru.Network.Messages
+namespace Kyru.Network.UdpMessages
 {
 	[ProtoContract]
-	internal sealed class KeepObjectRequest
+	internal sealed class FindValueRequest
 	{
 		[ProtoMember(1)]
 		internal KademliaId ObjectId;

@@ -80,21 +80,21 @@
     <Compile Include="KyruForm.Designer.cs">
       <DependentUpon>KyruForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="Network\Messages\FindNodeRequest.cs" />
-    <Compile Include="Network\Messages\FindNodeResponse.cs" />
-    <Compile Include="Network\Messages\FindValueRequest.cs" />
-    <Compile Include="Network\Messages\FindValueResponse.cs" />
+    <Compile Include="Network\UdpMessages\FindNodeRequest.cs" />
+    <Compile Include="Network\UdpMessages\FindNodeResponse.cs" />
+    <Compile Include="Network\UdpMessages\FindValueRequest.cs" />
+    <Compile Include="Network\UdpMessages\FindValueResponse.cs" />
     <Compile Include="Network\KademliaId.cs" />
-    <Compile Include="Network\Messages\KeepObjectRequest.cs" />
-    <Compile Include="Network\Messages\KeepObjectResponse.cs" />
-    <Compile Include="Network\Messages\KyruObjectMetadata.cs" />
+    <Compile Include="Network\UdpMessages\KeepObjectRequest.cs" />
+    <Compile Include="Network\UdpMessages\KeepObjectResponse.cs" />
+    <Compile Include="Network\UdpMessages\KyruObjectMetadata.cs" />
     <Compile Include="Network\Node.cs" />
     <Compile Include="Network\NodeInformation.cs" />
-    <Compile Include="Network\Messages\PingRequest.cs" />
-    <Compile Include="Network\Messages\StoreRequest.cs" />
-    <Compile Include="Network\Messages\StoreResponse.cs" />
+    <Compile Include="Network\UdpMessages\PingRequest.cs" />
+    <Compile Include="Network\UdpMessages\StoreRequest.cs" />
+    <Compile Include="Network\UdpMessages\StoreResponse.cs" />
     <Compile Include="Network\IncomingTcpConnection.cs" />
-    <Compile Include="Network\Messages\UdpMessage.cs" />
+    <Compile Include="Network\UdpMessages\UdpMessage.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Core\Session.cs" />

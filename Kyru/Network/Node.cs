@@ -5,7 +5,7 @@ using System.Net;
 using System.Net.Sockets;
 
 using Kyru.Core;
-using Kyru.Network.Messages;
+using Kyru.Network.UdpMessages;
 
 using ProtoBuf;
 

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 
-using Kyru.Network.Messages;
+using Kyru.Network.UdpMessages;
 
 namespace Kyru.Network
 {

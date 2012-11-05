@@ -1,7 +1,7 @@
 ﻿using System.Net;
 
 using Kyru.Network;
-using Kyru.Network.Messages;
+using Kyru.Network.UdpMessages;
 
 using MbUnit.Framework;
 

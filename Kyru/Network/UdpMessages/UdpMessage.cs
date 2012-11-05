@@ -4,7 +4,7 @@ using System.Text;
 
 using ProtoBuf;
 
-namespace Kyru.Network.Messages
+namespace Kyru.Network.UdpMessages
 {
 	[ProtoContract]
 	internal sealed class UdpMessage
