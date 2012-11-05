@@ -1,17 +1,15 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.IO;
 
 namespace Kyru.Core
 {
-    class Config
-    {
-        internal readonly string storeDirectory;
+	internal sealed class Config
+	{
+		internal string storeDirectory;
 
-        internal Config() {
-            storeDirectory = Path.Combine(System.Windows.Forms.Application.UserAppDataPath);
-        }
-    }
+		internal Config()
+		{
+			storeDirectory = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "Kyru", "objects");
+		}
+	}
 }
