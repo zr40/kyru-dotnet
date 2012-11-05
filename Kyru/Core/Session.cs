@@ -29,7 +29,7 @@ namespace Kyru.Core
 			var bytes = sha1.ComputeHash(Encoding.UTF8.GetBytes(username.ToCharArray()));
 			var id = new KademliaId(bytes);
 			this.app = app;
-			user = app.LocalObjectStorage.Get(id) as User;
+			user = app.LocalObjectStorage.GetObject(id) as User;
 			if (user == null)
 			{
 				// A new user
@@ -75,8 +75,8 @@ namespace Kyru.Core
 			userFile.EncryptedFileName = Encoding.UTF8.GetBytes(file.Name.ToCharArray());
 			User.Add(userFile);
 
-			app.LocalObjectStorage.Store(chunk);
-			app.LocalObjectStorage.Store(user);
+			app.LocalObjectStorage.StoreObject(chunk);
+			app.LocalObjectStorage.StoreObject(user);
 			return userFile;
 		}
 
@@ -119,7 +119,7 @@ namespace Kyru.Core
 		{
 			foreach (var afile in userFile.ChunkList)
 			{
-				var chunk = app.LocalObjectStorage.Get(afile).Chunk;
+				var chunk = app.LocalObjectStorage.GetObject(afile).Chunk;
 				fileStream.Write(chunk.Data, 0, chunk.Data.Length);
 			}
 			// TODO: Encryption
