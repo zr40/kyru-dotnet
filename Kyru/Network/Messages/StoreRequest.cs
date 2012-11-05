@@ -9,6 +9,6 @@ namespace Kyru.Network.Messages
 		internal KademliaId ObjectId;
 
 		[ProtoMember(2)]
-		internal KyruObjectMetadata[] Value;
+		internal KyruObjectMetadata[] Data;
 	}
 }

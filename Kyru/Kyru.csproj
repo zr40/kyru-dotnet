@@ -55,6 +55,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Core\LocalObjectStorage.cs" />
+    <Compile Include="DateTimeExtension.cs" />
     <Compile Include="Logging.cs" />
     <Compile Include="Core\App.cs" />
     <Compile Include="Core\Config.cs" />
@@ -67,6 +68,7 @@
       <DependentUpon>Login.cs</DependentUpon>
     </Compile>
     <Compile Include="Network\Kademlia.cs" />
+    <Compile Include="Network\MetadataStorage.cs" />
     <Compile Include="Network\Objects\Chunk.cs" />
     <Compile Include="Network\Objects\KyruObject.cs" />
     <Compile Include="Network\Objects\User.cs" />

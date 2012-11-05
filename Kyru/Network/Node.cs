@@ -25,6 +25,7 @@ namespace Kyru.Network
 		internal readonly KademliaId Id = KademliaId.RandomId;
 
 		private readonly Dictionary<RequestIdentifier, RequestInformation> outstandingRequests = new Dictionary<RequestIdentifier, RequestInformation>();
+		private readonly MetadataStorage metadataStorage;
 
 		private struct RequestIdentifier
 		{
@@ -47,7 +48,9 @@ namespace Kyru.Network
 		internal Node(int port, App app)
 		{
 			this.app = app;
+			metadataStorage = new MetadataStorage(this);
 			kademlia = new Kademlia(this);
+
 			udp = new UdpClient(port);
 			tcp = new TcpListener(IPAddress.Any, port);
 			KyruTimer.Register(this, 1);
@@ -100,10 +103,18 @@ namespace Kyru.Network
 					else
 					{
 						var request = outstandingRequests[identifier];
-						outstandingRequests.Remove(identifier);
 
-						// the callback will deal with handling the actual response
-						request.OutgoingMessage.ResponseCallback(incomingMessage);
+						if (request.NodeId != incomingMessage.SenderNodeId)
+						{
+							this.Log("In {0}, node ID from {1} does not match (expected {2}, received {3})", incomingMessage.Inspect(), endPoint, request.NodeId, incomingMessage.SenderNodeId);
+						}
+						else
+						{
+							outstandingRequests.Remove(identifier);
+
+							// the callback will deal with handling the actual response
+							request.OutgoingMessage.ResponseCallback(incomingMessage);
+						}
 					}
 				}
 			}
@@ -151,10 +162,11 @@ namespace Kyru.Network
 		{
 			UdpMessage response = CreateUdpReply(request);
 			kademlia.HandleIncomingRequest(node, response);
-			// TODO: reply.StoreResponse
-			// SendUdpMessage(response, node);
 
-			throw new NotImplementedException();
+			metadataStorage.Store(request.StoreRequest.ObjectId, request.StoreRequest.Data);
+
+			response.StoreResponse = new StoreResponse();
+			SendUdpMessage(response, node);
 		}
 
 		/// <summary>Processes an incoming FindValue request.</summary>
