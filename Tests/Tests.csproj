@@ -40,6 +40,7 @@
     <Compile Include="KademliaIdTest.cs" />
     <Compile Include="KademliaNearestTest.cs" />
     <Compile Include="KademliaTest.cs" />
+    <Compile Include="LocalObjectStorageTest.cs" />
     <Compile Include="NodeCommunicationTest.cs" />
     <Compile Include="NodeTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
