@@ -5,7 +5,7 @@ using System.Net;
 using System.Net.Sockets;
 
 using Kyru.Core;
-using Kyru.Network.Messages;
+using Kyru.Network.UdpMessages;
 
 using ProtoBuf;
 
@@ -17,7 +17,7 @@ namespace Kyru.Network
 		private readonly UdpClient udp;
 		private readonly TcpListener tcp;
 
-		private readonly Kademlia kademlia;
+		internal readonly Kademlia Kademlia;
 		private bool running;
 
 		internal const uint ProtocolVersion = 0;
@@ -49,7 +49,7 @@ namespace Kyru.Network
 		{
 			this.app = app;
 			metadataStorage = new MetadataStorage(this);
-			kademlia = new Kademlia(this);
+			Kademlia = new Kademlia(this);
 
 			udp = new UdpClient(port);
 			tcp = new TcpListener(IPAddress.Any, port);
@@ -104,7 +104,7 @@ namespace Kyru.Network
 					{
 						var request = outstandingRequests[identifier];
 
-						if (request.NodeId != incomingMessage.SenderNodeId)
+						if (request.NodeId != null && request.NodeId != incomingMessage.SenderNodeId)
 						{
 							this.Log("In {0}, node ID from {1} does not match (expected {2}, received {3})", incomingMessage.Inspect(), endPoint, request.NodeId, incomingMessage.SenderNodeId);
 						}
@@ -147,7 +147,7 @@ namespace Kyru.Network
 		private void IncomingKeepObject(NodeInformation node, UdpMessage request)
 		{
 			UdpMessage response = CreateUdpReply(request);
-			kademlia.HandleIncomingRequest(node, response);
+			Kademlia.HandleIncomingRequest(node, response);
 
 			response.KeepObjectResponse = new KeepObjectResponse();
 			response.KeepObjectResponse.HasObject = app.LocalObjectStorage.KeepObject(request.KeepObjectRequest.ObjectId);
@@ -161,7 +161,7 @@ namespace Kyru.Network
 		private void IncomingStore(NodeInformation node, UdpMessage request)
 		{
 			UdpMessage response = CreateUdpReply(request);
-			kademlia.HandleIncomingRequest(node, response);
+			Kademlia.HandleIncomingRequest(node, response);
 
 			metadataStorage.Store(request.StoreRequest.ObjectId, request.StoreRequest.Data);
 
@@ -175,14 +175,14 @@ namespace Kyru.Network
 		private void IncomingFindValue(NodeInformation node, UdpMessage request)
 		{
 			UdpMessage response = CreateUdpReply(request);
-			kademlia.HandleIncomingRequest(node, response);
+			Kademlia.HandleIncomingRequest(node, response);
 
 			response.FindValueResponse = new FindValueResponse();
 
 			var metadata = metadataStorage.Get(request.FindValueRequest.ObjectId);
 			if (metadata == null)
 			{
-				var contacts = kademlia.NearestContactsTo(request.FindValueRequest.ObjectId, request.SenderNodeId);
+				var contacts = Kademlia.NearestContactsTo(request.FindValueRequest.ObjectId, request.SenderNodeId);
 				response.FindValueResponse.Nodes = contacts.ToArray();
 			}
 			else
@@ -199,9 +199,9 @@ namespace Kyru.Network
 		private void IncomingFindNode(NodeInformation node, UdpMessage request)
 		{
 			UdpMessage response = CreateUdpReply(request);
-			kademlia.HandleIncomingRequest(node, response);
+			Kademlia.HandleIncomingRequest(node, response);
 
-			var contacts = kademlia.NearestContactsTo(request.FindNodeRequest.NodeId, node.NodeId);
+			var contacts = Kademlia.NearestContactsTo(request.FindNodeRequest.NodeId, node.NodeId);
 			response.FindNodeResponse = new FindNodeResponse();
 			response.FindNodeResponse.Nodes = contacts.ToArray();
 
@@ -214,7 +214,7 @@ namespace Kyru.Network
 		private void IncomingPing(NodeInformation node, UdpMessage request)
 		{
 			UdpMessage response = CreateUdpReply(request);
-			kademlia.HandleIncomingRequest(node, response);
+			Kademlia.HandleIncomingRequest(node, response);
 			SendUdpMessage(response, node);
 		}
 
@@ -231,7 +231,7 @@ namespace Kyru.Network
 			var client = tcp.EndAcceptTcpClient(ar);
 			TcpListen();
 
-			new IncomingTcpConnection(client).Accept();
+			new IncomingTcpConnection(app, client).Accept();
 		}
 
 		/// <summary>Creates a template reply UdpMessage with the ResponseId set based on the request message. Also notifies Kademlia about the request message.</summary>
@@ -310,7 +310,7 @@ namespace Kyru.Network
 							toRemove.Add(key);
 							ri.OutgoingMessage.NoResponseCallback();
 							if (ri.NodeId != null)
-								kademlia.RemoveNode(ri.NodeId);
+								Kademlia.RemoveNode(ri.NodeId);
 						}
 						else
 						{

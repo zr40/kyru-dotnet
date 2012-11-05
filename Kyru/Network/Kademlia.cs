@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 
-using Kyru.Network.Messages;
+using Kyru.Network.UdpMessages;
 
 namespace Kyru.Network
 {
@@ -76,12 +76,23 @@ namespace Kyru.Network
 			}
 		}
 
+		/// <summary>
+		/// Adds a node to the kademlia contacts.
+		/// </summary>
 		internal void AddNode(IPEndPoint ep)
 		{
 			var ping = new UdpMessage();
 			ping.PingRequest = new PingRequest();
-			ping.ResponseCallback = response => AddContact(new NodeInformation(ep, response.SenderNodeId));
+			ping.ResponseCallback = response => AddVerifiedNode(ep, response.SenderNodeId);
 			node.SendUdpMessage(ping, ep, null);
+		}
+
+		/// <summary>
+		/// Adds a known-good node to the kademlia contacts. This must only be called if the identity of the node is verified, such as with correct ping replies or a TCP connection.
+		/// </summary>
+		internal void AddVerifiedNode(IPEndPoint endPoint, KademliaId nodeId)
+		{
+			AddContact(new NodeInformation(endPoint, nodeId));
 		}
 
 		/// <summary>
