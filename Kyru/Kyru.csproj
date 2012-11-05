@@ -59,7 +59,6 @@
     <Compile Include="Logging.cs" />
     <Compile Include="Core\App.cs" />
     <Compile Include="Core\Config.cs" />
-    <Compile Include="Core\KObjectSet.cs" />
     <Compile Include="ITimerListener.cs" />
     <Compile Include="Login.cs">
       <SubType>Form</SubType>

@@ -41,9 +41,16 @@ namespace Kyru.Network.Objects
 		/// Return all chunks belonging to the file
 		/// </summary>
 		/// <returns></returns>
-		internal List<Chunk> RetrieveChunks(Config config)
+		internal List<Chunk> RetrieveChunks(App app)
 		{
-			return new KObjectSet(config).GetList(ChunkList, true).ConvertAll(o => o.Chunk);
+			List<Chunk> toReturn = new List<Chunk>();
+			foreach (var chunkID in ChunkList){
+				Chunk c = app.LocalObjectStorage.GetObject(chunkID) as Chunk;
+				if (c != null)
+					toReturn.Add(c);
+				// TODO: Retrieve chunks from the network.
+			}
+			return toReturn;
 		}
 	}
 }
