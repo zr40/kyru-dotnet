@@ -3,64 +3,73 @@
   <Class Name="Kyru.Core.App" Collapsed="true">
     <Position X="5.5" Y="0.5" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>AQACAAIAASAAAAAAAAEAAAAAAAAAAAAAAAAQACAAAAA=</HashCode>
+      <HashCode>AAAAAAAAAyAAAQAAAAAAAAAAAAAAAAAAABAQACEAAAA=</HashCode>
       <FileName>Core\App.cs</FileName>
     </TypeIdentifier>
     <ShowAsAssociation>
-      <Field Name="objectSet" />
-      <Field Name="session" />
+      <Field Name="Session" />
+      <Field Name="LocalObjectStorage" />
+      <Field Name="Config" />
     </ShowAsAssociation>
   </Class>
-  <Class Name="Kyru.Core.Chunk" Collapsed="true">
-    <Position X="0.5" Y="2.5" Width="1.5" />
-    <TypeIdentifier>
-      <HashCode>AAAAgIAAAAAAAAAAAAAAAAAAAAAAABAAAAAAAAAAAAA=</HashCode>
-      <FileName>Core\Chunk.cs</FileName>
-    </TypeIdentifier>
-  </Class>
-  <Class Name="Kyru.Core.User" Collapsed="true">
-    <Position X="2.75" Y="2.5" Width="1.5" />
-    <TypeIdentifier>
-      <HashCode>AAIAAAIAEAACAAAABAAAAAQAAAAAAAAAAAAAoAAAAIA=</HashCode>
-      <FileName>Core\User.cs</FileName>
-    </TypeIdentifier>
-    <ShowAsCollectionAssociation>
-      <Property Name="Files" />
-    </ShowAsCollectionAssociation>
-  </Class>
-  <Class Name="Kyru.Core.KFile" Collapsed="true">
-    <Position X="2.75" Y="3.5" Width="1.5" />
-    <TypeIdentifier>
-      <HashCode>AAAigIAAAAIAAAAAAAAACAAAAAAAAAAQAAAAAACAgAA=</HashCode>
-      <FileName>Core\KFile.cs</FileName>
-    </TypeIdentifier>
-  </Class>
-  <Class Name="Kyru.Core.KObject" Collapsed="true">
-    <Position X="0.5" Y="1.5" Width="1.5" />
-    <TypeIdentifier>
-      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAgA=</HashCode>
-      <FileName>Core\KObject.cs</FileName>
-    </TypeIdentifier>
-  </Class>
   <Class Name="Kyru.Core.Session" Collapsed="true">
-    <Position X="5.5" Y="2.5" Width="1.5" />
+    <Position X="5.5" Y="3" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>AAABAAIAAAAAAAIAAAAAAAAAAAAAAAAAAAEIAAAAACA=</HashCode>
+      <HashCode>AAABAAIAAAAAAAIAAAAAAAAAAAAAAAAAACEIIAAAASA=</HashCode>
       <FileName>Core\Session.cs</FileName>
     </TypeIdentifier>
     <ShowAsAssociation>
-      <Property Name="User" />
+      <Field Name="user" />
+      <Field Name="app" />
     </ShowAsAssociation>
   </Class>
-  <Class Name="Kyru.Core.KObjectSet" Collapsed="true">
-    <Position X="0.5" Y="0.5" Width="1.5" />
+  <Class Name="Kyru.Core.LocalObjectStorage" Collapsed="true">
+    <Position X="2" Y="0.5" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>ACIAAAAAAAAAAABAAAAAAAAAQAAAAAAAAAAAAAAAAAI=</HashCode>
-      <FileName>Core\KObjectSet.cs</FileName>
+      <HashCode>AECCAAAAAAAAIgBAQAAAAEBAAAAAAAACAAAAAQAAAQA=</HashCode>
+      <FileName>Core\LocalObjectStorage.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Field Name="config" />
+    </ShowAsAssociation>
+  </Class>
+  <Class Name="Kyru.Network.Objects.Chunk" Collapsed="true">
+    <Position X="1" Y="3" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAABAAAAAAAAAAAAA=</HashCode>
+      <FileName>Network\Objects\Chunk.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Kyru.Network.Objects.UserFile" Collapsed="true">
+    <Position X="3.25" Y="4.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAQAAAQCAAAAAAgAAAAAEAAAAAAAAAAAAAAAAAKAAAA=</HashCode>
+      <FileName>Network\Objects\UserFile.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Kyru.Network.Objects.KyruObject" Collapsed="true">
+    <Position X="2" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>QAABAEAAAAAAAAAAAAAAAAAAAEAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Network\Objects\KyruObject.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Kyru.Network.Objects.User" Collapsed="true">
+    <Position X="3.25" Y="3" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAIAAAIAEAACAAAAAAAAAAQAAAAAAAAAAAAAgAAAAIA=</HashCode>
+      <FileName>Network\Objects\User.cs</FileName>
     </TypeIdentifier>
     <ShowAsCollectionAssociation>
-      <Field Name="cache" />
+      <Field Name="files" />
     </ShowAsCollectionAssociation>
+  </Class>
+  <Class Name="Kyru.Core.Config" Collapsed="true">
+    <Position X="4" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAgAAAAAAAAAAAA=</HashCode>
+      <FileName>Core\Config.cs</FileName>
+    </TypeIdentifier>
   </Class>
   <Font Name="Tahoma" Size="8.25" />
 </ClassDiagram>
