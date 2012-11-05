@@ -1,8 +1,10 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Security.Cryptography;
-using System.Collections.Generic;
+using System.Text;
 
+using Kyru.Network;
 using Kyru.Network.Objects;
 
 namespace Kyru.Core
@@ -24,14 +26,14 @@ namespace Kyru.Core
 		internal Session(string username, string password, App app)
 		{
 			var sha1 = SHA1.Create();
-			var bytes = sha1.ComputeHash(System.Text.Encoding.UTF8.GetBytes(username.ToCharArray()));
-			var id = new Network.KademliaId(bytes);
+			var bytes = sha1.ComputeHash(Encoding.UTF8.GetBytes(username.ToCharArray()));
+			var id = new KademliaId(bytes);
 			this.app = app;
-			this.user = app.LocalObjectStorage.Get(id).User;
-			if (this.user == null)
+			user = app.LocalObjectStorage.Get(id) as User;
+			if (user == null)
 			{
 				// A new user
-				this.user = new User(username);
+				user = new User(username);
 			}
 
 			// TODO: Fill KademliaId correctly;
@@ -45,7 +47,7 @@ namespace Kyru.Core
 		/// <returns>The filename</returns>
 		internal string DecryptFileName(UserFile userFile)
 		{
-			return System.Text.Encoding.UTF8.GetString(userFile.EncryptedFileName);
+			return Encoding.UTF8.GetString(userFile.EncryptedFileName);
 			//TODO: encryption;
 		}
 
@@ -64,13 +66,13 @@ namespace Kyru.Core
 		/// <returns></returns>
 		internal UserFile AddFile(FileStream file)
 		{
-			byte[] data = new byte[file.Length];
-			var idList = new List<Network.KademliaId>();
+			var data = new byte[file.Length];
+			var idList = new List<KademliaId>();
 			file.Read(data, 0, (int) file.Length);
-			Chunk chunk = new Chunk(data);
+			var chunk = new Chunk(data);
 			idList.Add(chunk.ObjectId);
-			UserFile userFile = new UserFile(idList);
-			userFile.EncryptedFileName = System.Text.Encoding.UTF8.GetBytes(file.Name.ToCharArray());
+			var userFile = new UserFile(idList);
+			userFile.EncryptedFileName = Encoding.UTF8.GetBytes(file.Name.ToCharArray());
 			User.Add(userFile);
 
 			app.LocalObjectStorage.Store(chunk);
@@ -107,7 +109,6 @@ namespace Kyru.Core
 			return userFile.EncryptedFileDecryptionKey;
 			//TODO: encryption;
 		}
-
 
 		/// <summary>
 		/// Decrypts a kfile and outputs the result in file
