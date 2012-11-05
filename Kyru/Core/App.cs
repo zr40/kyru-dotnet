@@ -10,18 +10,18 @@ namespace Kyru.Core
 		//internal KObjectSet objectSet;
 		internal readonly LocalObjectStorage LocalObjectStorage;
 		internal Session Session;
-		internal readonly Node Node;
+		internal readonly Node node;
 
 		internal App()
 		{
 			Config = new Config();
 			LocalObjectStorage = new LocalObjectStorage(Config);
-			Node = new Node(this);
+			node = new Node(this);
 		}
 
 		internal void Start()
 		{
-			Node.Start();
+			node.Start();
 		}
 
 		internal void Login(string username, string password)
