@@ -17,7 +17,7 @@ namespace Tests
 		internal void PrepareKademlia()
 		{
 			node = new Node(null);
-			kademlia = (Kademlia) Mirror.ForObject(node)["kademlia"].Value;
+			kademlia = node.Kademlia;
 		}
 
 		[TearDown]
@@ -59,7 +59,7 @@ namespace Tests
 		{
 			using (var node2 = new Node(65432, null))
 			{
-				var kademlia2 = (Kademlia) Mirror.ForObject(node2)["kademlia"].Value;
+				var kademlia2 = node2.Kademlia;
 
 				node.Start();
 				node2.Start();

@@ -1,12 +1,10 @@
-﻿using System;
-using System.Net;
+﻿using System.Net;
 using System.Threading;
 
 using Kyru.Network;
 using Kyru.Network.UdpMessages;
 
 using MbUnit.Framework;
-using Gallio.Common;
 
 namespace Tests
 {
@@ -23,10 +21,10 @@ namespace Tests
 		internal void PrepareKademlia()
 		{
 			node = new Node(null);
-			kademlia = (Kademlia) Mirror.ForObject(node)["kademlia"].Value;
+			kademlia = node.Kademlia;
 
 			node2 = new Node(12345, null);
-			kademlia2 = (Kademlia) Mirror.ForObject(node)["kademlia"].Value;
+			kademlia2 = node.Kademlia;
 
 			targetEndPoint = new IPEndPoint(IPAddress.Loopback, 12345);
 			targetId = node2.Id;

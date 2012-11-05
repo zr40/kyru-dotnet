@@ -17,7 +17,7 @@ namespace Kyru.Network
 		private readonly UdpClient udp;
 		private readonly TcpListener tcp;
 
-		private readonly Kademlia kademlia;
+		internal readonly Kademlia Kademlia;
 		private bool running;
 
 		internal const uint ProtocolVersion = 0;
@@ -49,7 +49,7 @@ namespace Kyru.Network
 		{
 			this.app = app;
 			metadataStorage = new MetadataStorage(this);
-			kademlia = new Kademlia(this);
+			Kademlia = new Kademlia(this);
 
 			udp = new UdpClient(port);
 			tcp = new TcpListener(IPAddress.Any, port);
@@ -147,7 +147,7 @@ namespace Kyru.Network
 		private void IncomingKeepObject(NodeInformation node, UdpMessage request)
 		{
 			UdpMessage response = CreateUdpReply(request);
-			kademlia.HandleIncomingRequest(node, response);
+			Kademlia.HandleIncomingRequest(node, response);
 
 			response.KeepObjectResponse = new KeepObjectResponse();
 			response.KeepObjectResponse.HasObject = app.LocalObjectStorage.KeepObject(request.KeepObjectRequest.ObjectId);
@@ -161,7 +161,7 @@ namespace Kyru.Network
 		private void IncomingStore(NodeInformation node, UdpMessage request)
 		{
 			UdpMessage response = CreateUdpReply(request);
-			kademlia.HandleIncomingRequest(node, response);
+			Kademlia.HandleIncomingRequest(node, response);
 
 			metadataStorage.Store(request.StoreRequest.ObjectId, request.StoreRequest.Data);
 
@@ -175,14 +175,14 @@ namespace Kyru.Network
 		private void IncomingFindValue(NodeInformation node, UdpMessage request)
 		{
 			UdpMessage response = CreateUdpReply(request);
-			kademlia.HandleIncomingRequest(node, response);
+			Kademlia.HandleIncomingRequest(node, response);
 
 			response.FindValueResponse = new FindValueResponse();
 
 			var metadata = metadataStorage.Get(request.FindValueRequest.ObjectId);
 			if (metadata == null)
 			{
-				var contacts = kademlia.NearestContactsTo(request.FindValueRequest.ObjectId, request.SenderNodeId);
+				var contacts = Kademlia.NearestContactsTo(request.FindValueRequest.ObjectId, request.SenderNodeId);
 				response.FindValueResponse.Nodes = contacts.ToArray();
 			}
 			else
@@ -199,9 +199,9 @@ namespace Kyru.Network
 		private void IncomingFindNode(NodeInformation node, UdpMessage request)
 		{
 			UdpMessage response = CreateUdpReply(request);
-			kademlia.HandleIncomingRequest(node, response);
+			Kademlia.HandleIncomingRequest(node, response);
 
-			var contacts = kademlia.NearestContactsTo(request.FindNodeRequest.NodeId, node.NodeId);
+			var contacts = Kademlia.NearestContactsTo(request.FindNodeRequest.NodeId, node.NodeId);
 			response.FindNodeResponse = new FindNodeResponse();
 			response.FindNodeResponse.Nodes = contacts.ToArray();
 
@@ -214,7 +214,7 @@ namespace Kyru.Network
 		private void IncomingPing(NodeInformation node, UdpMessage request)
 		{
 			UdpMessage response = CreateUdpReply(request);
-			kademlia.HandleIncomingRequest(node, response);
+			Kademlia.HandleIncomingRequest(node, response);
 			SendUdpMessage(response, node);
 		}
 
@@ -310,7 +310,7 @@ namespace Kyru.Network
 							toRemove.Add(key);
 							ri.OutgoingMessage.NoResponseCallback();
 							if (ri.NodeId != null)
-								kademlia.RemoveNode(ri.NodeId);
+								Kademlia.RemoveNode(ri.NodeId);
 						}
 						else
 						{

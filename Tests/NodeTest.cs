@@ -16,7 +16,7 @@ namespace Tests
 		internal void PrepareKademlia()
 		{
 			node = new Node(null);
-			kademlia = (Kademlia)Mirror.ForObject(node)["kademlia"].Value;
+			kademlia = node.Kademlia;
 		}
 
 		[TearDown]
