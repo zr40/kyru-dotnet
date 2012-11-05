@@ -6,11 +6,9 @@ using ProtoBuf;
 
 namespace Kyru.Network.Objects
 {
-	[ProtoContract(SkipConstructor = true)]
+	[ProtoContract]
 	internal class UserFile
 	{
-		private readonly List<KademliaId> chunkList;
-
 		[ProtoMember(1)]
 		internal byte[] CryptographicSignature;
 
@@ -27,11 +25,16 @@ namespace Kyru.Network.Objects
 		internal byte[] HashOfEncryptedFileContents;
 
 		[ProtoMember(6)]
-		internal List<KademliaId> ChunkList;
+		internal readonly List<KademliaId> ChunkList = new List<KademliaId>();
+
+		private UserFile()
+		{
+			// used by serialization
+		}
 
 		internal UserFile(List<KademliaId> chunkList)
 		{
-			this.chunkList = chunkList;
+			ChunkList = chunkList;
 		}
 
 		/// <summary>

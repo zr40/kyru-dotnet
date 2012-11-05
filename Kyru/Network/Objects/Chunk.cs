@@ -8,9 +8,9 @@ namespace Kyru.Network.Objects
 		[ProtoMember(1)]
 		internal readonly byte[] Data;
 
-		internal Chunk(byte[] Data)
+		internal Chunk(byte[] data)
 		{
-			this.Data = Data;
+			Data = data;
 		}
 	}
 }

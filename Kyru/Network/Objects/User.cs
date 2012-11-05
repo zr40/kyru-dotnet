@@ -8,16 +8,21 @@ namespace Kyru.Network.Objects
 	/// <summary>
 	/// The User class contains public as well as encrypted data
 	/// </summary>
-	[ProtoContract(SkipConstructor = true), Serializable]
+	[ProtoContract]
 	internal class User : KyruObject
 	{
 		internal string Name;
 
 		[ProtoMember(1)]
-		private List<Tuple<byte[], ulong>> deletedFiles;
+		private readonly List<UserFile> files = new List<UserFile>();
 
 		[ProtoMember(2)]
-		private List<UserFile> files;
+		private readonly List<Tuple<byte[], ulong>> deletedFiles = new List<Tuple<byte[], ulong>>();
+
+		private User()
+		{
+			// used by serialization
+		}
 
 		internal User(string name)
 		{
