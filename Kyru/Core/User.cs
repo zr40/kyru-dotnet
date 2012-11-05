@@ -14,7 +14,7 @@ namespace Kyru.Core
 	/// <summary>
 	/// The User class contains public as well as encrypted data
 	/// </summary>
-	[ProtoContract, Serializable]
+	[ProtoContract]
 	internal class User : KObject
 	{
 		[ProtoMember(1)]

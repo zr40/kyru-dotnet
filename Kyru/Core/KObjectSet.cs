@@ -21,7 +21,7 @@ namespace Kyru.Core
 		/// The cache can give a list of some items that are in memory such that retrieving them is faster.
 		/// </summary>
 		private Dictionary<KademliaId, KObject> cache;
-		private System.Runtime.Serialization.Formatters.Binary.BinaryFormatter formatter = new System.Runtime.Serialization.Formatters.Binary.BinaryFormatter();
+		private ProtoBuf.Meta.TypeModel formatter = ProtoBuf.Meta.TypeModel.Create();
 
 		public KObjectSet(Config config) {
 			this.config = config;
@@ -40,7 +40,7 @@ namespace Kyru.Core
 			try
 			{
 				fs = new FileStream(path, FileMode.Open);
-				var returnValue = (T)formatter.Deserialize(fs);
+				var returnValue = (T)formatter.Deserialize(fs, null, typeof(T));
 				fs.Close();
 				return returnValue;
 			}

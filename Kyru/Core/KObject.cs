@@ -5,12 +5,14 @@ using System.Text;
 
 using Kyru.Network;
 using System.IO;
+using ProtoBuf;
 
 namespace Kyru.Core
 {
-	[Serializable]
-    internal abstract class KObject
-    {
-        internal KademliaId Id;
-    }
+	[ProtoContract]
+	internal abstract class KObject
+	{
+		[ProtoMember(1)]
+		internal KademliaId Id;
+	}
 }
