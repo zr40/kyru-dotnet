@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Security.Cryptography;
 
-namespace Kyru
+namespace Kyru.Core
 {
 	internal static class Crypto
 	{
