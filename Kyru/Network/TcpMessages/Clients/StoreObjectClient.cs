@@ -27,7 +27,7 @@ namespace Kyru.Network.TcpMessages.Clients
 			var clientHandshake = new ClientHandshake();
 			clientHandshake.NodeId = App.Node.Id;
 			clientHandshake.StoreObjectRequest = new StoreObjectRequest();
-			clientHandshake.StoreObjectRequest.Hash = Crypto.Hash.ComputeHash(bytes, 0, bytes.Length);
+			clientHandshake.StoreObjectRequest.Hash = Crypto.Hash(bytes);
 			clientHandshake.StoreObjectRequest.Length = (uint) bytes.Length;
 			clientHandshake.StoreObjectRequest.ObjectId = objectId;
 			Serializer.Serialize(stream, clientHandshake);
