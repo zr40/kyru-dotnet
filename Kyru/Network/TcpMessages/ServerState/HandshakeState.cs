@@ -24,7 +24,7 @@ namespace Kyru.Network.TcpMessages.ServerState
 		{
 			var serverHandshake = new ServerHandshake();
 			serverHandshake.ProtocolVersion = Node.ProtocolVersion;
-			serverHandshake.NodeId = app.node.Id;
+			serverHandshake.NodeId = app.Node.Id;
 			Serializer.Serialize(stream, serverHandshake);
 
 			var handshake = Serializer.Deserialize<ClientHandshake>(stream);
@@ -39,7 +39,7 @@ namespace Kyru.Network.TcpMessages.ServerState
 				return null;
 			}
 
-			app.node.Kademlia.AddVerifiedNode((IPEndPoint) client.Client.RemoteEndPoint, handshake.NodeId);
+			app.Node.Kademlia.AddVerifiedNode((IPEndPoint) client.Client.RemoteEndPoint, handshake.NodeId);
 			if (handshake.GetObjectRequest != null)
 			{
 				return new GetObjectState(stream, app, handshake.GetObjectRequest);
