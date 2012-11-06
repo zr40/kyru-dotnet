@@ -24,6 +24,7 @@ namespace Kyru.Network.TcpMessages.Clients
 
 			var clientHandshake = new ClientHandshake();
 			clientHandshake.NodeId = App.Node.Id;
+			clientHandshake.Port = App.Node.Port;
 			clientHandshake.GetObjectRequest = new GetObjectRequest();
 			clientHandshake.GetObjectRequest.ObjectId = objectId;
 			Serializer.Serialize(stream, clientHandshake);

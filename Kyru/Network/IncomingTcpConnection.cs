@@ -25,6 +25,7 @@ namespace Kyru.Network
 
 		private void LoopUntilDone()
 		{
+			this.Log("Accepted TCP connection from {0}", client.Client.RemoteEndPoint);
 			using (client)
 			using (var stream = client.GetStream())
 			{
@@ -34,6 +35,7 @@ namespace Kyru.Network
 					serverState = serverState.Process();
 				}
 			}
+			this.Log("TCP connection from {0} closed", client.Client.RemoteEndPoint);
 		}
 	}
 }

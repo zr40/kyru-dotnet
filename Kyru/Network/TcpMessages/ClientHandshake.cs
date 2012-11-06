@@ -13,5 +13,8 @@ namespace Kyru.Network.TcpMessages
 
 		[ProtoMember(3)]
 		internal StoreObjectRequest StoreObjectRequest;
+
+		[ProtoMember(4)]
+		internal ushort Port;
 	}
 }

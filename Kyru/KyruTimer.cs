@@ -16,9 +16,11 @@ namespace Kyru
 			timer.Start();
 		}
 
-		internal static void Stop()
+		internal static void Reset()
 		{
 			timer.Stop();
+			clients.Clear();
+			tick = 0;
 		}
 
 		private static readonly List<Client> clients = new List<Client>();

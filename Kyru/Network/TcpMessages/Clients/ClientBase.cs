@@ -21,7 +21,9 @@ namespace Kyru.Network.TcpMessages.Clients
 
 		internal void ThreadStart()
 		{
-			using (var client = new TcpClient(new IPEndPoint(IPAddress.Any, App.Node.Port)))
+			this.Log("Opening TCP connection to {0}", TargetNode.EndPoint);
+
+			using (var client = new TcpClient())
 			{
 				client.Connect(TargetNode.EndPoint);
 				using (var stream = client.GetStream())

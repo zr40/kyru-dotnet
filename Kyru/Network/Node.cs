@@ -16,7 +16,7 @@ namespace Kyru.Network
 {
 	internal sealed class Node : ITimerListener, IDisposable
 	{
-		internal int Port { get; private set; }
+		internal ushort Port { get; private set; }
 		private readonly App app;
 		private readonly UdpClient udp;
 		private readonly TcpListener tcp;
@@ -49,7 +49,7 @@ namespace Kyru.Network
 		{
 		}
 
-		internal Node(int port, App app)
+		internal Node(ushort port, App app)
 		{
 			Port = port;
 			this.app = app;
@@ -68,9 +68,10 @@ namespace Kyru.Network
 			running = true;
 
 			UdpListen();
-
 			tcp.Start();
 			TcpListen();
+
+			this.Log("Node {0} started", tcp.LocalEndpoint);
 		}
 
 		private void UdpListen()
@@ -233,6 +234,8 @@ namespace Kyru.Network
 			if (!running)
 				return;
 
+			this.Log("OnTcpAccept {0}", tcp.LocalEndpoint);
+
 			var client = tcp.EndAcceptTcpClient(ar);
 			TcpListen();
 
@@ -303,6 +306,8 @@ namespace Kyru.Network
 			running = false;
 			udp.Close();
 			tcp.Stop();
+
+			this.Log("Node {0} stopped", tcp.LocalEndpoint);
 		}
 
 		public void TimerElapsed()

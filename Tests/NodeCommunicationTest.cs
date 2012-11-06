@@ -65,7 +65,7 @@ namespace Tests
 					break;
 			}
 
-			var ct = new CallbackTimeout();
+			var ct = new CallbackTimeout<UdpMessage>();
 			var message = new UdpMessage();
 			message.FindNodeRequest = new FindNodeRequest {NodeId = KademliaId.RandomId};
 			message.ResponseCallback = ct.Done;

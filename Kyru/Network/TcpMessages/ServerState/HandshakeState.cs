@@ -39,7 +39,9 @@ namespace Kyru.Network.TcpMessages.ServerState
 				return null;
 			}
 
-			app.Node.Kademlia.AddVerifiedNode((IPEndPoint) client.Client.RemoteEndPoint, handshake.NodeId);
+			var clientAddress = ((IPEndPoint) client.Client.RemoteEndPoint).Address;
+			app.Node.Kademlia.AddVerifiedNode(new IPEndPoint(clientAddress, handshake.Port), handshake.NodeId);
+
 			if (handshake.GetObjectRequest != null)
 			{
 				return new GetObjectState(stream, app, handshake.GetObjectRequest);

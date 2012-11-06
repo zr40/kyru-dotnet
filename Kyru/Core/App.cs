@@ -12,11 +12,15 @@ namespace Kyru.Core
 		internal Session Session;
 		internal readonly Node Node;
 
-		internal App()
+		internal App() : this(12045)
+		{
+		}
+
+		internal App(ushort port)
 		{
 			Config = new Config();
 			LocalObjectStorage = new LocalObjectStorage(Config);
-			Node = new Node(this);
+			Node = new Node(port, this);
 		}
 
 		internal void Start()
