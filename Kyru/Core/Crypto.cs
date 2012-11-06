@@ -9,26 +9,29 @@ namespace Kyru.Core
 		private static readonly SHA1CryptoServiceProvider hash = new SHA1CryptoServiceProvider();
 
 		internal const int RsaPublicKeySize = 2048;
+		private const int ITERATIONS = 10000;
 
 		/// <summary>
-		/// Generates a private key from a username and password
+		/// Generates an RSA from a username and password
 		/// </summary>
 		/// <param name="username">Username</param>
 		/// <param name="password">Password</param>
 		/// <returns>The private key</returns>
-		internal static byte[] GeneratePrivateKey(string username, string password)
+		internal static byte[] GenerateKey(byte[] username, byte[] password)
 		{
 			throw new NotImplementedException();
 		}
 
 		/// <summary>
-		/// Extracts the public key from private key data
+		/// Extracts the public key from RSA private key data
 		/// </summary>
 		/// <param name="privateKey">The private key</param>
 		/// <returns>The public key</returns>
 		internal static byte[] ExtractPublicKey(byte[] privateKey)
 		{
-			throw new NotImplementedException();
+			var rsa = new RSACryptoServiceProvider();
+			rsa.ImportCspBlob(privateKey);
+			return rsa.ExportCspBlob(false);
 		}
 
 		/// <summary>
