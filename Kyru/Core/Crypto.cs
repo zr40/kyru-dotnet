@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 using System.Linq;
 using System.Security.Cryptography;
 
@@ -41,9 +42,11 @@ namespace Kyru.Core
 		/// <returns>The encrypted data</returns>
 		internal static byte[] EncryptRsa(byte[] data, byte[] publicKey)
 		{
-			var rsa = new RSACryptoServiceProvider();
-			rsa.ImportCspBlob(publicKey);
-			return rsa.Encrypt(data, true);
+			using (var rsa = new RSACryptoServiceProvider())
+			{
+				rsa.ImportCspBlob(publicKey);
+				return rsa.Encrypt(data, true);
+			}
 		}
 
 		/// <summary>
@@ -54,9 +57,11 @@ namespace Kyru.Core
 		/// <returns>The decrypted data</returns>
 		internal static byte[] DecryptRsa(byte[] data, byte[] privateKey)
 		{
-			var rsa = new RSACryptoServiceProvider();
-			rsa.ImportCspBlob(privateKey);
-			return rsa.Decrypt(data, true);
+			using (var rsa = new RSACryptoServiceProvider())
+			{
+				rsa.ImportCspBlob(privateKey);
+				return rsa.Decrypt(data, true);
+			}
 		}
 
 		internal static byte[] EncryptAes(byte[] data, byte[] encryptionKey)
