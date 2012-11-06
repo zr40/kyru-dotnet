@@ -9,10 +9,10 @@ using System.Windows.Forms;
 
 namespace Kyru
 {
-    public partial class Register : Form
+	internal partial class Register : Form
     {
         Login logger;
-        public Register(Login Logger)
+		  internal Register(Login Logger)
         {
             logger = Logger;
             InitializeComponent();
@@ -39,13 +39,16 @@ namespace Kyru
             if (txtPass.Text != txtConfirm.Text)
             {
                 MessageBox.Show("Your passwords don't match", "Warning");
+                return;
             }
             if (!un || !conf)
             {
                 MessageBox.Show("You seem to have forgotten your username, password, or confirmation", "Warning");
+                return;
             }
-            // registration methods here please
+            // logger.app.session.User = new Core.User(txtName.Text, ??????)
             logger.Visible = true;
+            MessageBox.Show("You successfully registered!", "Message");
             this.Close();
         }
     }

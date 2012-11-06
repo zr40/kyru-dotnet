@@ -9,10 +9,12 @@ using System.Windows.Forms;
 
 namespace Kyru
 {
-    public partial class Login : Form
+	internal partial class Login : Form
     {
-        public Login()
+		public Kyru.Core.App app;
+        internal Login(Kyru.Core.App app)
         {
+			  this.app = app;
             InitializeComponent();
         }
 
@@ -22,13 +24,12 @@ namespace Kyru
             {
                 string username = txtUsername.Text;
                 string password = txtPassword.Text;
+                app.Login(username, password);
             }
             else
             {
                 MessageBox.Show("You seem to be missing your username or password", "Warning");
             }
-
-            // Login coding needed
         }
 
         private void btnRegister_Click(object sender, EventArgs e)
@@ -36,6 +37,12 @@ namespace Kyru
             Register registry = new Register(this);
             registry.Show();
             this.Visible = false;
+        }
+
+        private void btnClose_Click(object sender, EventArgs e)
+        {
+            // how to make this work?
+            this.Close();
         }
     }
 }
