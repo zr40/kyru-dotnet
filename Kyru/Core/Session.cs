@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Security.Cryptography;
-using System.Text;
+using System.Text;	
 
 using Kyru.Network;
 using Kyru.Network.Objects;
@@ -33,8 +33,7 @@ namespace Kyru.Core
 			if (user == null)
 			{
 				// A new user
-				user = new User(username);
-				user.ObjectId = id;
+				user = new User(username, id);
 			}
 
 			// TODO: Fill KademliaId correctly;
@@ -75,8 +74,11 @@ namespace Kyru.Core
 			byte[] hash = sha1.ComputeHash(data);
 			chunk.ObjectId = new KademliaId(hash);
 			idList.Add(chunk.ObjectId);
-			var userFile = new UserFile(idList);
-			userFile.EncryptedFileName = Encoding.UTF8.GetBytes(file.Name.ToCharArray());
+			var userFile = new UserFile
+			               	{
+			               		ChunkList = idList,
+			               		EncryptedFileName = Encoding.UTF8.GetBytes(file.Name.ToCharArray())
+			               	};
 			User.Add(userFile);
 
 			app.LocalObjectStorage.StoreObject(chunk);

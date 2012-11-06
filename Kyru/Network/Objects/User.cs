@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using Kyru.Core;
 
 using ProtoBuf;
 
@@ -11,12 +12,13 @@ namespace Kyru.Network.Objects
 	[ProtoContract]
 	internal class User : KyruObject
 	{
+		[ProtoMember(1)]
 		internal string Name;
 
-		[ProtoMember(1)]
+		[ProtoMember(2)]
 		private readonly List<UserFile> files = new List<UserFile>();
 
-		[ProtoMember(2)]
+		[ProtoMember(3)]
 		private readonly List<Tuple<byte[], ulong>> deletedFiles = new List<Tuple<byte[], ulong>>();
 
 		private User()
@@ -24,9 +26,10 @@ namespace Kyru.Network.Objects
 			// used by serialization
 		}
 
-		internal User(string name)
+		internal User(string name, KademliaId id)
 		{
 			Name = name;
+			ObjectId = id;
 			deletedFiles = new List<Tuple<byte[], ulong>>();
 			files = new List<UserFile>();
 		}
@@ -60,18 +63,13 @@ namespace Kyru.Network.Objects
 		/// Checks if the signature is valid and, if so, adds it to the deleted file list and deletes the UserFile object
 		/// </summary>
 		/// <param name="deletedFile">signature + fileId</param>
-		private void AddDeletedFile(Tuple<byte[], ulong> deletedFile)
+		private void AddDeletedFile(byte[] signature, ulong fileId)
 		{
-			throw new NotImplementedException();
-			/*var rsa = new RSACryptoServiceProvider();
-			rsa.ImportCspBlob(Id.Bytes);
-			if (Convert.ToUInt64(rsa.Encrypt(deletedFile.Item1, true)) == deletedFile.Item2)
+			if (Crypto.VerifySignature(BitConverter.GetBytes(fileId),ObjectId.Bytes, signature))
 			{
-				deletedFiles.Add(deletedFile);
-				files.Remove(files.Find(kF => kF.FileId == deletedFile.Item2));
-			}*/
+				deletedFiles.Add(new Tuple<byte[], ulong>(signature, fileId));
+				files.RemoveAll(kf => kf.FileId == fileId);
+			}
 		}
-
-		// todo: protobuf (de)serialization, see UDPMessage for declaration and Node for usage
 	}
 }
