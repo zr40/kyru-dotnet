@@ -87,9 +87,8 @@ namespace Kyru.Core
 			rsa.ImportCspBlob(publicKey);
 			var dataHash = Hash(data);
 			var signHash = rsa.Encrypt(signature, true);
-			if (dataHash.Length != signHash.Length) return false;
 
-			return !dataHash.Where((t, i) => signHash[i] != t).Any();
+			return  (dataHash.Length == signHash.Length) && signHash.SequenceEqual(dataHash);
 		}
 	}
 }
