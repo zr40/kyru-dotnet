@@ -1,7 +1,4 @@
 using System.Collections.Generic;
-
-using Kyru.Core;
-
 using ProtoBuf;
 
 namespace Kyru.Network.Objects

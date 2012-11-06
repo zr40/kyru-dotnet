@@ -6,10 +6,9 @@ namespace Kyru.Core
 {
 	internal static class Crypto
 	{
-		private static readonly SHA1CryptoServiceProvider hash = new SHA1CryptoServiceProvider();
-
 		internal const int RsaPublicKeySize = 2048;
 		private const int ITERATIONS = 10000;
+		private static readonly SHA1CryptoServiceProvider hash = new SHA1CryptoServiceProvider();
 
 		/// <summary>
 		/// Generates an RSA from a username and password
@@ -46,7 +45,7 @@ namespace Kyru.Core
 			rsa.ImportCspBlob(publicKey);
 			return rsa.Encrypt(data, true);
 		}
-		
+
 		/// <summary>
 		/// Decrypts data with an RSA private key
 		/// </summary>
@@ -88,7 +87,7 @@ namespace Kyru.Core
 		/// <returns>The signature of the hashed data</returns>
 		internal static byte[] Sign(byte[] data, byte[] privateKey)
 		{
-			return DecryptRsa(Hash(data),privateKey);
+			return DecryptRsa(Hash(data), privateKey);
 		}
 
 		/// <summary>
@@ -100,10 +99,10 @@ namespace Kyru.Core
 		/// <returns></returns>
 		internal static bool VerifySignature(byte[] data, byte[] publicKey, byte[] signature)
 		{
-			var dataHash = Hash(data);
-			var signHash = EncryptRsa(signature, publicKey);
+			byte[] dataHash = Hash(data);
+			byte[] signHash = EncryptRsa(signature, publicKey);
 
-			return  (dataHash.Length == signHash.Length) && signHash.SequenceEqual(dataHash);
+			return (dataHash.Length == signHash.Length) && signHash.SequenceEqual(dataHash);
 		}
 	}
 }
