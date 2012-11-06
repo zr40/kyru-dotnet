@@ -55,7 +55,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Core\LocalObjectStorage.cs" />
-    <Compile Include="Crypto.cs" />
+    <Compile Include="Core\Crypto.cs" />
     <Compile Include="DateTimeExtension.cs" />
     <Compile Include="Logging.cs" />
     <Compile Include="Core\App.cs" />
