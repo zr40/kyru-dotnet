@@ -31,14 +31,30 @@ namespace Kyru.Core
 			throw new NotImplementedException();
 		}
 
+		/// <summary>
+		/// Encrypts data with an RSA public key
+		/// </summary>
+		/// <param name="data">Data to encrypt</param>
+		/// <param name="publicKey">Public key to use for decryption</param>
+		/// <returns>The encrypted data</returns>
 		internal static byte[] EncryptRsa(byte[] data, byte[] publicKey)
 		{
-			throw new NotImplementedException();
+			var rsa = new RSACryptoServiceProvider();
+			rsa.ImportCspBlob(publicKey);
+			return rsa.Encrypt(data, true);
 		}
 		
+		/// <summary>
+		/// Decrypts data with an RSA private key
+		/// </summary>
+		/// <param name="data">Data to decrypt</param>
+		/// <param name="privateKey">Private key to use for decryption</param>
+		/// <returns>The decrypted data</returns>
 		internal static byte[] DecryptRsa(byte[] data, byte[] privateKey)
 		{
-			throw new NotImplementedException();
+			var rsa = new RSACryptoServiceProvider();
+			rsa.ImportCspBlob(privateKey);
+			return rsa.Decrypt(data, true);
 		}
 
 		internal static byte[] EncryptAes(byte[] data, byte[] encryptionKey)
@@ -69,9 +85,7 @@ namespace Kyru.Core
 		/// <returns>The signature of the hashed data</returns>
 		internal static byte[] Sign(byte[] data, byte[] privateKey)
 		{
-			var rsa = new RSACryptoServiceProvider();
-			rsa.ImportCspBlob(privateKey);
-			return rsa.Decrypt(Hash(data), true);
+			return DecryptRsa(Hash(data),privateKey);
 		}
 
 		/// <summary>
@@ -83,10 +97,8 @@ namespace Kyru.Core
 		/// <returns></returns>
 		internal static bool VerifySignature(byte[] data, byte[] publicKey, byte[] signature)
 		{
-			var rsa = new RSACryptoServiceProvider();
-			rsa.ImportCspBlob(publicKey);
 			var dataHash = Hash(data);
-			var signHash = rsa.Encrypt(signature, true);
+			var signHash = EncryptRsa(signature, publicKey);
 
 			return  (dataHash.Length == signHash.Length) && signHash.SequenceEqual(dataHash);
 		}
