@@ -3,8 +3,11 @@ using System.Collections.Generic;
 using System.IO;
 using System.Net;
 using System.Net.Sockets;
+using System.Threading;
 
 using Kyru.Core;
+using Kyru.Network.TcpMessages;
+using Kyru.Network.TcpMessages.Clients;
 using Kyru.Network.UdpMessages;
 
 using ProtoBuf;
@@ -13,6 +16,7 @@ namespace Kyru.Network
 {
 	internal sealed class Node : ITimerListener, IDisposable
 	{
+		internal int Port { get; private set; }
 		private readonly App app;
 		private readonly UdpClient udp;
 		private readonly TcpListener tcp;
@@ -47,6 +51,7 @@ namespace Kyru.Network
 
 		internal Node(int port, App app)
 		{
+			Port = port;
 			this.app = app;
 			metadataStorage = new MetadataStorage(this);
 			Kademlia = new Kademlia(this);
@@ -232,6 +237,16 @@ namespace Kyru.Network
 			TcpListen();
 
 			new IncomingTcpConnection(app, client).Accept();
+		}
+
+		internal void GetObject(NodeInformation targetNode, KademliaId objectId, Action<Error, byte[]> done)
+		{
+			new Thread(new GetObjectClient(app, targetNode, objectId, done).ThreadStart).Start();
+		}
+
+		internal void StoreObject(NodeInformation targetNode, KademliaId objectId, byte[] bytes, Action<Error> done)
+		{
+			new Thread(new StoreObjectClient(app, targetNode, objectId, bytes, done).ThreadStart).Start();
 		}
 
 		/// <summary>Creates a template reply UdpMessage with the ResponseId set based on the request message. Also notifies Kademlia about the request message.</summary>

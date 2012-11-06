@@ -55,6 +55,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Core\LocalObjectStorage.cs" />
+    <Compile Include="Crypto.cs" />
     <Compile Include="DateTimeExtension.cs" />
     <Compile Include="Logging.cs" />
     <Compile Include="Core\App.cs" />
@@ -66,6 +67,9 @@
     <Compile Include="Login.Designer.cs">
       <DependentUpon>Login.cs</DependentUpon>
     </Compile>
+    <Compile Include="Network\TcpMessages\Clients\ClientBase.cs" />
+    <Compile Include="Network\TcpMessages\Clients\GetObjectClient.cs" />
+    <Compile Include="Network\TcpMessages\Clients\StoreObjectClient.cs" />
     <Compile Include="Network\TcpMessages\ServerState\GetObjectState.cs" />
     <Compile Include="Network\TcpMessages\ServerState\HandshakeState.cs" />
     <Compile Include="Network\Kademlia.cs" />
