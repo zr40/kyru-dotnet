@@ -44,7 +44,7 @@ namespace Tests
 		}
 
 		[Test]
-		internal void TestFindNode([Column(0, 1, 2, 19, 20, 21, 100)] int contacts, [EnumData(typeof(TestHelper.PrepareType))] TestHelper.PrepareType prepareType)
+		internal void TestFindNode([Column(0, 1, 20, 100)] int contacts, [EnumData(typeof(TestHelper.PrepareType))] TestHelper.PrepareType prepareType)
 		{
 			switch (prepareType)
 			{

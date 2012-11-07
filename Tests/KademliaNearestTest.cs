@@ -26,7 +26,7 @@ namespace Tests
 		}
 
 		[Test]
-		internal void TestNearest([Column(0, 1, 2, 19, 20, 21, 100)] int contacts)
+		internal void TestNearest([Column(0, 1, 20, 100)] int contacts)
 		{
 			TestHelper.PrepareFakeContacts(kademlia, contacts);
 

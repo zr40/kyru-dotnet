@@ -11,4 +11,9 @@ Tests\lib\Gallio.Echo.exe /nl /r:Local Tests\bin\Debug\Tests.dll
 if %errorlevel% neq 0 goto end
 
 :end
-if "%cmdcmdline:~4,2%"=="/c" (pause)
+
+if "%cmdcmdline:~4,2%"=="/c" (
+	if not "%github_shell"=="true" (
+		pause
+	)
+)
