@@ -25,9 +25,9 @@ namespace Kyru.Network.TcpMessages.ServerState
 			var serverHandshake = new ServerHandshake();
 			serverHandshake.ProtocolVersion = Node.ProtocolVersion;
 			serverHandshake.NodeId = app.Node.Id;
-			Serializer.Serialize(stream, serverHandshake);
+			Serializer.SerializeWithLengthPrefix(stream, serverHandshake, PrefixStyle.Base128);
 
-			var handshake = Serializer.Deserialize<ClientHandshake>(stream);
+			var handshake = Serializer.DeserializeWithLengthPrefix<ClientHandshake>(stream, PrefixStyle.Base128);
 			if (handshake.GetObjectRequest != null && handshake.StoreObjectRequest != null)
 			{
 				this.Log("Ignoring TCP request from {0} containing multiple requests", client.Client.RemoteEndPoint);

@@ -2,6 +2,7 @@ using ProtoBuf;
 
 namespace Kyru.Network.TcpMessages
 {
+	[ProtoContract]
 	internal sealed class StoreObjectResponse
 	{
 		[ProtoMember(1)]

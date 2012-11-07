@@ -31,9 +31,9 @@ namespace Kyru.Network.TcpMessages.Clients
 			clientHandshake.StoreObjectRequest.Hash = Crypto.Hash(bytes);
 			clientHandshake.StoreObjectRequest.Length = (uint) bytes.Length;
 			clientHandshake.StoreObjectRequest.ObjectId = objectId;
-			Serializer.Serialize(stream, clientHandshake);
+			Serializer.SerializeWithLengthPrefix(stream, clientHandshake, PrefixStyle.Base128);
 
-			var storeObjectResponse = Serializer.Deserialize<StoreObjectResponse>(stream);
+			var storeObjectResponse = Serializer.DeserializeWithLengthPrefix<StoreObjectResponse>(stream, PrefixStyle.Base128);
 			if (storeObjectResponse.Error != Error.Success)
 			{
 				this.Log("Got StoreObject response {0} from {1} for object ID {2}", storeObjectResponse.Error, TargetNode.EndPoint, objectId);

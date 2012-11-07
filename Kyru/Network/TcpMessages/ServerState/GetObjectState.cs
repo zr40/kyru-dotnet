@@ -26,14 +26,14 @@ namespace Kyru.Network.TcpMessages.ServerState
 			if (bytes == null)
 			{
 				response.Error = Error.NotFound;
-				Serializer.Serialize(stream, response);
+				Serializer.SerializeWithLengthPrefix(stream, response, PrefixStyle.Base128);
 				return null;
 			}
 
 			response.Error = Error.Success;
 			response.Length = (uint) bytes.Length;
 
-			Serializer.Serialize(stream, response);
+			Serializer.SerializeWithLengthPrefix(stream, response, PrefixStyle.Base128);
 
 			stream.Write(bytes, 0, bytes.Length);
 			return null;

@@ -28,7 +28,7 @@ namespace Kyru.Network.TcpMessages.Clients
 				client.Connect(TargetNode.EndPoint);
 				using (var stream = client.GetStream())
 				{
-					var serverHandshake = Serializer.Deserialize<ServerHandshake>(stream);
+					var serverHandshake = Serializer.DeserializeWithLengthPrefix<ServerHandshake>(stream, PrefixStyle.Base128);
 					if (serverHandshake.ProtocolVersion != Node.ProtocolVersion)
 					{
 						this.Log("Node at {0} uses unknown protocol version {1}. Dropping connection.", TargetNode.EndPoint, serverHandshake.ProtocolVersion);

@@ -27,9 +27,9 @@ namespace Kyru.Network.TcpMessages.Clients
 			clientHandshake.Port = App.Node.Port;
 			clientHandshake.GetObjectRequest = new GetObjectRequest();
 			clientHandshake.GetObjectRequest.ObjectId = objectId;
-			Serializer.Serialize(stream, clientHandshake);
+			Serializer.SerializeWithLengthPrefix(stream, clientHandshake, PrefixStyle.Base128);
 
-			var getObjectResponse = Serializer.Deserialize<GetObjectResponse>(stream);
+			var getObjectResponse = Serializer.DeserializeWithLengthPrefix<GetObjectResponse>(stream, PrefixStyle.Base128);
 			if (getObjectResponse.Error != Error.Success)
 			{
 				this.Log("Got GetObject response {0} from {1} for object ID {2}", getObjectResponse.Error, TargetNode.EndPoint, objectId);

@@ -36,7 +36,7 @@ namespace Kyru.Network.TcpMessages.ServerState
 				response.Error = Error.Success;
 			}
 
-			Serializer.Serialize(stream, response);
+			Serializer.SerializeWithLengthPrefix(stream, response, PrefixStyle.Base128);
 
 			if (response.Error == Error.Success)
 			{
