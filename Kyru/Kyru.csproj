@@ -54,6 +54,12 @@
     <Reference Include="System.XML" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AddNodeForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="AddNodeForm.Designer.cs">
+      <DependentUpon>AddNodeForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="Core\LocalObjectStorage.cs" />
     <Compile Include="Utilities\Crypto.cs" />
     <Compile Include="DateTimeExtension.cs" />
@@ -78,8 +84,6 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
-    <Compile Include="Random.cs" />
-    <Compile Include="Core\Chunk.cs" />
     <Compile Include="Network\MetadataStorage.cs" />
     <Compile Include="Network\Objects\Chunk.cs" />
     <Compile Include="Network\Objects\KyruObject.cs" />
@@ -132,6 +136,9 @@
     </None>
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="AddNodeForm.resx">
+      <DependentUpon>AddNodeForm.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Login.resx">
       <DependentUpon>Login.cs</DependentUpon>
     </EmbeddedResource>

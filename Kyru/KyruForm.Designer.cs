@@ -33,11 +33,11 @@
 			  this.iconList = new System.Windows.Forms.ImageList(this.components);
 			  this.topMenu = new System.Windows.Forms.MenuStrip();
 			  this.systemToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+			  this.addAFileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			  this.addANodeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			  this.configureDiskLimitsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			  this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
 			  this.quitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-			  this.addAFileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			  this.topMenu.SuspendLayout();
 			  this.SuspendLayout();
 			  // 
@@ -77,11 +77,19 @@
 			  this.systemToolStripMenuItem.Size = new System.Drawing.Size(54, 20);
 			  this.systemToolStripMenuItem.Text = "System";
 			  // 
+			  // addAFileToolStripMenuItem
+			  // 
+			  this.addAFileToolStripMenuItem.Name = "addAFileToolStripMenuItem";
+			  this.addAFileToolStripMenuItem.Size = new System.Drawing.Size(183, 22);
+			  this.addAFileToolStripMenuItem.Text = "Add a file";
+			  this.addAFileToolStripMenuItem.Click += new System.EventHandler(this.addAFileToolStripMenuItem_Click);
+			  // 
 			  // addANodeToolStripMenuItem
 			  // 
 			  this.addANodeToolStripMenuItem.Name = "addANodeToolStripMenuItem";
 			  this.addANodeToolStripMenuItem.Size = new System.Drawing.Size(183, 22);
 			  this.addANodeToolStripMenuItem.Text = "Add a node";
+			  this.addANodeToolStripMenuItem.Click += new System.EventHandler(this.addANodeToolStripMenuItem_Click);
 			  // 
 			  // configureDiskLimitsToolStripMenuItem
 			  // 
@@ -99,13 +107,6 @@
 			  this.quitToolStripMenuItem.Name = "quitToolStripMenuItem";
 			  this.quitToolStripMenuItem.Size = new System.Drawing.Size(183, 22);
 			  this.quitToolStripMenuItem.Text = "Quit";
-			  // 
-			  // addAFileToolStripMenuItem
-			  // 
-			  this.addAFileToolStripMenuItem.Name = "addAFileToolStripMenuItem";
-			  this.addAFileToolStripMenuItem.Size = new System.Drawing.Size(183, 22);
-			  this.addAFileToolStripMenuItem.Text = "Add a file";
-			  this.addAFileToolStripMenuItem.Click += new System.EventHandler(this.addAFileToolStripMenuItem_Click);
 			  // 
 			  // KyruForm
 			  // 

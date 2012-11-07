@@ -47,5 +47,11 @@ namespace Kyru
 				showFile(app.Session, file);
 			}
 		}
+
+		private void addANodeToolStripMenuItem_Click(object sender, System.EventArgs e)
+		{
+			Form form = new AddNodeForm(app.Node.Kademlia);
+			form.ShowDialog();
+		}
 	}
 }
