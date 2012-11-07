@@ -36,6 +36,7 @@
     <UseVSHostingProcess>false</UseVSHostingProcess>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="CryptoTest.cs" />
     <Compile Include="KademliaContactPingTest.cs" />
     <Compile Include="KademliaIdTest.cs" />
     <Compile Include="KademliaNearestTest.cs" />
