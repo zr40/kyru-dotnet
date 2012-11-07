@@ -1,12 +1,10 @@
-﻿using System;
-using System.Net;
+﻿using System.Net;
 using System.Threading;
 
 using Kyru.Network;
-using Kyru.Network.Messages;
+using Kyru.Network.UdpMessages;
 
 using MbUnit.Framework;
-using Gallio.Common;
 
 namespace Tests
 {
@@ -22,11 +20,11 @@ namespace Tests
 		[SetUp]
 		internal void PrepareKademlia()
 		{
-			node = new Node();
-			kademlia = (Kademlia) Mirror.ForObject(node)["kademlia"].Value;
+			node = new Node(null);
+			kademlia = node.Kademlia;
 
-			node2 = new Node(12345);
-			kademlia2 = (Kademlia) Mirror.ForObject(node)["kademlia"].Value;
+			node2 = new Node(12345, null);
+			kademlia2 = node.Kademlia;
 
 			targetEndPoint = new IPEndPoint(IPAddress.Loopback, 12345);
 			targetId = node2.Id;
@@ -67,7 +65,7 @@ namespace Tests
 					break;
 			}
 
-			var ct = new CallbackTimeout();
+			var ct = new CallbackTimeout<UdpMessage>();
 			var message = new UdpMessage();
 			message.FindNodeRequest = new FindNodeRequest {NodeId = KademliaId.RandomId};
 			message.ResponseCallback = ct.Done;

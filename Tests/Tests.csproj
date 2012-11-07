@@ -40,12 +40,15 @@
     <Compile Include="KademliaIdTest.cs" />
     <Compile Include="KademliaNearestTest.cs" />
     <Compile Include="KademliaTest.cs" />
+    <Compile Include="LocalObjectStorageTest.cs" />
     <Compile Include="NodeCommunicationTest.cs" />
     <Compile Include="NodeTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="SystemTests\TransferTest.cs" />
     <Compile Include="TestHelper.cs" />
     <Compile Include="TestParameters.cs" />
     <Compile Include="CallbackTimeout.cs" />
+    <Compile Include="UserMergeTest.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Kyru\Kyru.csproj">
@@ -60,7 +63,13 @@
     <Reference Include="MbUnit">
       <HintPath>lib\MbUnit.dll</HintPath>
     </Reference>
+    <Reference Include="protobuf-net, Version=2.0.0.580, Culture=neutral, PublicKeyToken=257b51d87d2e4d67, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\Kyru\lib\protobuf-net.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
+    <Reference Include="System.XML" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

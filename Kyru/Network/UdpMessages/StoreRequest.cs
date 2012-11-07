@@ -1,6 +1,6 @@
 using ProtoBuf;
 
-namespace Kyru.Network.Messages
+namespace Kyru.Network.UdpMessages
 {
 	[ProtoContract]
 	internal sealed class StoreRequest
@@ -9,6 +9,6 @@ namespace Kyru.Network.Messages
 		internal KademliaId ObjectId;
 
 		[ProtoMember(2)]
-		internal KyruObjectMetadata[] Value;
+		internal KyruObjectMetadata[] Data;
 	}
 }

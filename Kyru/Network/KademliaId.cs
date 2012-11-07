@@ -1,11 +1,13 @@
 ﻿using System;
+using System.Globalization;
 using System.Linq;
 
 using ProtoBuf;
+using Random = Kyru.Utilities.Random;
 
 namespace Kyru.Network
 {
-	[ProtoContract(SkipConstructor = true),Serializable]
+	[ProtoContract(SkipConstructor = true)]
 	internal sealed class KademliaId
 	{
 		internal const int Size = 160;
@@ -18,7 +20,7 @@ namespace Kyru.Network
 		public KademliaId(byte[] bytes)
 		{
 			if (bytes.Length != ArraySize)
-				throw new Exception("The array must of size " + ArraySize);
+				throw new InvalidOperationException("The array must of size " + ArraySize);
 
 			id = bytes;
 		}
@@ -48,7 +50,7 @@ namespace Kyru.Network
 			get
 			{
 				var bytes = new byte[ArraySize];
-				id.CopyTo(bytes, ArraySize);
+				id.CopyTo(bytes, 0);
 				return bytes;
 			}
 		}
@@ -117,5 +119,15 @@ namespace Kyru.Network
 		}
 
 		#endregion
+
+		public static KademliaId FromHex(string hex)
+		{
+			byte[] bytes = new byte[ArraySize];
+			for (int i = 0; i < ArraySize; i++)
+			{
+				bytes[i] = byte.Parse(hex.Substring(i * 2, 2), NumberStyles.HexNumber);
+			}
+			return new KademliaId(bytes);
+		}
 	}
 }

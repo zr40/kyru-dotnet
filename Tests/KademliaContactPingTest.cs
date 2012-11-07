@@ -3,7 +3,6 @@ using System.Net;
 using System.Threading;
 
 using Kyru.Network;
-using Kyru.Network.Messages;
 
 using MbUnit.Framework;
 
@@ -20,23 +19,17 @@ namespace Tests
 		[SetUp]
 		internal void PrepareKademlia()
 		{
-			node = new Node();
-			kademlia = (Kademlia) Mirror.ForObject(node)["kademlia"].Value;
+			node = new Node(null);
+			kademlia = node.Kademlia;
 
-			node2 = new Node(12345);
-			kademlia2 = (Kademlia) Mirror.ForObject(node)["kademlia"].Value;
+			node2 = new Node(12345, null);
+			kademlia2 = node2.Kademlia;
 
 			targetId = node2.Id;
 
 			var ni = new NodeInformation(new IPEndPoint(IPAddress.Loopback, 12345), targetId);
-			var message = new UdpMessage();
-			kademlia.HandleIncomingRequest(ni, message);
-
-			var response = new UdpMessage();
-			response.ResponseId = message.RequestId;
-			response.SenderNodeId = targetId;
-			message.ResponseCallback(response);
-
+			TestHelper.RegisterFakeContact(kademlia, ni);
+			
 			// set LastSeen to a time beyond the ping interval
 			var contact = Mirror.ForObject(kademlia)["FirstContact"].Invoke();
 			Mirror.ForObject(contact)["LastSeen"].Value = DateTime.Now - TimeSpan.FromHours(1.1);

@@ -1,7 +1,11 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Security.Cryptography;
-using System.Collections.Generic;
+using System.Text;	
+
+using Kyru.Network;
+using Kyru.Network.Objects;
 
 namespace Kyru.Core
 {
@@ -13,6 +17,7 @@ namespace Kyru.Core
 		private byte[] privateKey;
 		private App app;
 		private User user;
+		internal string Username { get; private set; }
 
 		/// <summary>
 		/// Constructor of Session class for a new User
@@ -22,13 +27,16 @@ namespace Kyru.Core
 		internal Session(string username, string password, App app)
 		{
 			var sha1 = SHA1.Create();
-			var bytes = sha1.ComputeHash(System.Text.Encoding.UTF8.GetBytes(username.ToCharArray()));
-			var id = new Network.KademliaId(bytes);
+			var bytes = sha1.ComputeHash(Encoding.UTF8.GetBytes(username.ToCharArray()));
+			var id = new KademliaId(bytes);
+			Username = username;
 			this.app = app;
-			this.user = app.objectSet.Get<User>(id);
-			if (this.user == null) {
+			user = app.LocalObjectStorage.GetObject(id) as User;
+			if (user == null)
+			{
 				// A new user
-				this.user = new User(username,id);
+				user = new User();
+				user.ObjectId = id;
 			}
 
 			// TODO: Fill KademliaId correctly;
@@ -42,12 +50,14 @@ namespace Kyru.Core
 		/// <returns>The filename</returns>
 		internal string DecryptFileName(UserFile userFile)
 		{
-			return System.Text.Encoding.UTF8.GetString(userFile.EncryptedFileName);
+			return Encoding.UTF8.GetString(userFile.EncryptedFileName);
 			//TODO: encryption;
 		}
 
-		internal User User {
-			get {
+		internal User User
+		{
+			get
+			{
 				return user;
 			}
 		}
@@ -59,17 +69,23 @@ namespace Kyru.Core
 		/// <returns></returns>
 		internal UserFile AddFile(FileStream file)
 		{
-			byte[] data = new byte[file.Length];
-			var idList = new List<Network.KademliaId>();
-			file.Read(data,0,(int)file.Length);
-			Chunk chunk = new Chunk(data);
-			idList.Add(chunk.Id);
-			UserFile userFile = new UserFile(idList);
-			userFile.EncryptedFileName = System.Text.Encoding.UTF8.GetBytes(file.Name.ToCharArray());
+			var data = new byte[file.Length];
+			var idList = new List<KademliaId>();
+			file.Read(data, 0, (int) file.Length);
+			var chunk = new Chunk(data);
+			SHA1 sha1 = SHA1.Create();
+			byte[] hash = sha1.ComputeHash(data);
+			chunk.ObjectId = new KademliaId(hash);
+			idList.Add(chunk.ObjectId);
+			var userFile = new UserFile
+			               	{
+			               		ChunkList = idList,
+			               		EncryptedFileName = Encoding.UTF8.GetBytes(file.Name.ToCharArray())
+			               	};
 			User.Add(userFile);
 
-			app.objectSet.Store(chunk);
-			app.objectSet.Store(user);
+			app.LocalObjectStorage.StoreObject(chunk);
+			app.LocalObjectStorage.StoreObject(user);
 			return userFile;
 		}
 
@@ -99,10 +115,9 @@ namespace Kyru.Core
 		/// <returns>the decrypted filekey</returns>
 		private byte[] DecryptFileKey(UserFile userFile)
 		{
-			return userFile.EncryptedFileKey;
+			return userFile.EncryptedFileDecryptionKey;
 			//TODO: encryption;
 		}
-
 
 		/// <summary>
 		/// Decrypts a kfile and outputs the result in file
@@ -111,9 +126,10 @@ namespace Kyru.Core
 		/// <param name="fileStream">the destination of the decrypted file</param>
 		internal void DecryptFile(UserFile userFile, FileStream fileStream)
 		{
-			var files = app.objectSet.GetList<Chunk>(userFile.ChunkIds);
-			foreach (var afile in files){
-				fileStream.Write(afile.Data, 0, afile.Data.Length);
+			foreach (var afile in userFile.ChunkList)
+			{
+				var chunk = app.LocalObjectStorage.GetObject(afile).Chunk;
+				fileStream.Write(chunk.Data, 0, chunk.Data.Length);
 			}
 			// TODO: Encryption
 			// TODO: Work with chunks

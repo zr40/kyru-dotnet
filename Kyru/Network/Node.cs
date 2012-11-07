@@ -3,19 +3,26 @@ using System.Collections.Generic;
 using System.IO;
 using System.Net;
 using System.Net.Sockets;
+using System.Threading;
 
-using Kyru.Network.Messages;
-
+using Kyru.Core;
+using Kyru.Network.TcpMessages;
+using Kyru.Network.TcpMessages.Clients;
+using Kyru.Network.UdpMessages;
+using Kyru.Utilities;
 using ProtoBuf;
+using Random = Kyru.Utilities.Random;
 
 namespace Kyru.Network
 {
 	internal sealed class Node : ITimerListener, IDisposable
 	{
+		internal ushort Port { get; private set; }
+		private readonly App app;
 		private readonly UdpClient udp;
 		private readonly TcpListener tcp;
 
-		private readonly Kademlia kademlia;
+		internal readonly Kademlia Kademlia;
 		private bool running;
 
 		internal const uint ProtocolVersion = 0;
@@ -23,6 +30,7 @@ namespace Kyru.Network
 		internal readonly KademliaId Id = KademliaId.RandomId;
 
 		private readonly Dictionary<RequestIdentifier, RequestInformation> outstandingRequests = new Dictionary<RequestIdentifier, RequestInformation>();
+		private readonly MetadataStorage metadataStorage;
 
 		private struct RequestIdentifier
 		{
@@ -38,16 +46,20 @@ namespace Kyru.Network
 			internal KademliaId NodeId;
 		}
 
-		internal Node() : this(12045)
+		internal Node(App app) : this(12045, app)
 		{
-			KyruTimer.Register(this, 1);
 		}
 
-		internal Node(int port)
+		internal Node(ushort port, App app)
 		{
-			kademlia = new Kademlia(this);
+			Port = port;
+			this.app = app;
+			metadataStorage = new MetadataStorage(this);
+			Kademlia = new Kademlia(this);
+
 			udp = new UdpClient(port);
 			tcp = new TcpListener(IPAddress.Any, port);
+			KyruTimer.Register(this, 1);
 		}
 
 		internal void Start()
@@ -57,9 +69,10 @@ namespace Kyru.Network
 			running = true;
 
 			UdpListen();
-
 			tcp.Start();
 			TcpListen();
+
+			this.Log("Node {0} started", tcp.LocalEndpoint);
 		}
 
 		private void UdpListen()
@@ -97,10 +110,18 @@ namespace Kyru.Network
 					else
 					{
 						var request = outstandingRequests[identifier];
-						outstandingRequests.Remove(identifier);
 
-						// the callback will deal with handling the actual response
-						request.OutgoingMessage.ResponseCallback(incomingMessage);
+						if (request.NodeId != null && request.NodeId != incomingMessage.SenderNodeId)
+						{
+							this.Log("In {0}, node ID from {1} does not match (expected {2}, received {3})", incomingMessage.Inspect(), endPoint, request.NodeId, incomingMessage.SenderNodeId);
+						}
+						else
+						{
+							outstandingRequests.Remove(identifier);
+
+							// the callback will deal with handling the actual response
+							request.OutgoingMessage.ResponseCallback(incomingMessage);
+						}
 					}
 				}
 			}
@@ -133,11 +154,12 @@ namespace Kyru.Network
 		private void IncomingKeepObject(NodeInformation node, UdpMessage request)
 		{
 			UdpMessage response = CreateUdpReply(request);
-			kademlia.HandleIncomingRequest(node, response);
-			// TODO: reply.KeepObjectResponse
-			// SendUdpMessage(response, node);
+			Kademlia.HandleIncomingRequest(node, response);
 
-			throw new NotImplementedException();
+			response.KeepObjectResponse = new KeepObjectResponse();
+			response.KeepObjectResponse.HasObject = app.LocalObjectStorage.KeepObject(request.KeepObjectRequest.ObjectId);
+
+			SendUdpMessage(response, node);
 		}
 
 		/// <summary>Processes an incoming Store request.</summary>
@@ -146,11 +168,12 @@ namespace Kyru.Network
 		private void IncomingStore(NodeInformation node, UdpMessage request)
 		{
 			UdpMessage response = CreateUdpReply(request);
-			kademlia.HandleIncomingRequest(node, response);
-			// TODO: reply.StoreResponse
-			// SendUdpMessage(response, node);
+			Kademlia.HandleIncomingRequest(node, response);
 
-			throw new NotImplementedException();
+			metadataStorage.Store(request.StoreRequest.ObjectId, request.StoreRequest.Data);
+
+			response.StoreResponse = new StoreResponse();
+			SendUdpMessage(response, node);
 		}
 
 		/// <summary>Processes an incoming FindValue request.</summary>
@@ -159,11 +182,22 @@ namespace Kyru.Network
 		private void IncomingFindValue(NodeInformation node, UdpMessage request)
 		{
 			UdpMessage response = CreateUdpReply(request);
-			kademlia.HandleIncomingRequest(node, response);
-			// TODO: reply.FindValueResponse
-			// SendUdpMessage(response, node);
+			Kademlia.HandleIncomingRequest(node, response);
 
-			throw new NotImplementedException();
+			response.FindValueResponse = new FindValueResponse();
+
+			var metadata = metadataStorage.Get(request.FindValueRequest.ObjectId);
+			if (metadata == null)
+			{
+				var contacts = Kademlia.NearestContactsTo(request.FindValueRequest.ObjectId, request.SenderNodeId);
+				response.FindValueResponse.Nodes = contacts.ToArray();
+			}
+			else
+			{
+				response.FindValueResponse.Data = metadata;
+			}
+
+			SendUdpMessage(response, node);
 		}
 
 		/// <summary>Processes an incoming FindNode request.</summary>
@@ -172,10 +206,12 @@ namespace Kyru.Network
 		private void IncomingFindNode(NodeInformation node, UdpMessage request)
 		{
 			UdpMessage response = CreateUdpReply(request);
-			kademlia.HandleIncomingRequest(node, response);
-			var contacts = kademlia.NearestContactsTo(request.FindNodeRequest.NodeId, node.NodeId);
+			Kademlia.HandleIncomingRequest(node, response);
+
+			var contacts = Kademlia.NearestContactsTo(request.FindNodeRequest.NodeId, node.NodeId);
 			response.FindNodeResponse = new FindNodeResponse();
 			response.FindNodeResponse.Nodes = contacts.ToArray();
+
 			SendUdpMessage(response, node);
 		}
 
@@ -185,7 +221,7 @@ namespace Kyru.Network
 		private void IncomingPing(NodeInformation node, UdpMessage request)
 		{
 			UdpMessage response = CreateUdpReply(request);
-			kademlia.HandleIncomingRequest(node, response);
+			Kademlia.HandleIncomingRequest(node, response);
 			SendUdpMessage(response, node);
 		}
 
@@ -199,10 +235,22 @@ namespace Kyru.Network
 			if (!running)
 				return;
 
+			this.Log("OnTcpAccept {0}", tcp.LocalEndpoint);
+
 			var client = tcp.EndAcceptTcpClient(ar);
 			TcpListen();
 
-			new IncomingTcpConnection(client).Accept();
+			new IncomingTcpConnection(app, client).Accept();
+		}
+
+		internal void GetObject(NodeInformation targetNode, KademliaId objectId, Action<Error, byte[]> done)
+		{
+			new Thread(new GetObjectClient(app, targetNode, objectId, done).ThreadStart).Start();
+		}
+
+		internal void StoreObject(NodeInformation targetNode, KademliaId objectId, byte[] bytes, Action<Error> done)
+		{
+			new Thread(new StoreObjectClient(app, targetNode, objectId, bytes, done).ThreadStart).Start();
 		}
 
 		/// <summary>Creates a template reply UdpMessage with the ResponseId set based on the request message. Also notifies Kademlia about the request message.</summary>
@@ -259,6 +307,8 @@ namespace Kyru.Network
 			running = false;
 			udp.Close();
 			tcp.Stop();
+
+			this.Log("Node {0} stopped", tcp.LocalEndpoint);
 		}
 
 		public void TimerElapsed()
@@ -281,7 +331,7 @@ namespace Kyru.Network
 							toRemove.Add(key);
 							ri.OutgoingMessage.NoResponseCallback();
 							if (ri.NodeId != null)
-								kademlia.RemoveNode(ri.NodeId);
+								Kademlia.RemoveNode(ri.NodeId);
 						}
 						else
 						{

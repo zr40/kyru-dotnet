@@ -1,7 +1,7 @@
 ﻿using System.Net;
 
 using Kyru.Network;
-using Kyru.Network.Messages;
+using Kyru.Network.UdpMessages;
 
 using MbUnit.Framework;
 
@@ -15,8 +15,8 @@ namespace Tests
 		[SetUp]
 		internal void PrepareKademlia()
 		{
-			node = new Node();
-			kademlia = (Kademlia)Mirror.ForObject(node)["kademlia"].Value;
+			node = new Node(null);
+			kademlia = node.Kademlia;
 		}
 
 		[TearDown]

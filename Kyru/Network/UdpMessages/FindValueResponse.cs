@@ -1,6 +1,6 @@
 using ProtoBuf;
 
-namespace Kyru.Network.Messages
+namespace Kyru.Network.UdpMessages
 {
 	[ProtoContract]
 	internal sealed class FindValueResponse
@@ -9,6 +9,6 @@ namespace Kyru.Network.Messages
 		internal NodeInformation[] Nodes;
 
 		[ProtoMember(2)]
-		internal KyruObjectMetadata[] Value;
+		internal KyruObjectMetadata[] Data;
 	}
 }

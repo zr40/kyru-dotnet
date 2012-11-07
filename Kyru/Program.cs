@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Windows.Forms;
+using Kyru.Utilities;
 
 namespace Kyru
 {
@@ -16,7 +17,7 @@ namespace Kyru
 			Core.App app = new Core.App();
 
 			app.Start();
-			app.Login("username", "password");
+			//app.Login("username", "password");
 
 			Application.EnableVisualStyles();
 			Application.SetCompatibleTextRenderingDefault(false);
@@ -24,7 +25,7 @@ namespace Kyru
 			// TODO: Login
 
 			Application.Run(new Login(app));
-			Application.Run(new KyruForm(app));
+			//Application.Run(new KyruForm(app));
 		}
 	}
 }

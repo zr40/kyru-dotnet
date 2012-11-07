@@ -1,9 +1,7 @@
 ﻿using System;
-using System.Net;
 
 using Kyru;
 using Kyru.Network;
-using Kyru.Network.Messages;
 
 using MbUnit.Framework;
 
@@ -17,8 +15,8 @@ namespace Tests
 		[SetUp]
 		internal void PrepareKademlia()
 		{
-			node = new Node();
-			kademlia = (Kademlia) Mirror.ForObject(node)["kademlia"].Value;
+			node = new Node(null);
+			kademlia = node.Kademlia;
 		}
 
 		[TearDown]
@@ -36,6 +34,5 @@ namespace Tests
 			result.ForEach(n => this.Log(n.NodeId.ToString()));
 			Assert.AreEqual(Math.Min(contacts, 20), result.Count);
 		}
-
 	}
 }

@@ -1,9 +1,8 @@
-﻿using System;
-using System.Net;
+﻿using System.Net;
 using System.Threading;
 
 using Kyru.Network;
-using Kyru.Network.Messages;
+using Kyru.Network.UdpMessages;
 
 using MbUnit.Framework;
 
@@ -17,8 +16,8 @@ namespace Tests
 		[SetUp]
 		internal void PrepareKademlia()
 		{
-			node = new Node();
-			kademlia = (Kademlia) Mirror.ForObject(node)["kademlia"].Value;
+			node = new Node(null);
+			kademlia = node.Kademlia;
 		}
 
 		[TearDown]
@@ -42,14 +41,15 @@ namespace Tests
 				var ni = new NodeInformation(new IPEndPoint(i + 1, i + 1), id);
 				var message = new UdpMessage();
 				kademlia.HandleIncomingRequest(ni, message);
+
 				Assert.AreEqual(i, kademlia.CurrentContacts);
 				Assert.IsNotNull(message.PingRequest);
 
 				var response = new UdpMessage();
 				response.ResponseId = message.RequestId;
 				response.SenderNodeId = id;
-
 				message.ResponseCallback(response);
+
 				Assert.AreEqual(i + 1, kademlia.CurrentContacts);
 			}
 		}
@@ -57,9 +57,9 @@ namespace Tests
 		[Test]
 		internal void AddContact()
 		{
-			using (var node2 = new Node(65432))
+			using (var node2 = new Node(65432, null))
 			{
-				var kademlia2 = (Kademlia) Mirror.ForObject(node2)["kademlia"].Value;
+				var kademlia2 = node2.Kademlia;
 
 				node.Start();
 				node2.Start();
