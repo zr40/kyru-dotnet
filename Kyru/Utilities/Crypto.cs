@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 using System.Linq;
 using System.Security.Cryptography;
 
@@ -16,9 +17,14 @@ namespace Kyru.Utilities
 		/// <param name="username">Username</param>
 		/// <param name="password">Password</param>
 		/// <returns>The private key</returns>
-		internal static byte[] GenerateKey(byte[] username, byte[] password)
+		internal static byte[] GenerateRsaKey(byte[] username, byte[] password)
 		{
 			throw new NotImplementedException();
+		}
+
+		internal static byte[] GenerateAesKey()
+		{
+			return Random.Bytes(32);
 		}
 
 		/// <summary>
@@ -65,14 +71,54 @@ namespace Kyru.Utilities
 			}
 		}
 
+		/// <summary>
+		/// Encrypts data through AES with a provided EncryptionKey, because we use a null IV each key should only be used ONCE!
+		/// </summary>
+		/// <param name="data">Data to encrypt</param>
+		/// <param name="encryptionKey">Key to use for encryption</param>
+		/// <returns>The encrypted data</returns>
 		internal static byte[] EncryptAes(byte[] data, byte[] encryptionKey)
 		{
-			throw new NotImplementedException();
+			using (var aes = new AesCryptoServiceProvider {Padding = PaddingMode.None})
+			{
+				using (var encryptor = aes.CreateEncryptor(encryptionKey, new byte[16]))
+				{
+					using (var ms = new MemoryStream())
+					{
+						using (var cs = new CryptoStream(ms, encryptor, CryptoStreamMode.Write))
+						{
+							cs.Write(data, 0, data.Length);
+							cs.FlushFinalBlock();
+							return ms.ToArray();
+						}
+					}
+				}
+			}
 		}
 
+		/// <summary>
+		/// Decrypts AES encrypted data
+		/// </summary>
+		/// <param name="data">Data to decrypt</param>
+		/// <param name="encryptionKey">Key to decrypt the data with</param>
+		/// <returns>The decrypted data</returns>
 		internal static byte[] DecryptAes(byte[] data, byte[] encryptionKey)
 		{
-			throw new NotImplementedException();
+			using (var aes = new AesCryptoServiceProvider {Padding = PaddingMode.None})
+			{
+				using (var decryptor = aes.CreateDecryptor(encryptionKey, new byte[16]))
+				{
+					using (var ms = new MemoryStream(data))
+					{
+						using (var cs = new CryptoStream(ms, decryptor, CryptoStreamMode.Read))
+						{
+							var decryptedData = new byte[data.Length];
+							cs.Read(decryptedData, 0, data.Length);
+							return decryptedData;
+						}
+					}
+				}
+			}
 		}
 
 		/// <summary>
