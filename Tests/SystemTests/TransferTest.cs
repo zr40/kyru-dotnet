@@ -8,6 +8,7 @@ using Kyru.Core;
 using Kyru.Network;
 using Kyru.Network.Objects;
 using Kyru.Network.TcpMessages;
+using Kyru.Utilities;
 
 using MbUnit.Framework;
 

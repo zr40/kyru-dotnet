@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Timers;
 
-namespace Kyru
+namespace Kyru.Utilities
 {
 	internal static class KyruTimer
 	{

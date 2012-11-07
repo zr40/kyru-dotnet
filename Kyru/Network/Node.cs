@@ -9,8 +9,9 @@ using Kyru.Core;
 using Kyru.Network.TcpMessages;
 using Kyru.Network.TcpMessages.Clients;
 using Kyru.Network.UdpMessages;
-
+using Kyru.Utilities;
 using ProtoBuf;
+using Random = Kyru.Utilities.Random;
 
 namespace Kyru.Network
 {

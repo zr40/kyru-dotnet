@@ -2,7 +2,7 @@
 using System.IO;
 
 using Kyru.Core;
-
+using Kyru.Utilities;
 using ProtoBuf;
 
 namespace Kyru.Network.TcpMessages.Clients
