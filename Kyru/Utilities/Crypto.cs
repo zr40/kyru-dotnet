@@ -28,9 +28,11 @@ namespace Kyru.Utilities
 		/// <returns>The public key</returns>
 		internal static byte[] ExtractPublicKey(byte[] privateKey)
 		{
-			var rsa = new RSACryptoServiceProvider();
-			rsa.ImportCspBlob(privateKey);
-			return rsa.ExportCspBlob(false);
+			using (var rsa = new RSACryptoServiceProvider())
+			{
+				rsa.ImportCspBlob(privateKey);
+				return rsa.ExportCspBlob(false);
+			}
 		}
 
 		/// <summary>
