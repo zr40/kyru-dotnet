@@ -7,7 +7,7 @@ namespace Kyru.Utilities
 	internal static class Crypto
 	{
 		internal const int RsaPublicKeySize = 2048;
-		private const int ITERATIONS = 10000;
+		private const int Iterations = 10000;
 		private static readonly SHA1CryptoServiceProvider hash = new SHA1CryptoServiceProvider();
 
 		/// <summary>
