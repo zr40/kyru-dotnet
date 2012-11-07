@@ -102,7 +102,11 @@ namespace Kyru.Core
 				return null;
 
 			using (var stream = new MemoryStream(bytes))
-				return Serializer.Deserialize<KyruObject>(stream);
+			{
+				var obj = Serializer.Deserialize<KyruObject>(stream);
+				obj.ObjectId = id;
+				return obj;
+			}
 		}
 
 		internal byte[] GetBytes(KademliaId id)

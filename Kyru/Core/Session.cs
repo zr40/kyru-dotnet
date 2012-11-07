@@ -17,6 +17,7 @@ namespace Kyru.Core
 		private byte[] privateKey;
 		private App app;
 		private User user;
+		internal string Username { get; private set; }
 
 		/// <summary>
 		/// Constructor of Session class for a new User
@@ -28,12 +29,14 @@ namespace Kyru.Core
 			var sha1 = SHA1.Create();
 			var bytes = sha1.ComputeHash(Encoding.UTF8.GetBytes(username.ToCharArray()));
 			var id = new KademliaId(bytes);
+			Username = username;
 			this.app = app;
 			user = app.LocalObjectStorage.GetObject(id) as User;
 			if (user == null)
 			{
 				// A new user
-				user = new User(username, id);
+				user = new User();
+				user.ObjectId = id;
 			}
 
 			// TODO: Fill KademliaId correctly;

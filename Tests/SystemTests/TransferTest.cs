@@ -65,9 +65,11 @@ namespace Tests.SystemTests
 			var objectId = KademliaId.RandomId;
 			var chunkId = KademliaId.RandomId;
 
-			var user = new User(null);
+			var user = new User();
 			user.ObjectId = objectId;
-			user.Add(new UserFile(new List<KademliaId>{chunkId}));
+			var userFile = new UserFile();
+			userFile.ChunkList.Add(chunkId);
+			user.Add(userFile);
 
 			var ms = new MemoryStream();
 			Serializer.Serialize(ms, user);

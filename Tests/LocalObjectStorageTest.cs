@@ -42,7 +42,8 @@ namespace Tests
 		{
 			var storage = new LocalObjectStorage(config);
 
-			var user = new User("foo", KademliaId.RandomId);
+			var user = new User();
+			user.ObjectId = KademliaId.RandomId;
 
 			storage.StoreObject(user);
 			Assert.AreEqual(1, storage.CurrentObjects.Count);
@@ -64,7 +65,8 @@ namespace Tests
 			ulong fileId = 123456789;
 			var id = KademliaId.RandomId;
 
-			var user = new User("foo", id);
+			var user = new User();
+			user.ObjectId = id;
 			user.Add(new UserFile { FileId = fileId, ChunkList = new List<KademliaId> { randomId } });
 
 			storage.StoreObject(user);
@@ -84,7 +86,8 @@ namespace Tests
 		{
 			var storage = new LocalObjectStorage(config);
 
-			var user = new User("foo", KademliaId.RandomId);
+			var user = new User();
+			user.ObjectId = KademliaId.RandomId;
 			user.Add(new UserFile { ChunkList = new List<KademliaId> { KademliaId.RandomId } });
 
 			storage.StoreObject(user);
@@ -97,7 +100,8 @@ namespace Tests
 		{
 			var storage = new LocalObjectStorage(config);
 
-			var user = new User("foo", KademliaId.RandomId);
+			var user = new User();
+			user.ObjectId = KademliaId.RandomId;
 			user.Add(new UserFile {ChunkList = new List<KademliaId> {KademliaId.RandomId}});
 			storage.StoreObject(user);
 

@@ -13,26 +13,10 @@ namespace Kyru.Network.Objects
 	internal class User : KyruObject
 	{
 		[ProtoMember(1)]
-		internal string Name;
-
-		[ProtoMember(2)]
 		private readonly List<UserFile> files = new List<UserFile>();
 
-		[ProtoMember(3)]
+		[ProtoMember(2)]
 		private readonly List<Tuple<byte[], ulong>> deletedFiles = new List<Tuple<byte[], ulong>>();
-
-		private User()
-		{
-			// used by serialization
-		}
-
-		internal User(string name, KademliaId id)
-		{
-			Name = name;
-			ObjectId = id;
-			deletedFiles = new List<Tuple<byte[], ulong>>();
-			files = new List<UserFile>();
-		}
 
 		internal IList<UserFile> Files
 		{

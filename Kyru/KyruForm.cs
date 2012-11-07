@@ -17,7 +17,7 @@ namespace Kyru
 			InitializeComponent();
 
 			virtualLocalFileTreeInit();
-			this.Text = app.Session.User.Name + " - " + this.Text;
+			this.Text = app.Session.Username + " - " + this.Text;
 		}
 
 		internal void virtualLocalFileTreeInit()
