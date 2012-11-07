@@ -22,6 +22,10 @@ namespace Kyru.Utilities
 			throw new NotImplementedException();
 		}
 
+		/// <summary>
+		/// Generates a valid AES key
+		/// </summary>
+		/// <returns>valid 256bit AES key</returns>
 		internal static byte[] GenerateAesKey()
 		{
 			return Random.Bytes(32);
