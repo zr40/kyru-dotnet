@@ -4,7 +4,7 @@ namespace Tests
 {
 	internal class CallbackTimeout
 	{
-		private ManualResetEventSlim ev = new ManualResetEventSlim();
+		private readonly ManualResetEventSlim ev = new ManualResetEventSlim();
 
 		internal void Done()
 		{
@@ -24,6 +24,19 @@ namespace Tests
 		internal void Done(T t)
 		{
 			Result = t;
+			Done();
+		}
+	}
+
+	internal sealed class CallbackTimeout<T1, T2> : CallbackTimeout
+	{
+		internal T1 Result1;
+		internal T2 Result2;
+
+		internal void Done(T1 t1, T2 t2)
+		{
+			Result1 = t1;
+			Result2 = t2;
 			Done();
 		}
 	}

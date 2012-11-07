@@ -74,16 +74,28 @@ namespace Tests.SystemTests
 
 			var ms = new MemoryStream();
 			Serializer.Serialize(ms, user);
+			var bytes = ms.ToArray();
 
-			var ct = new CallbackTimeout<Error>();
+			// store the object
 
-			nodeA.StoreObject(nodeBInfo, objectId, ms.ToArray(), ct.Done);
-			if (!ct.Block(TestParameters.LocalhostCommunicationTimeout * 10))
+			var ct1 = new CallbackTimeout<Error>();
+			nodeA.StoreObject(nodeBInfo, objectId, bytes, ct1.Done);
+			if (!ct1.Block(TestParameters.LocalhostCommunicationTimeout))
 			{
 				Assert.Fail("No response within timeout");
 			}
-			Assert.AreEqual(Error.Success, ct.Result);
+			Assert.AreEqual(Error.Success, ct1.Result);
 
+			// now retrieve it
+
+			var ct2 = new CallbackTimeout<Error, byte[]>();
+			nodeC.GetObject(nodeBInfo, objectId, ct2.Done);
+			if (!ct2.Block(TestParameters.LocalhostCommunicationTimeout))
+			{
+				Assert.Fail("No response within timeout");
+			}
+			Assert.AreEqual(Error.Success, ct2.Result1);
+			Assert.AreElementsEqual(bytes, ct2.Result2);
 		}
 	}
 }
