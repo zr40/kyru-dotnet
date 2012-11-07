@@ -22,6 +22,6 @@ namespace Kyru.Network.Objects
 		internal byte[] HashOfEncryptedFileContents;
 
 		[ProtoMember(6)]
-		internal readonly List<KademliaId> ChunkList = new List<KademliaId>();
+		internal List<KademliaId> ChunkList = new List<KademliaId>();
 	}
 }
