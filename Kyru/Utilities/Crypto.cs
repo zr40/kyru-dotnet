@@ -1,9 +1,8 @@
 ﻿using System;
-using System.IO;
 using System.Linq;
 using System.Security.Cryptography;
 
-namespace Kyru.Core
+namespace Kyru.Utilities
 {
 	internal static class Crypto
 	{

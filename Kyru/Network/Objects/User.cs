@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 using Kyru.Core;
-
+using Kyru.Utilities;
 using ProtoBuf;
 
 namespace Kyru.Network.Objects

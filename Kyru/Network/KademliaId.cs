@@ -3,6 +3,7 @@ using System.Globalization;
 using System.Linq;
 
 using ProtoBuf;
+using Random = Kyru.Utilities.Random;
 
 namespace Kyru.Network
 {
