@@ -4,7 +4,8 @@ using System.Linq;
 using System.Text;
 using Kyru.Utilities;
 using MbUnit.Framework;
-using Random = Kyru.Utilities.Random;
+using System;
+using Random = System.Random;
 
 namespace Tests
 {
@@ -14,7 +15,8 @@ namespace Tests
 		internal void TestAES()
 		{
 			var key = Crypto.GenerateAesKey();
-			var data = Random.Bytes(10000);
+			var data = new byte[10000];
+			new Random().NextBytes(data);
 			Assert.AreElementsEqual(data, Crypto.DecryptAes(Crypto.EncryptAes(data, key), key));
 		}
 	}
