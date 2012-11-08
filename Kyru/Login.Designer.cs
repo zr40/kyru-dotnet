@@ -91,6 +91,7 @@
 			  this.btnClose.TabIndex = 6;
 			  this.btnClose.Text = "&Close";
 			  this.btnClose.UseVisualStyleBackColor = true;
+			  this.btnClose.Visible = false;
 			  // 
 			  // txtPassword
 			  // 

@@ -80,7 +80,7 @@ namespace Kyru.Network
 		{
 			// TODO: republish metadata, expire old entries
 
-			throw new NotImplementedException();
+			//throw new NotImplementedException();
 		}
 	}
 }

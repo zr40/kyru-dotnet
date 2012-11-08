@@ -74,39 +74,42 @@
             this.toolStripSeparator1,
             this.quitToolStripMenuItem});
 			  this.systemToolStripMenuItem.Name = "systemToolStripMenuItem";
-			  this.systemToolStripMenuItem.Size = new System.Drawing.Size(54, 20);
+			  this.systemToolStripMenuItem.Size = new System.Drawing.Size(57, 20);
 			  this.systemToolStripMenuItem.Text = "System";
 			  // 
 			  // addAFileToolStripMenuItem
 			  // 
 			  this.addAFileToolStripMenuItem.Name = "addAFileToolStripMenuItem";
-			  this.addAFileToolStripMenuItem.Size = new System.Drawing.Size(183, 22);
+			  this.addAFileToolStripMenuItem.Size = new System.Drawing.Size(187, 22);
 			  this.addAFileToolStripMenuItem.Text = "Add a file";
 			  this.addAFileToolStripMenuItem.Click += new System.EventHandler(this.addAFileToolStripMenuItem_Click);
 			  // 
 			  // addANodeToolStripMenuItem
 			  // 
 			  this.addANodeToolStripMenuItem.Name = "addANodeToolStripMenuItem";
-			  this.addANodeToolStripMenuItem.Size = new System.Drawing.Size(183, 22);
+			  this.addANodeToolStripMenuItem.Size = new System.Drawing.Size(187, 22);
 			  this.addANodeToolStripMenuItem.Text = "Add a node";
 			  this.addANodeToolStripMenuItem.Click += new System.EventHandler(this.addANodeToolStripMenuItem_Click);
 			  // 
 			  // configureDiskLimitsToolStripMenuItem
 			  // 
 			  this.configureDiskLimitsToolStripMenuItem.Name = "configureDiskLimitsToolStripMenuItem";
-			  this.configureDiskLimitsToolStripMenuItem.Size = new System.Drawing.Size(183, 22);
+			  this.configureDiskLimitsToolStripMenuItem.Size = new System.Drawing.Size(187, 22);
 			  this.configureDiskLimitsToolStripMenuItem.Text = "Configure Disk Limits";
+			  this.configureDiskLimitsToolStripMenuItem.Visible = false;
 			  // 
 			  // toolStripSeparator1
 			  // 
 			  this.toolStripSeparator1.Name = "toolStripSeparator1";
-			  this.toolStripSeparator1.Size = new System.Drawing.Size(180, 6);
+			  this.toolStripSeparator1.Size = new System.Drawing.Size(184, 6);
+			  this.toolStripSeparator1.Visible = false;
 			  // 
 			  // quitToolStripMenuItem
 			  // 
 			  this.quitToolStripMenuItem.Name = "quitToolStripMenuItem";
-			  this.quitToolStripMenuItem.Size = new System.Drawing.Size(183, 22);
+			  this.quitToolStripMenuItem.Size = new System.Drawing.Size(187, 22);
 			  this.quitToolStripMenuItem.Text = "Quit";
+			  this.quitToolStripMenuItem.Visible = false;
 			  // 
 			  // KyruForm
 			  // 
