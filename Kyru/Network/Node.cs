@@ -329,7 +329,8 @@ namespace Kyru.Network
 						{
 							this.Log("{0} does not respond to message {1:X8}", key.EndPoint, key.RequestId);
 							toRemove.Add(key);
-							ri.OutgoingMessage.NoResponseCallback();
+							if (ri.OutgoingMessage.NoResponseCallback != null)
+								ri.OutgoingMessage.NoResponseCallback();
 							if (ri.NodeId != null)
 								Kademlia.RemoveNode(ri.NodeId);
 						}
