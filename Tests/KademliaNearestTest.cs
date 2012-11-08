@@ -31,7 +31,6 @@ namespace Tests
 			TestHelper.PrepareFakeContacts(kademlia, contacts);
 
 			var result = kademlia.NearestContactsTo(KademliaId.RandomId, null);
-			result.ForEach(n => this.Log(n.NodeId.ToString()));
 			Assert.AreEqual(Math.Min(contacts, 20), result.Count);
 		}
 	}

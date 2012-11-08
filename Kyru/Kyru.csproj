@@ -61,6 +61,7 @@
       <DependentUpon>AddNodeForm.cs</DependentUpon>
     </Compile>
     <Compile Include="Core\LocalObjectStorage.cs" />
+    <Compile Include="Network\Operations\NodeLookup.cs" />
     <Compile Include="Utilities\Crypto.cs" />
     <Compile Include="DateTimeExtension.cs" />
     <Compile Include="Logging.cs" />

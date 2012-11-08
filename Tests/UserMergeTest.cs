@@ -2,6 +2,7 @@
 
 namespace Tests
 {
+	[Ignore]
 	internal class UserMergeTest
 	{
 		[Test]

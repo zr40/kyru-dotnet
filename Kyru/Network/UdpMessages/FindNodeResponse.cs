@@ -6,6 +6,6 @@ namespace Kyru.Network.UdpMessages
 	internal sealed class FindNodeResponse
 	{
 		[ProtoMember(1)]
-		internal NodeInformation[] Nodes;
+		internal NodeInformation[] Nodes = new NodeInformation[0];
 	}
 }

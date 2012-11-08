@@ -45,6 +45,7 @@
     <Compile Include="NodeCommunicationTest.cs" />
     <Compile Include="NodeTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="SystemTests\NetworkTest.cs" />
     <Compile Include="SystemTests\TransferTest.cs" />
     <Compile Include="TestHelper.cs" />
     <Compile Include="TestParameters.cs" />

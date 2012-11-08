@@ -2,7 +2,9 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
+using System.Threading;
 
+using Kyru.Network.Operations;
 using Kyru.Network.UdpMessages;
 using Kyru.Utilities;
 
@@ -10,8 +12,8 @@ namespace Kyru.Network
 {
 	internal sealed class Kademlia : ITimerListener
 	{
-		private const int k = 20;
-		private const int α = 3;
+		internal const int k = 20;
+		internal const int α = 3;
 
 		private class KnownNode
 		{
@@ -123,6 +125,18 @@ namespace Kyru.Network
 				}
 				this.Log("Adding contact {0} ({1})", contact.NodeId, contact.EndPoint);
 				bucket.Add(new KnownNode(contact));
+
+				if (CurrentContacts == 1)
+				{
+					// populate the contacts list
+					NodeLookup(node.Id, nodes =>
+					                    {
+						                    foreach (var n in nodes)
+						                    {
+							                    NodeLookup(n.NodeId, _ => { });
+						                    }
+					                    });
+				}
 			}
 			else
 			{
@@ -200,6 +214,11 @@ namespace Kyru.Network
 					return true;
 			}
 			return false;
+		}
+
+		internal void NodeLookup(KademliaId id, Action<List<NodeInformation>> done)
+		{
+			new Thread(new NodeLookup(node, id, done).ThreadStart).Start();
 		}
 	}
 }

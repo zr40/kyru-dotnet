@@ -13,7 +13,7 @@ if %errorlevel% neq 0 goto end
 :end
 
 if "%cmdcmdline:~4,2%"=="/c" (
-	if not "%github_shell"=="true" (
+	if not "%github_shell%"=="true" (
 		pause
 	)
 )

@@ -130,7 +130,7 @@ namespace Kyru.Network.UdpMessages
 		{
 			if (Node.ProtocolVersion != ProtocolVersion)
 			{
-				this.Log("Ignoring message from {0} with unknown protocol version {1}", endPoint, ProtocolVersion);
+				this.Warn("Ignoring message from {0} with unknown protocol version {1}", endPoint, ProtocolVersion);
 				return false;
 			}
 
@@ -139,22 +139,22 @@ namespace Kyru.Network.UdpMessages
 				// responses may not contain any requests besides ping
 				if (FindNodeRequest != null)
 				{
-					this.Log("Ignoring response from {0} with response ID {1:X16} containing a find node request", endPoint, ResponseId);
+					this.Warn("Ignoring response from {0} with response ID {1:X16} containing a find node request", endPoint, ResponseId);
 					return false;
 				}
 				if (FindValueRequest != null)
 				{
-					this.Log("Ignoring response from {0} with response ID {1:X16} containing a find value request", endPoint, ResponseId);
+					this.Warn("Ignoring response from {0} with response ID {1:X16} containing a find value request", endPoint, ResponseId);
 					return false;
 				}
 				if (KeepObjectRequest != null)
 				{
-					this.Log("Ignoring response from {0} with response ID {1:X16} containing a keep object request", endPoint, ResponseId);
+					this.Warn("Ignoring response from {0} with response ID {1:X16} containing a keep object request", endPoint, ResponseId);
 					return false;
 				}
 				if (StoreRequest != null)
 				{
-					this.Log("Ignoring response from {0} with response ID {1:X16} containing a store request", endPoint, ResponseId);
+					this.Warn("Ignoring response from {0} with response ID {1:X16} containing a store request", endPoint, ResponseId);
 					return false;
 				}
 			}
@@ -183,12 +183,12 @@ namespace Kyru.Network.UdpMessages
 
 			if (requests > 1)
 			{
-				this.Log("Ignoring message from {0} with request ID {1:X16} containing multiple requests", endPoint, ResponseId);
+				this.Warn("Ignoring message from {0} with request ID {1:X16} containing multiple requests", endPoint, ResponseId);
 				return false;
 			}
 			if (requests == 0 && ResponseId == 0)
 			{
-				this.Log("Ignoring empty message from {0} with request ID {1:X16}.", endPoint, ResponseId);
+				this.Warn("Ignoring empty message from {0} with request ID {1:X16}.", endPoint, ResponseId);
 				return false;
 			}
 			return true;

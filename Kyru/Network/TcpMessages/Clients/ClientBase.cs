@@ -31,7 +31,7 @@ namespace Kyru.Network.TcpMessages.Clients
 					var serverHandshake = Serializer.DeserializeWithLengthPrefix<ServerHandshake>(stream, PrefixStyle.Base128);
 					if (serverHandshake.ProtocolVersion != Node.ProtocolVersion)
 					{
-						this.Log("Node at {0} uses unknown protocol version {1}. Dropping connection.", TargetNode.EndPoint, serverHandshake.ProtocolVersion);
+						this.Warn("Node at {0} uses unknown protocol version {1}. Dropping connection.", TargetNode.EndPoint, serverHandshake.ProtocolVersion);
 						return;
 					}
 					App.Node.Kademlia.AddVerifiedNode((IPEndPoint) client.Client.RemoteEndPoint, serverHandshake.NodeId);

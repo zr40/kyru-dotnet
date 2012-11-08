@@ -58,7 +58,7 @@ namespace Kyru.Core
 		{
 			if (!o.VerifyData())
 			{
-				this.Log("Object failed verification; it will not be stored. ID: {0}", o.ObjectId);
+				this.Warn("Object failed verification; it will not be stored. ID: {0}", o.ObjectId);
 				return;
 			}
 
@@ -75,7 +75,7 @@ namespace Kyru.Core
 			{
 				if (!Serializer.Deserialize<KyruObject>(st).VerifyData())
 				{
-					this.Log("Object failed verification; it will not be stored. ID: {0}", id);
+					this.Warn("Object failed verification; it will not be stored. ID: {0}", id);
 					return;
 				}
 			}
@@ -88,7 +88,7 @@ namespace Kyru.Core
 			if (id.Bytes.All(b => b == 0))
 				throw new InvalidOperationException("Possible bug: tried to store object with id zero");
 			if (bytes.Length > MaxObjectSize)
-				this.Log("Object larger than 1 MiB; it will not be stored. ID: {0}", id);
+				this.Warn("Object larger than 1 MiB; it will not be stored. ID: {0}", id);
 
 			File.WriteAllBytes(PathFor(id), bytes);
 

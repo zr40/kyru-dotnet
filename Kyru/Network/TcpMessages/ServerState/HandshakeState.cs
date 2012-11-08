@@ -30,12 +30,12 @@ namespace Kyru.Network.TcpMessages.ServerState
 			var handshake = Serializer.DeserializeWithLengthPrefix<ClientHandshake>(stream, PrefixStyle.Base128);
 			if (handshake.GetObjectRequest != null && handshake.StoreObjectRequest != null)
 			{
-				this.Log("Ignoring TCP request from {0} containing multiple requests", client.Client.RemoteEndPoint);
+				this.Warn("Ignoring TCP request from {0} containing multiple requests", client.Client.RemoteEndPoint);
 				return null;
 			}
 			if (handshake.GetObjectRequest == null && handshake.StoreObjectRequest == null)
 			{
-				this.Log("Ignoring TCP request from {0} containing no requests", client.Client.RemoteEndPoint);
+				this.Warn("Ignoring TCP request from {0} containing no requests", client.Client.RemoteEndPoint);
 				return null;
 			}
 

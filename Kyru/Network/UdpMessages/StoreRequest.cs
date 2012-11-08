@@ -1,3 +1,5 @@
+using System.Collections.Generic;
+
 using ProtoBuf;
 
 namespace Kyru.Network.UdpMessages
@@ -9,6 +11,6 @@ namespace Kyru.Network.UdpMessages
 		internal KademliaId ObjectId;
 
 		[ProtoMember(2)]
-		internal KyruObjectMetadata[] Data;
+		internal KyruObjectMetadata[] Data = new KyruObjectMetadata[0];
 	}
 }

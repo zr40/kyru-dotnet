@@ -1,9 +1,7 @@
-﻿using System.Collections.Generic;
-using System.IO;
+﻿using System.IO;
 using System.Net;
 using System.Threading;
 
-using Kyru;
 using Kyru.Core;
 using Kyru.Network;
 using Kyru.Network.Objects;

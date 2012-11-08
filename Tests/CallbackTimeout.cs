@@ -11,7 +11,7 @@ namespace Tests
 			ev.Set();
 		}
 
-		internal bool Block(int timeout = -1)
+		internal bool Block(int timeout)
 		{
 			return ev.Wait(timeout);
 		}

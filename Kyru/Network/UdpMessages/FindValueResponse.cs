@@ -6,9 +6,9 @@ namespace Kyru.Network.UdpMessages
 	internal sealed class FindValueResponse
 	{
 		[ProtoMember(1)]
-		internal NodeInformation[] Nodes;
+		internal NodeInformation[] Nodes = new NodeInformation[0];
 
 		[ProtoMember(2)]
-		internal KyruObjectMetadata[] Data;
+		internal KyruObjectMetadata[] Data = new KyruObjectMetadata[0];
 	}
 }

@@ -8,7 +8,7 @@ using Random = Kyru.Utilities.Random;
 namespace Kyru.Network
 {
 	[ProtoContract(SkipConstructor = true)]
-	internal sealed class KademliaId
+	internal sealed class KademliaId : IComparable<KademliaId>
 	{
 		internal const int Size = 160;
 
@@ -53,6 +53,16 @@ namespace Kyru.Network
 				id.CopyTo(bytes, 0);
 				return bytes;
 			}
+		}
+
+		public int CompareTo(KademliaId other)
+		{
+			for (int i = 0; i < ArraySize; i++)
+			{
+				var result = id[i].CompareTo(other.id[i]);
+				if (result != 0) return result;
+			}
+			return 0;
 		}
 
 		public override string ToString()

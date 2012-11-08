@@ -26,7 +26,7 @@ namespace Kyru.Network
 		private bool running;
 
 		internal const uint ProtocolVersion = 0;
-		internal const uint TimeoutTicks = 2 + 1;
+		internal const int TimeoutTicks = 2 + 1;
 		internal readonly KademliaId Id = KademliaId.RandomId;
 
 		private readonly Dictionary<RequestIdentifier, RequestInformation> outstandingRequests = new Dictionary<RequestIdentifier, RequestInformation>();
@@ -105,7 +105,7 @@ namespace Kyru.Network
 				{
 					if (!outstandingRequests.ContainsKey(identifier))
 					{
-						this.Log("{2} from {0} has unknown response ID {1:X16}", endPoint, incomingMessage.ResponseId, incomingMessage.Inspect());
+						this.Warn("{2} from {0} has unknown response ID {1:X16}", endPoint, incomingMessage.ResponseId, incomingMessage.Inspect());
 					}
 					else
 					{
@@ -113,7 +113,7 @@ namespace Kyru.Network
 
 						if (request.NodeId != null && request.NodeId != incomingMessage.SenderNodeId)
 						{
-							this.Log("In {0}, node ID from {1} does not match (expected {2}, received {3})", incomingMessage.Inspect(), endPoint, request.NodeId, incomingMessage.SenderNodeId);
+							this.Warn("In {0}, node ID from {1} does not match (expected {2}, received {3})", incomingMessage.Inspect(), endPoint, request.NodeId, incomingMessage.SenderNodeId);
 						}
 						else
 						{
@@ -235,12 +235,15 @@ namespace Kyru.Network
 			if (!running)
 				return;
 
-			this.Log("OnTcpAccept {0}", tcp.LocalEndpoint);
-
 			var client = tcp.EndAcceptTcpClient(ar);
 			TcpListen();
 
 			new IncomingTcpConnection(app, client).Accept();
+		}
+
+		internal void GetObject(KademliaId objectId, Action<Error, byte[]> done)
+		{
+			throw new NotImplementedException();
 		}
 
 		internal void GetObject(NodeInformation targetNode, KademliaId objectId, Action<Error, byte[]> done)
@@ -327,7 +330,7 @@ namespace Kyru.Network
 					{
 						if (ri.SecondAttempt)
 						{
-							this.Log("{0} does not respond to message {1:X8}", key.EndPoint, key.RequestId);
+							this.Warn("{0} does not respond to message {1:X8}", key.EndPoint, key.RequestId);
 							toRemove.Add(key);
 							if (ri.OutgoingMessage.NoResponseCallback != null)
 								ri.OutgoingMessage.NoResponseCallback();
@@ -336,7 +339,7 @@ namespace Kyru.Network
 						}
 						else
 						{
-							this.Log("Resending message {1:X8} to {0}", key.EndPoint, key.RequestId);
+							this.Warn("Resending message {1:X8} to {0}", key.EndPoint, key.RequestId);
 							ri.Age = 0;
 							ri.SecondAttempt = true;
 							SendUdp(ri.OutgoingMessage, key.EndPoint);
