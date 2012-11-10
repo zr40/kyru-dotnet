@@ -15,7 +15,7 @@ namespace Tests
 		internal void TestAES()
 		{
 			var key = Crypto.GenerateAesKey();
-			var data = new byte[10000];
+			var data = new byte[10001];
 			new Random().NextBytes(data);
 			Assert.AreElementsEqual(data, Crypto.DecryptAes(Crypto.EncryptAes(data, key), key));
 		}

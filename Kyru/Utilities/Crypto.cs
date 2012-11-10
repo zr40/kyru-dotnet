@@ -83,7 +83,7 @@ namespace Kyru.Utilities
 		/// <returns>The encrypted data</returns>
 		internal static byte[] EncryptAes(byte[] data, byte[] encryptionKey)
 		{
-			using (var aes = new AesCryptoServiceProvider {Padding = PaddingMode.None})
+			using (var aes = new AesCryptoServiceProvider())
 			{
 				using (var encryptor = aes.CreateEncryptor(encryptionKey, new byte[16]))
 				{
@@ -91,6 +91,7 @@ namespace Kyru.Utilities
 					{
 						using (var cs = new CryptoStream(ms, encryptor, CryptoStreamMode.Write))
 						{
+							cs.Write(BitConverter.GetBytes(data.Length), 0, 4);
 							cs.Write(data, 0, data.Length);
 							cs.FlushFinalBlock();
 							return ms.ToArray();
@@ -108,7 +109,7 @@ namespace Kyru.Utilities
 		/// <returns>The decrypted data</returns>
 		internal static byte[] DecryptAes(byte[] data, byte[] encryptionKey)
 		{
-			using (var aes = new AesCryptoServiceProvider {Padding = PaddingMode.None})
+			using (var aes = new AesCryptoServiceProvider())
 			{
 				using (var decryptor = aes.CreateDecryptor(encryptionKey, new byte[16]))
 				{
@@ -116,8 +117,11 @@ namespace Kyru.Utilities
 					{
 						using (var cs = new CryptoStream(ms, decryptor, CryptoStreamMode.Read))
 						{
-							var decryptedData = new byte[data.Length];
-							cs.Read(decryptedData, 0, data.Length);
+							var lengthBytes = new byte[4];
+							cs.Read(lengthBytes, 0, 4);
+							var length = BitConverter.ToInt32(lengthBytes, 0);
+							var decryptedData = new byte[length];
+							cs.Read(decryptedData, 0, length);
 							return decryptedData;
 						}
 					}
