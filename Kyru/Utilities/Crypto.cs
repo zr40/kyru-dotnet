@@ -83,7 +83,7 @@ namespace Kyru.Utilities
 		/// <returns>The encrypted data</returns>
 		internal static byte[] EncryptAes(byte[] data, byte[] encryptionKey)
 		{
-			using (var aes = new AesCryptoServiceProvider())
+			using (var aes = new AesCryptoServiceProvider {Padding = PaddingMode.ISO10126})
 			{
 				using (var encryptor = aes.CreateEncryptor(encryptionKey, new byte[16]))
 				{
@@ -109,7 +109,7 @@ namespace Kyru.Utilities
 		/// <returns>The decrypted data</returns>
 		internal static byte[] DecryptAes(byte[] data, byte[] encryptionKey)
 		{
-			using (var aes = new AesCryptoServiceProvider())
+			using (var aes = new AesCryptoServiceProvider {Padding = PaddingMode.ISO10126})
 			{
 				using (var decryptor = aes.CreateDecryptor(encryptionKey, new byte[16]))
 				{
