@@ -53,5 +53,34 @@ namespace Kyru
 			Form form = new AddNodeForm(app.Node.Kademlia);
 			form.ShowDialog();
 		}
+
+		private void virtualLocalFileTree_MouseUp(object sender, MouseEventArgs e)
+		{
+			if (e.Button == MouseButtons.Right)
+			{
+				// Select the clicked node
+				virtualLocalFileTree.SelectedNode = virtualLocalFileTree.GetNodeAt(e.X, e.Y);
+
+				if (virtualLocalFileTree.SelectedNode != null)
+				{
+					rightClickMenu.Show(virtualLocalFileTree, e.Location);
+				}
+			}
+		}
+
+		private void saveToolStripMenuItem_Click(object sender, System.EventArgs e)
+		{
+			throw new System.NotImplementedException();
+		}
+
+		private void deleteToolStripMenuItem_Click(object sender, System.EventArgs e)
+		{
+			throw new System.NotImplementedException();
+		}
+
+		private void infoToolStripMenuItem_Click(object sender, System.EventArgs e)
+		{
+			throw new System.NotImplementedException();
+		}
 	}
 }

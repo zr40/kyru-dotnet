@@ -38,7 +38,12 @@
 			  this.configureDiskLimitsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			  this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
 			  this.quitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+			  this.rightClickMenu = new System.Windows.Forms.ContextMenuStrip(this.components);
+			  this.saveToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+			  this.deleteToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+			  this.infoToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			  this.topMenu.SuspendLayout();
+			  this.rightClickMenu.SuspendLayout();
 			  this.SuspendLayout();
 			  // 
 			  // virtualLocalFileTree
@@ -48,6 +53,7 @@
 			  this.virtualLocalFileTree.Name = "virtualLocalFileTree";
 			  this.virtualLocalFileTree.Size = new System.Drawing.Size(292, 242);
 			  this.virtualLocalFileTree.TabIndex = 0;
+			  this.virtualLocalFileTree.MouseUp += new System.Windows.Forms.MouseEventHandler(this.virtualLocalFileTree_MouseUp);
 			  // 
 			  // iconList
 			  // 
@@ -111,6 +117,36 @@
 			  this.quitToolStripMenuItem.Text = "Quit";
 			  this.quitToolStripMenuItem.Visible = false;
 			  // 
+			  // rightClickMenu
+			  // 
+			  this.rightClickMenu.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.saveToolStripMenuItem,
+            this.deleteToolStripMenuItem,
+            this.infoToolStripMenuItem});
+			  this.rightClickMenu.Name = "rightClickMenu";
+			  this.rightClickMenu.Size = new System.Drawing.Size(108, 70);
+			  // 
+			  // saveToolStripMenuItem
+			  // 
+			  this.saveToolStripMenuItem.Name = "saveToolStripMenuItem";
+			  this.saveToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+			  this.saveToolStripMenuItem.Text = "Save";
+			  this.saveToolStripMenuItem.Click += new System.EventHandler(this.saveToolStripMenuItem_Click);
+			  // 
+			  // deleteToolStripMenuItem
+			  // 
+			  this.deleteToolStripMenuItem.Name = "deleteToolStripMenuItem";
+			  this.deleteToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+			  this.deleteToolStripMenuItem.Text = "Delete";
+			  this.deleteToolStripMenuItem.Click += new System.EventHandler(this.deleteToolStripMenuItem_Click);
+			  // 
+			  // infoToolStripMenuItem
+			  // 
+			  this.infoToolStripMenuItem.Name = "infoToolStripMenuItem";
+			  this.infoToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+			  this.infoToolStripMenuItem.Text = "Info";
+			  this.infoToolStripMenuItem.Click += new System.EventHandler(this.infoToolStripMenuItem_Click);
+			  // 
 			  // KyruForm
 			  // 
 			  this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
@@ -124,6 +160,7 @@
 			  this.Text = "Kyru";
 			  this.topMenu.ResumeLayout(false);
 			  this.topMenu.PerformLayout();
+			  this.rightClickMenu.ResumeLayout(false);
 			  this.ResumeLayout(false);
 			  this.PerformLayout();
 
@@ -140,6 +177,10 @@
 		private System.Windows.Forms.ToolStripSeparator toolStripSeparator1;
         private System.Windows.Forms.ToolStripMenuItem quitToolStripMenuItem;
 		  private System.Windows.Forms.ToolStripMenuItem addAFileToolStripMenuItem;
+		  private System.Windows.Forms.ContextMenuStrip rightClickMenu;
+		  private System.Windows.Forms.ToolStripMenuItem saveToolStripMenuItem;
+		  private System.Windows.Forms.ToolStripMenuItem deleteToolStripMenuItem;
+		  private System.Windows.Forms.ToolStripMenuItem infoToolStripMenuItem;
     }
 }
 
