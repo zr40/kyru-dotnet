@@ -31,7 +31,23 @@ namespace Kyru
 
 		internal void showFile(Session session, UserFile fileToShow) {
 			string fileName = session.DecryptFileName(fileToShow);
-			virtualLocalFileTree.Nodes.Add(fileName);
+			var dirs = fileName.Split('\\');
+			TreeNode node = null;
+			TreeNodeCollection nodes = virtualLocalFileTree.Nodes;
+			foreach (var dir in dirs)
+			{
+				if (nodes.ContainsKey(dir))
+				{
+					node = nodes[dir];
+				}
+				else
+				{
+					node = nodes.Add(dir,dir);
+					// TODO: Add images
+				}
+				nodes = node.Nodes;
+			}
+			node.Tag = fileToShow;
 		}
 
 		private void addAFileToolStripMenuItem_Click(object sender, System.EventArgs e)
@@ -70,21 +86,22 @@ namespace Kyru
 
 		private void saveToolStripMenuItem_Click(object sender, System.EventArgs e)
 		{
-			UserFile userFile = app.Session.GetFile(virtualLocalFileTree.SelectedNode.Name);
+			UserFile userFile = virtualLocalFileTree.SelectedNode.Tag as UserFile;
 			if (userFile == null)
 				return;
 
 			SaveFileDialog dialog = new SaveFileDialog();
+			dialog.FileName = virtualLocalFileTree.SelectedNode.Text;
 			if (dialog.ShowDialog() == System.Windows.Forms.DialogResult.OK)
 			{
-				FileStream fs = new FileStream(dialog.FileName, FileMode.Open);
+				FileStream fs = new FileStream(dialog.FileName, FileMode.Create);
 				app.Session.DecryptFile(userFile, fs);
 			}
 		}
 
 		private void deleteToolStripMenuItem_Click(object sender, System.EventArgs e)
 		{
-			UserFile userFile = app.Session.GetFile(virtualLocalFileTree.SelectedNode.Name);
+			UserFile userFile = virtualLocalFileTree.SelectedNode.Tag as UserFile;
 			if (userFile == null)
 				return;
 			app.Session.DeleteFile(userFile);
