@@ -120,6 +120,21 @@ namespace Kyru.Core
 		}
 
 		/// <summary>
+		/// Finds a file in the user of the session
+		/// </summary>
+		/// <param name="fileName">The name of the file</param>
+		/// <returns>The UserFile or null if nothing is found</returns>
+		internal UserFile GetFile(String fileName)
+		{
+			foreach (UserFile file in User.Files) {
+				if (DecryptFileName(file) == fileName){
+					return file;
+				}
+			}
+			return null;
+		}
+
+		/// <summary>
 		/// Decrypts a kfile and outputs the result in file
 		/// </summary>
 		/// <param name="userFile">the file to decrypt</param>

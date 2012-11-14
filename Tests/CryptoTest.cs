@@ -4,7 +4,6 @@ using System.Linq;
 using System.Text;
 using Kyru.Utilities;
 using MbUnit.Framework;
-using System;
 using Random = System.Random;
 
 namespace Tests

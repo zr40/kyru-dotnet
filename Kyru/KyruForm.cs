@@ -70,12 +70,19 @@ namespace Kyru
 
 		private void saveToolStripMenuItem_Click(object sender, System.EventArgs e)
 		{
-			throw new System.NotImplementedException();
+			SaveFileDialog dialog = new SaveFileDialog();
+			if (dialog.ShowDialog() == System.Windows.Forms.DialogResult.OK)
+			{
+				UserFile userFile = app.Session.GetFile(virtualLocalFileTree.SelectedNode.Name);
+				FileStream fs = new FileStream(dialog.FileName, FileMode.Open);
+				app.Session.DecryptFile(userFile, fs);
+			}
 		}
 
 		private void deleteToolStripMenuItem_Click(object sender, System.EventArgs e)
 		{
-			throw new System.NotImplementedException();
+			UserFile userFile = app.Session.GetFile(virtualLocalFileTree.SelectedNode.Name);
+			app.Session.DeleteFile(userFile);
 		}
 
 		private void infoToolStripMenuItem_Click(object sender, System.EventArgs e)
