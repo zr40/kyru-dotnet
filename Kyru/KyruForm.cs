@@ -70,10 +70,13 @@ namespace Kyru
 
 		private void saveToolStripMenuItem_Click(object sender, System.EventArgs e)
 		{
+			UserFile userFile = app.Session.GetFile(virtualLocalFileTree.SelectedNode.Name);
+			if (userFile == null)
+				return;
+
 			SaveFileDialog dialog = new SaveFileDialog();
 			if (dialog.ShowDialog() == System.Windows.Forms.DialogResult.OK)
 			{
-				UserFile userFile = app.Session.GetFile(virtualLocalFileTree.SelectedNode.Name);
 				FileStream fs = new FileStream(dialog.FileName, FileMode.Open);
 				app.Session.DecryptFile(userFile, fs);
 			}
@@ -82,7 +85,10 @@ namespace Kyru
 		private void deleteToolStripMenuItem_Click(object sender, System.EventArgs e)
 		{
 			UserFile userFile = app.Session.GetFile(virtualLocalFileTree.SelectedNode.Name);
+			if (userFile == null)
+				return;
 			app.Session.DeleteFile(userFile);
+			virtualLocalFileTree.Nodes.Remove(virtualLocalFileTree.SelectedNode);
 		}
 
 		private void infoToolStripMenuItem_Click(object sender, System.EventArgs e)
