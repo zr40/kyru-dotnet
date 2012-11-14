@@ -32,6 +32,15 @@ namespace Kyru.Utilities
 		}
 
 		/// <summary>
+		/// Generates a valid AES key
+		/// </summary>
+		/// <returns>valid 256bit AES key</returns>
+		internal static byte[] GenerateIV()
+		{
+			return Random.Bytes(16);
+		}
+
+		/// <summary>
 		/// Extracts the public key from RSA private key data
 		/// </summary>
 		/// <param name="privateKey">The private key</param>
@@ -81,11 +90,11 @@ namespace Kyru.Utilities
 		/// <param name="data">Data to encrypt</param>
 		/// <param name="encryptionKey">Key to use for encryption</param>
 		/// <returns>The encrypted data</returns>
-		internal static byte[] EncryptAes(byte[] data, byte[] encryptionKey)
+		internal static byte[] EncryptAes(byte[] data, byte[] encryptionKey, byte[] IV)
 		{
 			using (var aes = new AesCryptoServiceProvider {Padding = PaddingMode.ISO10126})
 			{
-				using (var encryptor = aes.CreateEncryptor(encryptionKey, new byte[16]))
+				using (var encryptor = aes.CreateEncryptor(encryptionKey, IV))
 				{
 					using (var ms = new MemoryStream())
 					{
@@ -107,11 +116,11 @@ namespace Kyru.Utilities
 		/// <param name="data">Data to decrypt</param>
 		/// <param name="encryptionKey">Key to decrypt the data with</param>
 		/// <returns>The decrypted data</returns>
-		internal static byte[] DecryptAes(byte[] data, byte[] encryptionKey)
+		internal static byte[] DecryptAes(byte[] data, byte[] encryptionKey, byte[] IV)
 		{
 			using (var aes = new AesCryptoServiceProvider {Padding = PaddingMode.ISO10126})
 			{
-				using (var decryptor = aes.CreateDecryptor(encryptionKey, new byte[16]))
+				using (var decryptor = aes.CreateDecryptor(encryptionKey, IV))
 				{
 					using (var ms = new MemoryStream(data))
 					{

@@ -16,7 +16,8 @@ namespace Tests
 			var key = Crypto.GenerateAesKey();
 			var data = new byte[10001];
 			new Random().NextBytes(data);
-			Assert.AreElementsEqual(data, Crypto.DecryptAes(Crypto.EncryptAes(data, key), key));
+			var IV = Crypto.GenerateIV();
+			Assert.AreElementsEqual(data, Crypto.DecryptAes(Crypto.EncryptAes(data, key, IV), key, IV));
 		}
 	}
 }
