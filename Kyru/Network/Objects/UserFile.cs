@@ -13,7 +13,7 @@ namespace Kyru.Network.Objects
 		internal ulong FileId;
 
 		[ProtoMember(3)]
-		internal byte[] EncryptedFileDecryptionKey;
+		internal byte[] EncryptedEncryptionKey;
 
 		[ProtoMember(4)] 
 		internal byte[] EncryptedIV;
