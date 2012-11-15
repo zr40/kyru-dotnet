@@ -124,15 +124,16 @@ namespace Kyru.Core
 		/// </summary>
 		/// <param name="userFile">the file to decrypt</param>
 		/// <param name="fileStream">the destination of the decrypted file</param>
+		/// <exception cref="NullReferenceException">One or more of the chunks could not be found</exception>
 		internal void DecryptFile(UserFile userFile, FileStream fileStream)
 		{
-			foreach (var afile in userFile.ChunkList)
+			foreach (KademliaId chunkId in userFile.ChunkList)
 			{
-				var chunk = app.LocalObjectStorage.GetObject(afile).Chunk;
+				var chunk = app.LocalObjectStorage.GetObject(chunkId).Chunk;
+				// TODO: Remote chunks
 				fileStream.Write(chunk.Data, 0, chunk.Data.Length);
 			}
 			// TODO: Encryption
-			// TODO: Work with chunks
 		}
 	}
 }

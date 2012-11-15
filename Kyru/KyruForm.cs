@@ -94,8 +94,15 @@ namespace Kyru
 			dialog.FileName = virtualLocalFileTree.SelectedNode.Text;
 			if (dialog.ShowDialog() == System.Windows.Forms.DialogResult.OK)
 			{
-				FileStream fs = new FileStream(dialog.FileName, FileMode.Create);
-				app.Session.DecryptFile(userFile, fs);
+				try
+				{
+					app.Session.DecryptFile(userFile, fs);
+				}
+				catch (NullReferenceException)
+				{
+					MessageBox.Show("One or more of the chunks could not be found. Your file may be hopelessly lost.");
+				}
+
 			}
 		}
 
