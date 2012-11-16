@@ -24,7 +24,7 @@ namespace Kyru
 
 			// TODO: Login
 
-			Application.Run(new Login(app));
+			Application.Run(new Login(app.LocalObjectStorage));
 			//Application.Run(new KyruForm(app));
 		}
 	}

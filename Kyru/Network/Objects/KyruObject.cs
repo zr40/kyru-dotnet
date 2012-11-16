@@ -11,22 +11,6 @@ namespace Kyru.Network.Objects
 		/// <remarks>Not part of the serialized object</remarks>
 		internal KademliaId ObjectId;
 
-		internal User User
-		{
-			get
-			{
-				return this as User;
-			}
-		}
-
-		internal Chunk Chunk
-		{
-			get
-			{
-				return this as Chunk;
-			}
-		}
-
 		internal abstract bool VerifyData();
 	}
 }

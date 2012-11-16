@@ -71,7 +71,7 @@ namespace Tests
 
 			storage.StoreObject(user);
 
-			var readUser = storage.GetObject(id).User;
+			var readUser = storage.GetObject(id) as User;
 			Assert.AreEqual(1, readUser.Files.Count);
 			Assert.AreEqual(0, readUser.DeletedFiles.Count);
 

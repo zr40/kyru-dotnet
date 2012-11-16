@@ -15,7 +15,7 @@ namespace Kyru.Core
 	internal sealed class Session
 	{
 		private byte[] privateKey;
-		private readonly App app;
+		private LocalObjectStorage localObjectStorage;
 		internal readonly User User;
 		internal string Username { get; private set; }
 
@@ -24,9 +24,9 @@ namespace Kyru.Core
 		/// </summary>
 		/// <param name="username">Username of the user</param>
 		/// <param name="password">Password of the user</param>
-		internal Session(string username, string password, App app)
+		internal Session(string username, string password, LocalObjectStorage localObjectStorage)
 		{
-			this.app = app;
+			this.localObjectStorage = localObjectStorage;
 
 			// TODO: Derive privateKey from username and password (in order to encrypt/decrypt files)
 
@@ -37,7 +37,7 @@ namespace Kyru.Core
 			Username = username;
 
 			// TODO: this is the wrong place; create session only when the user object exists or has been created
-			User = app.LocalObjectStorage.GetObject(id) as User;
+			User = localObjectStorage.GetObject(id) as User;
 			if (User == null)
 			{
 				// A new user
@@ -81,8 +81,8 @@ namespace Kyru.Core
 			                            };
 			User.Add(userFile);
 
-			app.LocalObjectStorage.StoreObject(chunk);
-			app.LocalObjectStorage.StoreObject(User);
+			localObjectStorage.StoreObject(chunk);
+			localObjectStorage.StoreObject(User);
 			return userFile;
 		}
 
@@ -131,7 +131,7 @@ namespace Kyru.Core
 			var ms = new MemoryStream();
 			foreach (KademliaId chunkId in userFile.ChunkList)
 			{
-				var chunk = app.LocalObjectStorage.GetObject(chunkId).Chunk;
+				var chunk = localObjectStorage.GetObject(chunkId) as Chunk;
 				ms.Write(chunk.Data, 0, chunk.Data.Length);
 			}
 

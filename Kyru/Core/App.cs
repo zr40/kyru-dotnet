@@ -24,10 +24,5 @@ namespace Kyru.Core
 		{
 			Node.Start();
 		}
-
-		internal void Login(string username, string password)
-		{
-			Session = new Session(username, password, this);
-		}
 	}
 }

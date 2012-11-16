@@ -9,27 +9,26 @@ namespace Kyru
 {
 	public partial class KyruForm : Form
 	{
-		private App app;
+		private Session session;
 
-		internal KyruForm(App app)
+		internal KyruForm(Session session)
 		{
-			this.app = app;
+			this.session = session;
 			InitializeComponent();
 
 			virtualLocalFileTreeInit();
-			Text = app.Session.Username + " - " + Text;
+			Text = session.Username + " - " + Text;
 		}
 
 		internal void virtualLocalFileTreeInit()
 		{
-			var session = app.Session;
 			foreach (var fileToShow in session.User.Files)
 			{
-				showFile(session, fileToShow);
+				showFile(fileToShow);
 			}
 		}
 
-		internal void showFile(Session session, UserFile fileToShow)
+		internal void showFile(UserFile fileToShow)
 		{
 			string fileName = session.DecryptFileName(fileToShow);
 			var dirs = fileName.Split('\\');
@@ -59,16 +58,10 @@ namespace Kyru
 			foreach (string filename in dialog.FileNames)
 			{
 				var fs = new FileStream(filename, FileMode.Open);
-				var file = app.Session.AddFile(fs, filename);
+				var file = session.AddFile(fs, filename);
 				fs.Close();
-				showFile(app.Session, file);
+				showFile(file);
 			}
-		}
-
-		private void addANodeToolStripMenuItem_Click(object sender, EventArgs e)
-		{
-			Form form = new AddNodeForm(app.Node.Kademlia);
-			form.ShowDialog();
 		}
 
 		private void virtualLocalFileTree_MouseUp(object sender, MouseEventArgs e)
@@ -95,14 +88,8 @@ namespace Kyru
 			dialog.FileName = virtualLocalFileTree.SelectedNode.Text;
 			if (dialog.ShowDialog() == DialogResult.OK)
 			{
-				try
-				{
-					//app.Session.DecryptFile(userFile, fs);
-				}
-				catch (NullReferenceException)
-				{
-					MessageBox.Show("One or more of the chunks could not be found. Your file may be hopelessly lost.");
-				}
+				FileStream fs = new FileStream(dialog.FileName, FileMode.Create);
+				session.DecryptFile(userFile, fs);
 			}
 		}
 
@@ -111,7 +98,7 @@ namespace Kyru
 			var userFile = virtualLocalFileTree.SelectedNode.Tag as UserFile;
 			if (userFile == null)
 				return;
-			app.Session.DeleteFile(userFile);
+			session.DeleteFile(userFile);
 			virtualLocalFileTree.Nodes.Remove(virtualLocalFileTree.SelectedNode);
 		}
 

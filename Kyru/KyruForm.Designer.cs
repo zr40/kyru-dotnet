@@ -34,10 +34,6 @@
 			  this.topMenu = new System.Windows.Forms.MenuStrip();
 			  this.systemToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			  this.addAFileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-			  this.addANodeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-			  this.configureDiskLimitsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-			  this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
-			  this.quitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			  this.rightClickMenu = new System.Windows.Forms.ContextMenuStrip(this.components);
 			  this.saveToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			  this.deleteToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -74,11 +70,7 @@
 			  // systemToolStripMenuItem
 			  // 
 			  this.systemToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.addAFileToolStripMenuItem,
-            this.addANodeToolStripMenuItem,
-            this.configureDiskLimitsToolStripMenuItem,
-            this.toolStripSeparator1,
-            this.quitToolStripMenuItem});
+            this.addAFileToolStripMenuItem});
 			  this.systemToolStripMenuItem.Name = "systemToolStripMenuItem";
 			  this.systemToolStripMenuItem.Size = new System.Drawing.Size(57, 20);
 			  this.systemToolStripMenuItem.Text = "System";
@@ -86,36 +78,9 @@
 			  // addAFileToolStripMenuItem
 			  // 
 			  this.addAFileToolStripMenuItem.Name = "addAFileToolStripMenuItem";
-			  this.addAFileToolStripMenuItem.Size = new System.Drawing.Size(187, 22);
+			  this.addAFileToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
 			  this.addAFileToolStripMenuItem.Text = "Add a file";
 			  this.addAFileToolStripMenuItem.Click += new System.EventHandler(this.addAFileToolStripMenuItem_Click);
-			  // 
-			  // addANodeToolStripMenuItem
-			  // 
-			  this.addANodeToolStripMenuItem.Name = "addANodeToolStripMenuItem";
-			  this.addANodeToolStripMenuItem.Size = new System.Drawing.Size(187, 22);
-			  this.addANodeToolStripMenuItem.Text = "Add a node";
-			  this.addANodeToolStripMenuItem.Click += new System.EventHandler(this.addANodeToolStripMenuItem_Click);
-			  // 
-			  // configureDiskLimitsToolStripMenuItem
-			  // 
-			  this.configureDiskLimitsToolStripMenuItem.Name = "configureDiskLimitsToolStripMenuItem";
-			  this.configureDiskLimitsToolStripMenuItem.Size = new System.Drawing.Size(187, 22);
-			  this.configureDiskLimitsToolStripMenuItem.Text = "Configure Disk Limits";
-			  this.configureDiskLimitsToolStripMenuItem.Visible = false;
-			  // 
-			  // toolStripSeparator1
-			  // 
-			  this.toolStripSeparator1.Name = "toolStripSeparator1";
-			  this.toolStripSeparator1.Size = new System.Drawing.Size(184, 6);
-			  this.toolStripSeparator1.Visible = false;
-			  // 
-			  // quitToolStripMenuItem
-			  // 
-			  this.quitToolStripMenuItem.Name = "quitToolStripMenuItem";
-			  this.quitToolStripMenuItem.Size = new System.Drawing.Size(187, 22);
-			  this.quitToolStripMenuItem.Text = "Quit";
-			  this.quitToolStripMenuItem.Visible = false;
 			  // 
 			  // rightClickMenu
 			  // 
@@ -171,11 +136,7 @@
         private System.Windows.Forms.TreeView virtualLocalFileTree;
         private System.Windows.Forms.ImageList iconList;
         private System.Windows.Forms.MenuStrip topMenu;
-        private System.Windows.Forms.ToolStripMenuItem systemToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem addANodeToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem configureDiskLimitsToolStripMenuItem;
-		private System.Windows.Forms.ToolStripSeparator toolStripSeparator1;
-        private System.Windows.Forms.ToolStripMenuItem quitToolStripMenuItem;
+		  private System.Windows.Forms.ToolStripMenuItem systemToolStripMenuItem;
 		  private System.Windows.Forms.ToolStripMenuItem addAFileToolStripMenuItem;
 		  private System.Windows.Forms.ContextMenuStrip rightClickMenu;
 		  private System.Windows.Forms.ToolStripMenuItem saveToolStripMenuItem;

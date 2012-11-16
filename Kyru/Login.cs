@@ -7,11 +7,11 @@ namespace Kyru
 {
 	internal partial class Login : Form
 	{
-		private App app;
+		private LocalObjectStorage localObjectStorage;
 
-		internal Login(App app)
+		internal Login(LocalObjectStorage localObjectStorage)
 		{
-			this.app = app;
+			this.localObjectStorage = localObjectStorage;
 			InitializeComponent();
 		}
 
@@ -19,9 +19,10 @@ namespace Kyru
 		{
 			if (txtUsername.Text != "" && txtPassword.Text != "")
 			{
-				app.Login(txtUsername.Text, txtPassword.Text);
+				Session session = new Session(txtUsername.Text, txtPassword.Text, localObjectStorage);
+
 				Visible = false;
-				var kform = new KyruForm(app);
+				var kform = new KyruForm(session);
 				kform.FormClosed += new FormClosedEventHandler(logout);
 				kform.ShowDialog();
 			}
@@ -46,7 +47,6 @@ namespace Kyru
 
 		private void logout(object sender, EventArgs e)
 		{
-			app.Session = null;
 			Visible = true;
 		}
 	}
