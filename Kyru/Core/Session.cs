@@ -77,8 +77,8 @@ namespace Kyru.Core
 			chunk.ObjectId = new KademliaId(hash);
 			chunkList.Add(chunk.ObjectId);
 
-			var userFile = new UserFile {ChunkList = chunkList, EncryptedFileName = Encoding.UTF8.GetBytes(fileName), // TODO encrypt the name
-			                            };
+			var userFile = new UserFile {ChunkList = chunkList, EncryptedFileName = Encoding.UTF8.GetBytes(fileName)}; // TODO encrypt the name
+
 			User.Add(userFile);
 
 			localObjectStorage.StoreObject(chunk);

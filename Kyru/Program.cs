@@ -1,11 +1,14 @@
 ﻿using System;
 using System.Windows.Forms;
 using Kyru.Utilities;
+using System.Threading;
 
 namespace Kyru
 {
 	internal static class Program
 	{
+		static ManualResetEvent _quitEvent = new ManualResetEvent(false);
+
 		[STAThread]
 		private static void Main()
 		{
@@ -17,15 +20,14 @@ namespace Kyru
 			Core.App app = new Core.App();
 
 			app.Start();
-			//app.Login("username", "password");
 
 			Application.EnableVisualStyles();
 			Application.SetCompatibleTextRenderingDefault(false);
 
-			// TODO: Login
+			app.CreateSystemTray();
 
-			Application.Run(new Login(app.LocalObjectStorage));
-			//Application.Run(new KyruForm(app));
+			// Todo, find a better solution
+			_quitEvent.WaitOne();
 		}
 	}
 }
