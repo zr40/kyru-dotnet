@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+
 using ProtoBuf;
 
 namespace Kyru.Network.Objects
@@ -15,7 +16,7 @@ namespace Kyru.Network.Objects
 		[ProtoMember(3)]
 		internal byte[] EncryptedEncryptionKey;
 
-		[ProtoMember(4)] 
+		[ProtoMember(4)]
 		internal byte[] EncryptedIV;
 
 		[ProtoMember(5)]

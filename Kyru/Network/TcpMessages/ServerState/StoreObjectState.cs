@@ -25,6 +25,7 @@ namespace Kyru.Network.TcpMessages.ServerState
 
 			if (app.LocalObjectStorage.KeepObject(storeObjectRequest.ObjectId))
 			{
+				// TODO: allow user object merges if the hash is different
 				response.Error = Error.ObjectAlreadyStored;
 			}
 			else if (storeObjectRequest.Length > LocalObjectStorage.MaxObjectSize)

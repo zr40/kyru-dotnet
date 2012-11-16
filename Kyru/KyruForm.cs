@@ -1,15 +1,15 @@
-﻿using System.Windows.Forms;
+﻿using System;
+using System.IO;
+using System.Windows.Forms;
 
 using Kyru.Core;
-using System.IO;
-
 using Kyru.Network.Objects;
 
 namespace Kyru
 {
 	public partial class KyruForm : Form
 	{
-		App app;
+		private App app;
 
 		internal KyruForm(App app)
 		{
@@ -17,7 +17,7 @@ namespace Kyru
 			InitializeComponent();
 
 			virtualLocalFileTreeInit();
-			this.Text = app.Session.Username + " - " + this.Text;
+			Text = app.Session.Username + " - " + Text;
 		}
 
 		internal void virtualLocalFileTreeInit()
@@ -29,7 +29,8 @@ namespace Kyru
 			}
 		}
 
-		internal void showFile(Session session, UserFile fileToShow) {
+		internal void showFile(Session session, UserFile fileToShow)
+		{
 			string fileName = session.DecryptFileName(fileToShow);
 			var dirs = fileName.Split('\\');
 			TreeNode node = null;
@@ -42,7 +43,7 @@ namespace Kyru
 				}
 				else
 				{
-					node = nodes.Add(dir,dir);
+					node = nodes.Add(dir, dir);
 					// TODO: Add images
 				}
 				nodes = node.Nodes;
@@ -50,21 +51,21 @@ namespace Kyru
 			node.Tag = fileToShow;
 		}
 
-		private void addAFileToolStripMenuItem_Click(object sender, System.EventArgs e)
+		private void addAFileToolStripMenuItem_Click(object sender, EventArgs e)
 		{
-			OpenFileDialog dialog = new OpenFileDialog();
+			var dialog = new OpenFileDialog();
 			dialog.Multiselect = true;
 			dialog.ShowDialog();
 			foreach (string filename in dialog.FileNames)
 			{
-				FileStream fs = new FileStream(filename, FileMode.Open);
-				var file = app.Session.AddFile(fs);
+				var fs = new FileStream(filename, FileMode.Open);
+				var file = app.Session.AddFile(fs, filename);
 				fs.Close();
 				showFile(app.Session, file);
 			}
 		}
 
-		private void addANodeToolStripMenuItem_Click(object sender, System.EventArgs e)
+		private void addANodeToolStripMenuItem_Click(object sender, EventArgs e)
 		{
 			Form form = new AddNodeForm(app.Node.Kademlia);
 			form.ShowDialog();
@@ -84,40 +85,39 @@ namespace Kyru
 			}
 		}
 
-		private void saveToolStripMenuItem_Click(object sender, System.EventArgs e)
+		private void saveToolStripMenuItem_Click(object sender, EventArgs e)
 		{
-			UserFile userFile = virtualLocalFileTree.SelectedNode.Tag as UserFile;
+			var userFile = virtualLocalFileTree.SelectedNode.Tag as UserFile;
 			if (userFile == null)
 				return;
 
-			SaveFileDialog dialog = new SaveFileDialog();
+			var dialog = new SaveFileDialog();
 			dialog.FileName = virtualLocalFileTree.SelectedNode.Text;
-			if (dialog.ShowDialog() == System.Windows.Forms.DialogResult.OK)
+			if (dialog.ShowDialog() == DialogResult.OK)
 			{
 				try
 				{
-					app.Session.DecryptFile(userFile, fs);
+					//app.Session.DecryptFile(userFile, fs);
 				}
 				catch (NullReferenceException)
 				{
 					MessageBox.Show("One or more of the chunks could not be found. Your file may be hopelessly lost.");
 				}
-
 			}
 		}
 
-		private void deleteToolStripMenuItem_Click(object sender, System.EventArgs e)
+		private void deleteToolStripMenuItem_Click(object sender, EventArgs e)
 		{
-			UserFile userFile = virtualLocalFileTree.SelectedNode.Tag as UserFile;
+			var userFile = virtualLocalFileTree.SelectedNode.Tag as UserFile;
 			if (userFile == null)
 				return;
 			app.Session.DeleteFile(userFile);
 			virtualLocalFileTree.Nodes.Remove(virtualLocalFileTree.SelectedNode);
 		}
 
-		private void infoToolStripMenuItem_Click(object sender, System.EventArgs e)
+		private void infoToolStripMenuItem_Click(object sender, EventArgs e)
 		{
-			throw new System.NotImplementedException();
+			throw new NotImplementedException();
 		}
 	}
 }

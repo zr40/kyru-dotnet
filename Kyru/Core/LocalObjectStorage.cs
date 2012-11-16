@@ -5,6 +5,7 @@ using System.Linq;
 
 using Kyru.Network;
 using Kyru.Network.Objects;
+using Kyru.Utilities;
 
 using ProtoBuf;
 
@@ -21,9 +22,9 @@ namespace Kyru.Core
 		{
 			this.config = config;
 
-			Directory.CreateDirectory(config.storeDirectory);
+			Directory.CreateDirectory(config.StoreDirectory);
 
-			foreach (var file in Directory.GetFiles(config.storeDirectory))
+			foreach (var file in Directory.GetFiles(config.StoreDirectory))
 			{
 				// TODO: verify file names and contents?
 				currentObjects[KademliaId.FromHex(Path.GetFileName(file))] = DateTime.Now;
@@ -38,7 +39,7 @@ namespace Kyru.Core
 			}
 		}
 
-		public const uint MaxObjectSize = 1024 * 1024; // 1 MiB
+		internal const uint MaxObjectSize = 1024 * 1024 + Crypto.AesHeaderSize; // 1 MiB
 
 		/// <summary>
 		/// Determines whether an object is locally stored. If it is, the access timestamp is updated.
@@ -129,7 +130,7 @@ namespace Kyru.Core
 
 		private string PathFor(KademliaId id)
 		{
-			return Path.Combine(config.storeDirectory, id.ToString());
+			return Path.Combine(config.StoreDirectory, id.ToString());
 		}
 	}
 }

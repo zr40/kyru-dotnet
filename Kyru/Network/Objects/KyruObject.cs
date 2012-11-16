@@ -27,10 +27,6 @@ namespace Kyru.Network.Objects
 			}
 		}
 
-		internal bool VerifyData()
-		{
-			// TODO
-			return true;
-		}
+		internal abstract bool VerifyData();
 	}
 }

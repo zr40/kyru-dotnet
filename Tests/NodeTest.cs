@@ -37,7 +37,7 @@ namespace Tests
 			response.SenderNodeId = id;
 
 			message.ResponseCallback(response);
-			Assert.AreEqual(1, kademlia.CurrentContacts);
+			Assert.AreEqual(1, kademlia.CurrentContactCount);
 
 			// actual test
 
@@ -51,12 +51,12 @@ namespace Tests
 
 			for (int i = 0; i < Node.TimeoutTicks; i++)
 				node.TimerElapsed();
-			Assert.AreEqual(1, kademlia.CurrentContacts);
+			Assert.AreEqual(1, kademlia.CurrentContactCount);
 
 			for (int i = 0; i < Node.TimeoutTicks; i++)
 				node.TimerElapsed();
 			Assert.IsTrue(noResponse, "The no-response callback should be called in this test");
-			Assert.AreEqual(0, kademlia.CurrentContacts);
+			Assert.AreEqual(0, kademlia.CurrentContactCount);
 		}
 	}
 }

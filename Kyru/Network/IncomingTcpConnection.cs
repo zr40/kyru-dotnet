@@ -8,8 +8,8 @@ namespace Kyru.Network
 {
 	internal class IncomingTcpConnection
 	{
-		internal readonly App app;
-		internal readonly TcpClient client;
+		private readonly App app;
+		private readonly TcpClient client;
 		private IServerState serverState;
 
 		internal IncomingTcpConnection(App app, TcpClient client)

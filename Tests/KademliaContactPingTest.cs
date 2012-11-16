@@ -48,10 +48,10 @@ namespace Tests
 			kademlia.TimerElapsed();
 			for (int i = 0; i < Node.TimeoutTicks * 2; i++)
 			{
-				Assert.AreEqual(1, kademlia.CurrentContacts);
+				Assert.AreEqual(1, kademlia.CurrentContactCount);
 				node.TimerElapsed();
 			}
-			Assert.AreEqual(0, kademlia.CurrentContacts);
+			Assert.AreEqual(0, kademlia.CurrentContactCount);
 		}
 
 		[Test]
@@ -65,11 +65,11 @@ namespace Tests
 
 			for (int i = 0; i < Node.TimeoutTicks * 2; i++)
 			{
-				Assert.AreEqual(1, kademlia.CurrentContacts);
+				Assert.AreEqual(1, kademlia.CurrentContactCount);
 				node.TimerElapsed();
 			}
-			Assert.AreEqual(1, kademlia.CurrentContacts);
-			Assert.AreEqual(1, kademlia2.CurrentContacts);
+			Assert.AreEqual(1, kademlia.CurrentContactCount);
+			Assert.AreEqual(1, kademlia2.CurrentContactCount);
 		}
 	}
 }

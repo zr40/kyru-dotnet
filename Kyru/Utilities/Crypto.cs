@@ -11,6 +11,8 @@ namespace Kyru.Utilities
 		private const int Iterations = 10000;
 		private static readonly SHA1CryptoServiceProvider hash = new SHA1CryptoServiceProvider();
 
+		internal const int AesHeaderSize = sizeof(int);
+
 		/// <summary>
 		/// Generates an RSA from a username and password
 		/// </summary>
@@ -93,15 +95,17 @@ namespace Kyru.Utilities
 		internal static byte[] EncryptAes(byte[] data, byte[] encryptionKey, byte[] IV)
 		{
 			using (var aes = new AesCryptoServiceProvider {Padding = PaddingMode.ISO10126})
-				using (var encryptor = aes.CreateEncryptor(encryptionKey, IV))
-					using (var ms = new MemoryStream())
-						using (var cs = new CryptoStream(ms, encryptor, CryptoStreamMode.Write))
-						{
-							cs.Write(BitConverter.GetBytes(data.Length), 0, 4);
-							cs.Write(data, 0, data.Length);
-							cs.FlushFinalBlock();
-							return ms.ToArray();
-						}
+			using (var encryptor = aes.CreateEncryptor(encryptionKey, IV))
+			using (var ms = new MemoryStream())
+			{
+				ms.Write(BitConverter.GetBytes(data.Length), 0, AesHeaderSize);
+				using (var cs = new CryptoStream(ms, encryptor, CryptoStreamMode.Write))
+				{
+					cs.Write(data, 0, data.Length);
+					cs.FlushFinalBlock();
+					return ms.ToArray();
+				}
+			}
 		}
 
 		/// <summary>
@@ -113,17 +117,20 @@ namespace Kyru.Utilities
 		internal static byte[] DecryptAes(byte[] data, byte[] encryptionKey, byte[] IV)
 		{
 			using (var aes = new AesCryptoServiceProvider {Padding = PaddingMode.ISO10126})
-				using (var decryptor = aes.CreateDecryptor(encryptionKey, IV))
-					using (var ms = new MemoryStream(data))
-						using (var cs = new CryptoStream(ms, decryptor, CryptoStreamMode.Read))
-						{
-							var lengthBytes = new byte[4];
-							cs.Read(lengthBytes, 0, 4);
-							var length = BitConverter.ToInt32(lengthBytes, 0);
-							var decryptedData = new byte[length];
-							cs.Read(decryptedData, 0, length);
-							return decryptedData;
-						}
+			using (var decryptor = aes.CreateDecryptor(encryptionKey, IV))
+			using (var ms = new MemoryStream(data))
+			{
+				var lengthBytes = new byte[AesHeaderSize];
+				ms.Read(lengthBytes, 0, AesHeaderSize);
+				var length = BitConverter.ToInt32(lengthBytes, 0);
+
+				using (var cs = new CryptoStream(ms, decryptor, CryptoStreamMode.Read))
+				{
+					var decryptedData = new byte[length];
+					cs.Read(decryptedData, 0, length);
+					return decryptedData;
+				}
+			}
 		}
 
 		/// <summary>

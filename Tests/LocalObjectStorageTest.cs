@@ -20,7 +20,7 @@ namespace Tests
 			tempPath = Path.Combine(Path.GetTempPath(), "KyruTest" + Path.GetRandomFileName());
 
 			config = new Config();
-			config.storeDirectory = tempPath;
+			config.StoreDirectory = tempPath;
 		}
 
 		[TearDown]

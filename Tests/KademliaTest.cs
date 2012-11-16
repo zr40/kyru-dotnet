@@ -29,7 +29,7 @@ namespace Tests
 		[Test]
 		internal void KademliaStartsWith0Contacts()
 		{
-			Assert.AreEqual(0, kademlia.CurrentContacts);
+			Assert.AreEqual(0, kademlia.CurrentContactCount);
 		}
 
 		[Test]
@@ -42,7 +42,7 @@ namespace Tests
 				var message = new UdpMessage();
 				kademlia.HandleIncomingRequest(ni, message);
 
-				Assert.AreEqual(i, kademlia.CurrentContacts);
+				Assert.AreEqual(i, kademlia.CurrentContactCount);
 				Assert.IsNotNull(message.PingRequest);
 
 				var response = new UdpMessage();
@@ -50,7 +50,7 @@ namespace Tests
 				response.SenderNodeId = id;
 				message.ResponseCallback(response);
 
-				Assert.AreEqual(i + 1, kademlia.CurrentContacts);
+				Assert.AreEqual(i + 1, kademlia.CurrentContactCount);
 			}
 		}
 
@@ -67,8 +67,8 @@ namespace Tests
 				kademlia.AddNode(new IPEndPoint(IPAddress.Loopback, 65432));
 				Thread.Sleep(TestParameters.LocalhostCommunicationTimeout);
 
-				Assert.AreEqual(1, kademlia.CurrentContacts);
-				Assert.AreEqual(1, kademlia2.CurrentContacts);
+				Assert.AreEqual(1, kademlia.CurrentContactCount);
+				Assert.AreEqual(1, kademlia2.CurrentContactCount);
 			}
 		}
 	}

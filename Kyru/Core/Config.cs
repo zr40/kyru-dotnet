@@ -5,11 +5,11 @@ namespace Kyru.Core
 {
 	internal sealed class Config
 	{
-		internal string storeDirectory;
+		internal string StoreDirectory;
 
 		internal Config()
 		{
-			storeDirectory = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData), "Kyru", "objects");
+			StoreDirectory = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData), "Kyru", "objects");
 		}
 	}
 }

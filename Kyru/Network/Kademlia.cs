@@ -31,7 +31,7 @@ namespace Kyru.Network
 
 		private readonly List<KnownNode>[] buckets = new List<KnownNode>[KademliaId.Size];
 
-		internal int CurrentContacts
+		internal int CurrentContactCount
 		{
 			get
 			{
@@ -126,7 +126,7 @@ namespace Kyru.Network
 				this.Log("Adding contact {0} ({1})", contact.NodeId, contact.EndPoint);
 				bucket.Add(new KnownNode(contact));
 
-				if (CurrentContacts == 1)
+				if (CurrentContactCount == 1)
 				{
 					// populate the contacts list
 					NodeLookup(node.Id, nodes =>

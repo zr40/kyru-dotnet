@@ -12,5 +12,11 @@ namespace Kyru.Network.Objects
 		{
 			Data = data;
 		}
+
+		internal override bool VerifyData()
+		{
+			// TODO: verify hash, compare with id
+			return true;
+		}
 	}
 }
