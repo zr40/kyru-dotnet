@@ -11,9 +11,9 @@ namespace Kyru.Network.TcpMessages.ServerState
 	{
 		private readonly TcpClient client;
 		private readonly NetworkStream stream;
-		private readonly App app;
+		private readonly KyruApplication app;
 
-		internal HandshakeState(TcpClient client, NetworkStream stream, App app)
+		internal HandshakeState(TcpClient client, NetworkStream stream, KyruApplication app)
 		{
 			this.client = client;
 			this.stream = stream;

@@ -10,10 +10,10 @@ namespace Kyru.Network.TcpMessages.Clients
 {
 	internal abstract class ClientBase
 	{
-		protected readonly App App;
+		protected readonly KyruApplication App;
 		protected readonly NodeInformation TargetNode;
 
-		protected ClientBase(App app, NodeInformation targetNode)
+		protected ClientBase(KyruApplication app, NodeInformation targetNode)
 		{
 			App = app;
 			TargetNode = targetNode;

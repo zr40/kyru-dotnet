@@ -29,9 +29,9 @@ namespace Tests.SystemTests
 		{
 			KyruTimer.Reset();
 
-			nodeA = new App(12345).Node;
-			nodeB = new App(12346).Node;
-			nodeC = new App(12347).Node;
+			nodeA = new KyruApplication(12345).Node;
+			nodeB = new KyruApplication(12346).Node;
+			nodeC = new KyruApplication(12347).Node;
 
 			nodeAInfo = new NodeInformation(new IPEndPoint(IPAddress.Loopback, 12345), nodeA.Id);
 			nodeBInfo = new NodeInformation(new IPEndPoint(IPAddress.Loopback, 12346), nodeB.Id);

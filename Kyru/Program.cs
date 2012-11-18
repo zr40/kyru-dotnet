@@ -7,7 +7,7 @@ namespace Kyru
 {
 	internal static class Program
 	{
-		static ManualResetEvent _quitEvent = new ManualResetEvent(false);
+		static ManualResetEvent neverThrown = new ManualResetEvent(false);
 
 		[STAThread]
 		private static void Main()
@@ -17,7 +17,7 @@ namespace Kyru
 
 			KyruTimer.Start();
 
-			Core.App app = new Core.App();
+			Core.KyruApplication app = new Core.KyruApplication();
 
 			app.Start();
 
@@ -26,8 +26,9 @@ namespace Kyru
 
 			app.CreateSystemTray();
 
+			// Make sure the application doesn't quit at the end of the main loop.
 			// Todo, find a better solution
-			_quitEvent.WaitOne();
+			neverThrown.WaitOne();
 		}
 	}
 }

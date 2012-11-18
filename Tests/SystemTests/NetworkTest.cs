@@ -35,7 +35,7 @@ namespace Tests.SystemTests
 			{
 				var port = (ushort) (12000 + i);
 
-				var node = new App(port).Node;
+				var node = new KyruApplication(port).Node;
 				node.Start();
 				nodes.Add(node);
 

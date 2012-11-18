@@ -12,7 +12,7 @@ namespace Kyru.Network.TcpMessages.Clients
 		private readonly KademliaId objectId;
 		private readonly Action<Error, byte[]> done;
 
-		internal GetObjectClient(App app, NodeInformation targetNode, KademliaId objectId, Action<Error, byte[]> done) : base(app, targetNode)
+		internal GetObjectClient(KyruApplication app, NodeInformation targetNode, KademliaId objectId, Action<Error, byte[]> done) : base(app, targetNode)
 		{
 			this.objectId = objectId;
 			this.done = done;

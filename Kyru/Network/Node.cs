@@ -18,7 +18,7 @@ namespace Kyru.Network
 	internal sealed class Node : ITimerListener, IDisposable
 	{
 		internal ushort Port { get; private set; }
-		private readonly App app;
+		private readonly KyruApplication app;
 		private readonly UdpClient udp;
 		private readonly TcpListener tcp;
 
@@ -46,11 +46,11 @@ namespace Kyru.Network
 			internal KademliaId NodeId;
 		}
 
-		internal Node(App app) : this(12045, app)
+		internal Node(KyruApplication app) : this(12045, app)
 		{
 		}
 
-		internal Node(ushort port, App app)
+		internal Node(ushort port, KyruApplication app)
 		{
 			Port = port;
 			this.app = app;

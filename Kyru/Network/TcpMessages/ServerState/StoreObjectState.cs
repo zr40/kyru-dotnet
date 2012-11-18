@@ -9,10 +9,10 @@ namespace Kyru.Network.TcpMessages.ServerState
 	internal sealed class StoreObjectState : IServerState
 	{
 		private readonly NetworkStream stream;
-		private readonly App app;
+		private readonly KyruApplication app;
 		private readonly StoreObjectRequest storeObjectRequest;
 
-		internal StoreObjectState(NetworkStream stream, App app, StoreObjectRequest storeObjectRequest)
+		internal StoreObjectState(NetworkStream stream, KyruApplication app, StoreObjectRequest storeObjectRequest)
 		{
 			this.stream = stream;
 			this.app = app;

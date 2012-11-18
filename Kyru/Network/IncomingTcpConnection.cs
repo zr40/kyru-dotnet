@@ -8,11 +8,11 @@ namespace Kyru.Network
 {
 	internal class IncomingTcpConnection
 	{
-		private readonly App app;
+		private readonly KyruApplication app;
 		private readonly TcpClient client;
 		private IServerState serverState;
 
-		internal IncomingTcpConnection(App app, TcpClient client)
+		internal IncomingTcpConnection(KyruApplication app, TcpClient client)
 		{
 			this.app = app;
 			this.client = client;

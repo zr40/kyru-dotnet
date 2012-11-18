@@ -13,7 +13,7 @@ namespace Kyru.Network.TcpMessages.Clients
 		private readonly byte[] bytes;
 		private readonly Action<Error> done;
 
-		internal StoreObjectClient(App app, NodeInformation targetNode, KademliaId objectId, byte[] bytes, Action<Error> done) : base(app, targetNode)
+		internal StoreObjectClient(KyruApplication app, NodeInformation targetNode, KademliaId objectId, byte[] bytes, Action<Error> done) : base(app, targetNode)
 		{
 			this.objectId = objectId;
 			this.bytes = bytes;

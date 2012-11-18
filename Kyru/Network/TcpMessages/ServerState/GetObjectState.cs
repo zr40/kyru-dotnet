@@ -9,10 +9,10 @@ namespace Kyru.Network.TcpMessages.ServerState
 	internal sealed class GetObjectState : IServerState
 	{
 		private readonly NetworkStream stream;
-		private readonly App app;
+		private readonly KyruApplication app;
 		private readonly GetObjectRequest getObjectRequest;
 
-		internal GetObjectState(NetworkStream stream, App app, GetObjectRequest getObjectRequest)
+		internal GetObjectState(NetworkStream stream, KyruApplication app, GetObjectRequest getObjectRequest)
 		{
 			this.stream = stream;
 			this.app = app;
