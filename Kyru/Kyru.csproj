@@ -65,7 +65,7 @@
     <Compile Include="Utilities\Crypto.cs" />
     <Compile Include="DateTimeExtension.cs" />
     <Compile Include="Logging.cs" />
-    <Compile Include="Core\App.cs" />
+    <Compile Include="Core\KyruApplication.cs" />
     <Compile Include="Core\Config.cs" />
     <Compile Include="ITimerListener.cs" />
     <Compile Include="Login.cs">

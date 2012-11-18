@@ -2,6 +2,7 @@
 using System.Windows.Forms;
 using System;
 using System.Drawing;
+using System.Threading;
 
 namespace Kyru.Core
 {
@@ -59,13 +60,12 @@ namespace Kyru.Core
 
 		private void OnLogin(object sender, EventArgs e)
 		{
-
-			Application.Run(new Login(LocalObjectStorage));
+			new Thread(() => new Login(LocalObjectStorage).ShowDialog()).Start();
 		}
 
 		private void OnRegisterNode(object sender, EventArgs e)
 		{
-			Application.Run(new AddNodeForm(Node.Kademlia));
+			new Thread(() => new AddNodeForm(Node.Kademlia).ShowDialog()).Start();
 		}
 	}
 }
