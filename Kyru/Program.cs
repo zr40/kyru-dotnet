@@ -58,7 +58,7 @@ namespace Kyru
 
 		private static void OnLogin(object sender, EventArgs e)
 		{
-			Form f = new Login(app.LocalObjectStorage);
+			Form f = new LoginForm(app.LocalObjectStorage);
 			f.Show();
 		}
 
