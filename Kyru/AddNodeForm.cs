@@ -23,7 +23,7 @@ namespace Kyru
 			if (IPAddress.TryParse(txtIp.Text, out address) && int.TryParse(txtPort.Text, out port))
 			{
 				kademlia.AddNode(new IPEndPoint(address, port));
-				//this.Close();
+				this.Close();
 			}
 		}
 	}

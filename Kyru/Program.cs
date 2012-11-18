@@ -44,7 +44,7 @@ namespace Kyru
 			trayIcon = new NotifyIcon();
 			trayIcon.Text = "Kyru";
 			trayIcon.Icon = new Icon("kyru.ico");
-			trayIcon.Click += OnLogin;
+			trayIcon.MouseDoubleClick += OnLogin;
 
 			trayIcon.ContextMenu = trayMenu;
 			trayIcon.Visible = true;

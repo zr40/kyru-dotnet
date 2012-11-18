@@ -23,31 +23,13 @@ namespace Kyru
 
 				Visible = false;
 				var kform = new KyruForm(session);
-				kform.FormClosed += new FormClosedEventHandler(logout);
-				kform.ShowDialog();
+				kform.Show();
+				this.Close();
 			}
 			else
 			{
 				MessageBox.Show("You seem to be missing your username or password", "Warning");
 			}
-		}
-
-		private void btnRegister_Click(object sender, EventArgs e)
-		{
-			var registry = new Register(this);
-			registry.Show();
-			Visible = false;
-		}
-
-		private void btnClose_Click(object sender, EventArgs e)
-		{
-			// how to make this work?
-			Close();
-		}
-
-		private void logout(object sender, EventArgs e)
-		{
-			Visible = true;
 		}
 	}
 }
