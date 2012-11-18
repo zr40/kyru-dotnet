@@ -4,6 +4,7 @@ using System.Windows.Forms;
 
 using Kyru.Core;
 using Kyru.Network.Objects;
+using System.Threading;
 
 namespace Kyru
 {
@@ -54,6 +55,7 @@ namespace Kyru
 		{
 			var dialog = new OpenFileDialog();
 			dialog.Multiselect = true;
+			Thread.CurrentThread.SetApartmentState(ApartmentState.STA);
 			dialog.ShowDialog();
 			foreach (string filename in dialog.FileNames)
 			{
