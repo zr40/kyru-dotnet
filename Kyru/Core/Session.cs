@@ -116,7 +116,7 @@ namespace Kyru.Core
 		/// <returns>the decrypted filekey</returns>
 		private byte[] DecryptFileKey(UserFile userFile)
 		{
-			return userFile.EncryptedEncryptionKey;
+			return userFile.EncryptedKey;
 			//TODO: decryption;
 		}
 
