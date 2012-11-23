@@ -90,8 +90,10 @@ namespace Kyru
 			dialog.FileName = virtualLocalFileTree.SelectedNode.Text;
 			if (dialog.ShowDialog() == DialogResult.OK)
 			{
-				FileStream fs = new FileStream(dialog.FileName, FileMode.Create);
-				session.DecryptFile(userFile, fs);
+				using (FileStream fs = new FileStream(dialog.FileName, FileMode.Create))
+				{
+					session.DecryptFile(userFile, fs);
+				}
 			}
 		}
 

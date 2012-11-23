@@ -138,6 +138,7 @@ namespace Kyru.Core
 			var bytes = ms.ToArray();
 			// TODO: decrypt this
 			output.Write(bytes, 0, bytes.Length);
+			output.Flush();
 		}
 	}
 }
