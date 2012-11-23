@@ -53,7 +53,7 @@ namespace Kyru.Core
 		/// <returns>The filename</returns>
 		internal string DecryptFileName(UserFile userFile)
 		{
-			return Encoding.UTF8.GetString(userFile.EncryptedFileName);
+			return Encoding.UTF8.GetString(Crypto.DecryptAes(userFile.EncryptedFileName, DecryptFileKey(userFile), userFile.IV));
 			//TODO: decryption
 		}
 
@@ -66,18 +66,27 @@ namespace Kyru.Core
 		internal UserFile AddFile(Stream input, string fileName)
 		{
 			var data = new byte[input.Length];
-
 			var chunkList = new List<KademliaId>();
+			byte[] fileKey = Crypto.GenerateAesKey();
+			byte[] fileIV = Crypto.GenerateIV();
 
 			// TODO: split into 1 MiB chunks
 			input.Read(data, 0, (int) input.Length);
+			data = Crypto.EncryptAes(data,fileKey,fileIV);
 			var chunk = new Chunk(data);
 
 			byte[] hash = Crypto.Hash(data);
 			chunk.ObjectId = new KademliaId(hash);
 			chunkList.Add(chunk.ObjectId);
-
-			var userFile = new UserFile {ChunkList = chunkList, EncryptedFileName = Encoding.UTF8.GetBytes(fileName)}; // TODO encrypt the name
+			
+			var userFile = new UserFile {
+				ChunkList = chunkList,
+				EncryptedFileName = Crypto.EncryptAes(Encoding.UTF8.GetBytes(fileName),fileKey, fileIV),
+				EncryptedKey = fileKey, // TODO: RSA encrypt the key
+				IV = fileIV,
+				Hash = hash
+				// TODO: Missing fields
+			};
 
 			User.Add(userFile);
 
@@ -136,7 +145,7 @@ namespace Kyru.Core
 			}
 
 			var bytes = ms.ToArray();
-			// TODO: decrypt this
+			bytes = Crypto.DecryptAes(bytes, DecryptFileKey(userFile), userFile.IV);
 			output.Write(bytes, 0, bytes.Length);
 			output.Flush();
 		}

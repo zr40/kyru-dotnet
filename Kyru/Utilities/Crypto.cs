@@ -91,6 +91,7 @@ namespace Kyru.Utilities
 		/// </summary>
 		/// <param name="data">Data to encrypt</param>
 		/// <param name="encryptionKey">Key to use for encryption</param>
+		/// <param name="IV">see http://msdn.microsoft.com/en-us/library/system.security.cryptography.symmetricalgorithm.iv(v=vs.95).aspx</param>
 		/// <returns>The encrypted data</returns>
 		internal static byte[] EncryptAes(byte[] data, byte[] encryptionKey, byte[] IV)
 		{
