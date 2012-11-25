@@ -11,7 +11,7 @@ using ProtoBuf;
 
 namespace Kyru.Core
 {
-	internal sealed class LocalObjectStorage
+	internal sealed class LocalObjectStorage : ITimerListener
 	{
 		private readonly Config config;
 
@@ -29,6 +29,8 @@ namespace Kyru.Core
 				// TODO: verify file names and contents?
 				currentObjects[KademliaId.FromHex(Path.GetFileName(file))] = DateTime.Now;
 			}
+
+			KyruTimer.Register(this, 60);
 		}
 
 		internal IList<KademliaId> CurrentObjects
@@ -131,6 +133,11 @@ namespace Kyru.Core
 		private string PathFor(KademliaId id)
 		{
 			return Path.Combine(config.StoreDirectory, id.ToString());
+		}
+
+		public void TimerElapsed()
+		{
+			// TODO: check availability of objects; store the object with the least availability on a random node
 		}
 	}
 }
