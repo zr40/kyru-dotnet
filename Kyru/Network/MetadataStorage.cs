@@ -17,7 +17,7 @@ namespace Kyru.Network
 		{
 			this.node = node;
 
-			KyruTimer.Register(this, 60);
+			KyruTimer.Register(this, 3600);
 		}
 
 		/// <summary>
@@ -25,35 +25,41 @@ namespace Kyru.Network
 		/// </summary>
 		internal KyruObjectMetadata[] Get(KademliaId id)
 		{
-			List<KyruObjectMetadata> metadata;
-			if (storage.TryGetValue(id, out metadata) && metadata.Count != 0)
-				return metadata.ToArray();
-			return null;
+			lock (storage)
+			{
+				List<KyruObjectMetadata> metadata;
+				if (storage.TryGetValue(id, out metadata) && metadata.Count != 0)
+					return metadata.ToArray();
+				return null;
+			}
 		}
 
 		internal void Store(KademliaId id, KyruObjectMetadata[] newMetadata)
 		{
-			if (!storage.ContainsKey(id))
+			lock (storage)
 			{
-				storage[id] = new List<KyruObjectMetadata>();
-			}
-			var metadata = storage[id];
-
-			foreach (var newItem in newMetadata)
-			{
-				// make sure the timestamp isn't in the future
-				newItem.Timestamp = Math.Min(DateTime.Now.UnixTimestamp(), newItem.Timestamp);
-
-				var item = metadata.FirstOrDefault(m => m.IpAddress == newItem.IpAddress && m.NodeId == newItem.NodeId);
-
-				if (item == null)
+				if (!storage.ContainsKey(id))
 				{
-					VerifyOwnership(id, newItem);
-					metadata.Add(newItem);
+					storage[id] = new List<KyruObjectMetadata>();
 				}
-				else
+				var metadata = storage[id];
+
+				foreach (var newItem in newMetadata)
 				{
-					item.Timestamp = Math.Max(item.Timestamp, newItem.Timestamp);
+					// make sure the timestamp isn't in the future
+					newItem.Timestamp = Math.Min(DateTime.Now.UnixTimestamp(), newItem.Timestamp);
+
+					var item = metadata.FirstOrDefault(m => m.IpAddress == newItem.IpAddress && m.NodeId == newItem.NodeId);
+
+					if (item == null)
+					{
+						VerifyOwnership(id, newItem);
+						metadata.Add(newItem);
+					}
+					else
+					{
+						item.Timestamp = Math.Max(item.Timestamp, newItem.Timestamp);
+					}
 				}
 			}
 		}
@@ -67,20 +73,59 @@ namespace Kyru.Network
 			                           {
 				                           if (!udpMessage.KeepObjectResponse.HasObject) return;
 
-				                           if (!storage.ContainsKey(objectId))
-					                           storage[objectId] = new List<KyruObjectMetadata>();
+				                           lock (storage)
+				                           {
+					                           if (!storage.ContainsKey(objectId))
+						                           storage[objectId] = new List<KyruObjectMetadata>();
 
-				                           newItem.Timestamp = DateTime.Now.UnixTimestamp();
-				                           storage[objectId].Add(newItem);
+					                           newItem.Timestamp = DateTime.Now.UnixTimestamp();
+					                           storage[objectId].Add(newItem);
+				                           }
 			                           };
 			node.SendUdpMessage(message, new IPEndPoint(newItem.IpAddress, newItem.Port), newItem.NodeId);
 		}
 
 		public void TimerElapsed()
 		{
-			// TODO: republish metadata, expire old entries
+			this.Log("Republishing metadata");
 
-			//throw new NotImplementedException();
+			lock (storage)
+			{
+				// remove expired metadata
+				var deadline = DateTime.Now.UnixTimestamp() - 86400;
+
+				var empty = new List<KademliaId>();
+
+				foreach (var metadata in storage)
+				{
+					metadata.Value.RemoveAll(m => deadline > m.Timestamp);
+
+					if (metadata.Value.Count == 0)
+						empty.Add(metadata.Key);
+				}
+
+				foreach (var id in empty)
+				{
+					storage.Remove(id);
+				}
+
+				foreach (var metadata in storage)
+				{
+					node.Kademlia.NodeLookup(metadata.Key, foundNodes =>
+					                                       {
+						                                       var storeRequest = new StoreRequest();
+						                                       storeRequest.ObjectId = metadata.Key;
+						                                       storeRequest.Data = metadata.Value.ToArray();
+
+						                                       foreach (var foundNode in foundNodes)
+						                                       {
+							                                       var message = new UdpMessage();
+							                                       message.StoreRequest = storeRequest;
+							                                       node.SendUdpMessage(message, foundNode.EndPoint, foundNode.NodeId);
+						                                       }
+					                                       });
+				}
+			}
 		}
 	}
 }
