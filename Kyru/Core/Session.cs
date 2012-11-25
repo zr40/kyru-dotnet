@@ -147,7 +147,6 @@ namespace Kyru.Core
 			var bytes = ms.ToArray();
 			bytes = Crypto.DecryptAes(bytes, DecryptFileKey(userFile), userFile.IV);
 			output.Write(bytes, 0, bytes.Length);
-			output.Flush();
 		}
 	}
 }
