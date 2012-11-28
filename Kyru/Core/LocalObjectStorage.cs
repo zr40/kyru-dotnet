@@ -75,6 +75,7 @@ namespace Kyru.Core
 			{
 				Serializer.Serialize(stream, o);
 				node.StoreObject(o.ObjectId, stream.ToArray());
+				Store(o.ObjectId, stream.ToArray());
 			}
 		}
 
