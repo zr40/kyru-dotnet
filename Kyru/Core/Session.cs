@@ -75,16 +75,14 @@ namespace Kyru.Core
 			data = Crypto.EncryptAes(data,fileKey,fileIV);
 			var chunk = new Chunk(data);
 
-			byte[] hash = Crypto.Hash(data);
-			chunk.ObjectId = new KademliaId(hash);
+			chunk.ObjectId = chunk.generateID();
 			chunkList.Add(chunk.ObjectId);
 			
 			var userFile = new UserFile {
 				ChunkList = chunkList,
 				EncryptedFileName = Crypto.EncryptAes(Encoding.UTF8.GetBytes(fileName),fileKey, fileIV),
 				EncryptedKey = fileKey, // TODO: RSA encrypt the key
-				IV = fileIV,
-				Hash = hash
+				IV = fileIV
 				// TODO: Missing fields
 			};
 
