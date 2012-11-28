@@ -20,7 +20,7 @@ namespace Kyru
 			virtualLocalFileTreeInit();
 			Text = session.Username + " - " + Text;
 
-			session.User.OnFileAdded += new FileEventHandler(showFile);
+			session.User.OnFileAdded += new Action<UserFile>(showFile);
 		}
 
 		internal void virtualLocalFileTreeInit()

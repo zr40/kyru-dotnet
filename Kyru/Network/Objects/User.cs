@@ -7,8 +7,6 @@ using ProtoBuf;
 
 namespace Kyru.Network.Objects
 {
-	internal delegate void FileEventHandler(UserFile uf);
-
 	/// <summary>
 	/// The User class contains public as well as encrypted data
 	/// </summary>
@@ -24,9 +22,8 @@ namespace Kyru.Network.Objects
 		[ProtoMember(3)]
 		private readonly byte[] publicKey;
 
-		internal event FileEventHandler OnFileAdded;
-		//internal event FileEventHandler OnFileDeleted;
-		//internal event FileEventHandler OnFileStored;
+		internal event Action<UserFile> OnFileAdded;
+		internal event Action<ulong> OnFileDeleted;
 
 		[Obsolete("TODO: use other constructor")]
 		internal User()
@@ -77,6 +74,9 @@ namespace Kyru.Network.Objects
 			{
 				deletedFiles.Add(new Tuple<byte[], ulong>(signature, fileId));
 				files.RemoveAll(kf => kf.FileId == fileId);
+
+				if (OnFileDeleted != null)
+					OnFileDeleted(fileId);
 			}
 		}
 
