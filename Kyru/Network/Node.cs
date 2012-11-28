@@ -281,6 +281,19 @@ namespace Kyru.Network
 			new Thread(new GetObjectClient(app, targetNode, objectId, done).ThreadStart).Start();
 		}
 
+		internal void StoreObject(KademliaId objectId, byte[] bytes)
+		{
+			new Thread(() =>
+			{
+				Kademlia.NodeLookup(objectId, list =>
+				{
+					foreach (var item in list) {
+						StoreObject(item, objectId, bytes, (error) => { });
+					}
+				});
+			}).Start();
+		}
+
 		internal void StoreObject(NodeInformation targetNode, KademliaId objectId, byte[] bytes, Action<Error> done)
 		{
 			new Thread(new StoreObjectClient(app, targetNode, objectId, bytes, done).ThreadStart).Start();

@@ -14,13 +14,15 @@ namespace Kyru.Core
 	internal sealed class LocalObjectStorage : ITimerListener
 	{
 		private readonly Config config;
+		private readonly Node node;
 
 		/// <remarks>Value: access timestamp</remarks>
 		private readonly Dictionary<KademliaId, DateTime> currentObjects = new Dictionary<KademliaId, DateTime>();
 
-		internal LocalObjectStorage(Config config)
+		internal LocalObjectStorage(Config config, Network.Node node)
 		{
 			this.config = config;
+			this.node = node;
 
 			Directory.CreateDirectory(config.StoreDirectory);
 
@@ -57,6 +59,10 @@ namespace Kyru.Core
 			return false;
 		}
 
+		/// <summary>
+		/// Stores an object on this or another node
+		/// </summary>
+		/// <param name="o">the object</param>
 		internal void StoreObject(KyruObject o)
 		{
 			if (!o.VerifyData())
@@ -68,10 +74,15 @@ namespace Kyru.Core
 			using (var stream = new MemoryStream())
 			{
 				Serializer.Serialize(stream, o);
-				Store(o.ObjectId, stream.ToArray());
+				node.StoreObject(o.ObjectId, stream.ToArray());
 			}
 		}
 
+		/// <summary>
+		/// Stores the data on this node
+		/// </summary>
+		/// <param name="id">the id</param>
+		/// <param name="bytes">data</param>
 		internal void StoreBytes(KademliaId id, byte[] bytes)
 		{
 			using (var st = new MemoryStream(bytes))
