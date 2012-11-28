@@ -243,7 +243,37 @@ namespace Kyru.Network
 
 		internal void GetObject(KademliaId objectId, Action<Error, byte[]> done)
 		{
-			throw new NotImplementedException();
+			new Thread(() => {
+				Kademlia.NodeLookup(objectId,list => {
+					GetObjectRecursive(list,objectId,done);
+				});
+			}).Start();
+		}
+
+		private void GetObjectRecursive(List<NodeInformation> targetNodes, KademliaId objectId, Action<Error, byte[]> done)
+		{
+			if (targetNodes.Count == 0){
+				done(Error.NotFound, new byte[0]);
+				return;
+			}
+			var targetNode = targetNodes[0];
+			targetNodes.RemoveAt(0);
+			new GetObjectClient(app, targetNode, objectId, (error, data) =>
+			{
+				switch (error)
+				{
+					case Error.NotFound:
+						GetObjectRecursive(targetNodes, objectId, done);
+						return;
+					case Error.ObjectAlreadyStored:
+					case Error.StoreRejected:
+						done(error, new byte[0]);
+						return;
+					case Error.Success:
+						done(error, data);
+						return;
+				}
+			}).ThreadStart();
 		}
 
 		internal void GetObject(NodeInformation targetNode, KademliaId objectId, Action<Error, byte[]> done)
