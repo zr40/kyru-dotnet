@@ -7,6 +7,8 @@ using ProtoBuf;
 
 namespace Kyru.Network.Objects
 {
+	internal delegate void FileEventHandler(UserFile uf);
+
 	/// <summary>
 	/// The User class contains public as well as encrypted data
 	/// </summary>
@@ -21,6 +23,10 @@ namespace Kyru.Network.Objects
 
 		[ProtoMember(3)]
 		private readonly byte[] publicKey;
+
+		internal event FileEventHandler OnFileAdded;
+		//internal event FileEventHandler OnFileDeleted;
+		//internal event FileEventHandler OnFileStored;
 
 		[Obsolete("TODO: use other constructor")]
 		internal User()
@@ -57,6 +63,8 @@ namespace Kyru.Network.Objects
 		{
 			// TODO: check signature
 			files.Add(userFile);
+			if (OnFileAdded != null)
+				OnFileAdded(userFile);
 		}
 
 		/// <summary>

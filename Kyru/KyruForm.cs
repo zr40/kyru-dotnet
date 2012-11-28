@@ -19,6 +19,8 @@ namespace Kyru
 
 			virtualLocalFileTreeInit();
 			Text = session.Username + " - " + Text;
+
+			session.User.OnFileAdded += new FileEventHandler(showFile);
 		}
 
 		internal void virtualLocalFileTreeInit()
@@ -59,10 +61,17 @@ namespace Kyru
 			dialog.ShowDialog();
 			foreach (string filename in dialog.FileNames)
 			{
-				var fs = new FileStream(filename, FileMode.Open);
-				var file = session.AddFile(fs, filename);
-				fs.Close();
-				showFile(file);
+				try
+				{
+					using (var fs = new FileStream(filename, FileMode.Open))
+					{
+						session.AddFile(fs, filename);
+					}
+				}
+				catch
+				{
+					MessageBox.Show("Could not add file " + filename);
+				}
 			}
 		}
 
