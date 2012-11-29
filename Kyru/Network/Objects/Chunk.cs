@@ -1,5 +1,6 @@
-using ProtoBuf;
 using Kyru.Utilities;
+
+using ProtoBuf;
 
 namespace Kyru.Network.Objects
 {
@@ -16,10 +17,11 @@ namespace Kyru.Network.Objects
 
 		internal override bool VerifyData()
 		{
-			return (ObjectId == generateID());
+			return ObjectId == CalculateHash();
 		}
 
-		internal KademliaId generateID() {
+		internal KademliaId CalculateHash()
+		{
 			byte[] hash = Crypto.Hash(Data);
 			return new KademliaId(hash);
 		}

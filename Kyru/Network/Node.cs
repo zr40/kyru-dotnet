@@ -10,7 +10,9 @@ using Kyru.Network.TcpMessages;
 using Kyru.Network.TcpMessages.Clients;
 using Kyru.Network.UdpMessages;
 using Kyru.Utilities;
+
 using ProtoBuf;
+
 using Random = Kyru.Utilities.Random;
 
 namespace Kyru.Network
@@ -243,37 +245,13 @@ namespace Kyru.Network
 
 		internal void GetObject(KademliaId objectId, Action<Error, byte[]> done)
 		{
-			new Thread(() => {
-				Kademlia.NodeLookup(objectId,list => {
-					GetObjectRecursive(list,objectId,done);
-				});
-			}).Start();
-		}
-
-		private void GetObjectRecursive(List<NodeInformation> targetNodes, KademliaId objectId, Action<Error, byte[]> done)
-		{
-			if (targetNodes.Count == 0){
-				done(Error.NotFound, new byte[0]);
-				return;
-			}
-			var targetNode = targetNodes[0];
-			targetNodes.RemoveAt(0);
-			new GetObjectClient(app, targetNode, objectId, (error, data) =>
-			{
-				switch (error)
-				{
-					case Error.NotFound:
-						GetObjectRecursive(targetNodes, objectId, done);
-						return;
-					case Error.ObjectAlreadyStored:
-					case Error.StoreRejected:
-						done(error, new byte[0]);
-						return;
-					case Error.Success:
-						done(error, data);
-						return;
-				}
-			}).ThreadStart();
+			Kademlia.ValueLookup(objectId, node =>
+			                               {
+				                               if (node == null)
+					                               done(Error.NotFound, null);
+				                               else
+					                               GetObject(node, objectId, done);
+			                               });
 		}
 
 		internal void GetObject(NodeInformation targetNode, KademliaId objectId, Action<Error, byte[]> done)
@@ -283,15 +261,13 @@ namespace Kyru.Network
 
 		internal void StoreObject(KademliaId objectId, byte[] bytes)
 		{
-			new Thread(() =>
-			{
-				Kademlia.NodeLookup(objectId, list =>
-				{
-					foreach (var item in list) {
-						StoreObject(item, objectId, bytes, (error) => { });
-					}
-				});
-			}).Start();
+			new Thread(() => Kademlia.NodeLookup(objectId, list =>
+			                                               {
+				                                               foreach (var item in list)
+				                                               {
+					                                               StoreObject(item, objectId, bytes, error => { });
+				                                               }
+			                                               })).Start();
 		}
 
 		internal void StoreObject(NodeInformation targetNode, KademliaId objectId, byte[] bytes, Action<Error> done)

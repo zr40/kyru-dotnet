@@ -74,7 +74,6 @@ namespace Kyru.Core
 			using (var stream = new MemoryStream())
 			{
 				Serializer.Serialize(stream, o);
-				node.StoreObject(o.ObjectId, stream.ToArray());
 				Store(o.ObjectId, stream.ToArray());
 			}
 		}
@@ -108,6 +107,8 @@ namespace Kyru.Core
 			File.WriteAllBytes(PathFor(id), bytes);
 
 			currentObjects[id] = DateTime.Now;
+
+			node.StoreObject(id, bytes);
 		}
 
 		internal KyruObject GetObject(KademliaId id)

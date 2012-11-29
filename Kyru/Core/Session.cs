@@ -75,7 +75,7 @@ namespace Kyru.Core
 			data = Crypto.EncryptAes(data,fileKey,fileIV);
 			var chunk = new Chunk(data);
 
-			chunk.ObjectId = chunk.generateID();
+			chunk.ObjectId = chunk.CalculateHash();
 			chunkList.Add(chunk.ObjectId);
 			
 			var userFile = new UserFile {

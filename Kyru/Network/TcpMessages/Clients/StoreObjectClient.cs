@@ -41,6 +41,8 @@ namespace Kyru.Network.TcpMessages.Clients
 				return;
 			}
 
+			// TODO: update local metadata
+
 			stream.Write(bytes, 0, bytes.Length);
 			done(Error.Success);
 		}

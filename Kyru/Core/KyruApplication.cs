@@ -20,8 +20,8 @@ namespace Kyru.Core
 		internal KyruApplication(ushort port)
 		{
 			Config = new Config();
-			LocalObjectStorage = new LocalObjectStorage(Config);
 			Node = new Node(port, this);
+			LocalObjectStorage = new LocalObjectStorage(Config, Node);
 		}
 
 		internal void Start()

@@ -9,10 +9,13 @@ using MbUnit.Framework;
 
 namespace Tests
 {
+	[Ignore("Fake node required")]
 	internal sealed class LocalObjectStorageTest
 	{
 		private Config config;
 		private string tempPath;
+
+		private Node node;
 
 		[SetUp]
 		internal void CreateConfig()
@@ -33,14 +36,14 @@ namespace Tests
 		[Test]
 		internal void EmptyStorage()
 		{
-			var storage = new LocalObjectStorage(config);
+			var storage = new LocalObjectStorage(config, node);
 			Assert.AreEqual(0, storage.CurrentObjects.Count);
 		}
 
 		[Test]
 		internal void StoreObject()
 		{
-			var storage = new LocalObjectStorage(config);
+			var storage = new LocalObjectStorage(config, node);
 
 			var user = new User();
 			user.ObjectId = KademliaId.RandomId;
@@ -59,7 +62,7 @@ namespace Tests
 		[Test]
 		internal void GetObject()
 		{
-			var storage = new LocalObjectStorage(config);
+			var storage = new LocalObjectStorage(config, node);
 
 			var randomId = KademliaId.RandomId;
 			ulong fileId = 123456789;
@@ -84,7 +87,7 @@ namespace Tests
 		[Test]
 		internal void GetObjectNotPresent()
 		{
-			var storage = new LocalObjectStorage(config);
+			var storage = new LocalObjectStorage(config, node);
 
 			var user = new User();
 			user.ObjectId = KademliaId.RandomId;
@@ -98,14 +101,14 @@ namespace Tests
 		[Test]
 		internal void Initialization()
 		{
-			var storage = new LocalObjectStorage(config);
+			var storage = new LocalObjectStorage(config, node);
 
 			var user = new User();
 			user.ObjectId = KademliaId.RandomId;
 			user.Add(new UserFile {ChunkList = new List<KademliaId> {KademliaId.RandomId}});
 			storage.StoreObject(user);
 
-			storage = new LocalObjectStorage(config);
+			storage = new LocalObjectStorage(config, node);
 
 			Assert.AreEqual(1, storage.CurrentObjects.Count);
 			Assert.AreEqual(user.ObjectId, storage.CurrentObjects[0]);
