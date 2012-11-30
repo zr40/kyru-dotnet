@@ -99,10 +99,18 @@ namespace Kyru
 			dialog.FileName = virtualLocalFileTree.SelectedNode.Text;
 			if (dialog.ShowDialog() == DialogResult.OK)
 			{
-				using (FileStream fs = new FileStream(dialog.FileName, FileMode.Create))
+				session.DownloadObjects(userFile.ChunkList, (error) =>
 				{
-					session.DecryptFile(userFile, fs);
-				}
+					if (error != Network.TcpMessages.Error.Success){
+						MessageBox.Show("Saving failed: Could not find all parts of the file. Try to connect to the network or save the file later");
+						return;
+					}
+
+					using (FileStream fs = new FileStream(dialog.FileName, FileMode.Create))
+					{
+						session.DecryptFile(userFile, fs);
+					}
+				});
 			}
 		}
 

@@ -146,5 +146,10 @@ namespace Kyru.Core
 			bytes = Crypto.DecryptAes(bytes, DecryptFileKey(userFile), userFile.IV);
 			output.Write(bytes, 0, bytes.Length);
 		}
+
+		internal void DownloadObjects(List<KademliaId> ids, Action<Network.TcpMessages.Error> done)
+		{
+			localObjectStorage.DownloadObjects(ids, done);
+		}
 	}
 }
