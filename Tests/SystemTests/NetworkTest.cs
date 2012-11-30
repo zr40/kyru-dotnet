@@ -121,7 +121,7 @@ namespace Tests.SystemTests
 			var node = nodes[NodeCount - 1];
 
 			var ct = new CallbackTimeout<Error, byte[]>();
-			node.GetObject(objectId, ct.Done);
+			node.GetObjectFromNetwork(objectId, ct.Done);
 			if (!ct.Block(TestParameters.LocalhostCommunicationTimeout * 100))
 			{
 				Assert.Fail("Not completed within timeout");

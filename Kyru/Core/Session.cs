@@ -88,8 +88,8 @@ namespace Kyru.Core
 
 			User.Add(userFile);
 
-			localObjectStorage.StoreObject(chunk);
-			localObjectStorage.StoreObject(User);
+			localObjectStorage.StoreObject(chunk, true);
+			localObjectStorage.StoreObject(User, true);
 			return userFile;
 		}
 

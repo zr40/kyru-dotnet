@@ -1,8 +1,4 @@
 ﻿using Kyru.Network;
-using System.Windows.Forms;
-using System;
-using System.Drawing;
-using System.Threading;
 
 namespace Kyru.Core
 {

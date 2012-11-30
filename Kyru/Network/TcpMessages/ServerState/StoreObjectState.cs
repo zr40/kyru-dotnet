@@ -51,7 +51,7 @@ namespace Kyru.Network.TcpMessages.ServerState
 					remaining -= read;
 				}
 
-				app.LocalObjectStorage.StoreBytes(storeObjectRequest.ObjectId, buffer);
+				app.LocalObjectStorage.StoreBytes(storeObjectRequest.ObjectId, buffer, false);
 			}
 			return null;
 		}

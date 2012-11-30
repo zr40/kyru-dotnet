@@ -243,18 +243,18 @@ namespace Kyru.Network
 			new IncomingTcpConnection(app, client).Accept();
 		}
 
-		internal void GetObject(KademliaId objectId, Action<Error, byte[]> done)
+		internal void GetObjectFromNetwork(KademliaId objectId, Action<Error, byte[]> done)
 		{
 			Kademlia.ValueLookup(objectId, node =>
 			                               {
 				                               if (node == null)
 					                               done(Error.NotFound, null);
 				                               else
-					                               GetObject(node, objectId, done);
+					                               GetObjectFromNode(node, objectId, done);
 			                               });
 		}
 
-		internal void GetObject(List<NodeInformation> nodes, KademliaId objectId, Action<Error, byte[]> done)
+		internal void GetObjectFromNode(List<NodeInformation> nodes, KademliaId objectId, Action<Error, byte[]> done)
 		{
 			if (nodes.Count == 0)
 			{

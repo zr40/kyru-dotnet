@@ -1,18 +1,18 @@
 ﻿using System;
-using System.Windows.Forms;
-using Kyru.Utilities;
-using System.Threading;
 using System.Drawing;
+using System.Windows.Forms;
+
+using Kyru.Core;
+using Kyru.Utilities;
 
 namespace Kyru
 {
 	internal static class Program
 	{
-		static ManualResetEvent neverThrown = new ManualResetEvent(false);
-		static Core.KyruApplication app;
+		private static KyruApplication app;
 
-		static NotifyIcon trayIcon;
-		static ContextMenu trayMenu;
+		private static NotifyIcon trayIcon;
+		private static ContextMenu trayMenu;
 
 		[STAThread]
 		private static void Main()
@@ -22,19 +22,19 @@ namespace Kyru
 
 			KyruTimer.Start();
 
-			app = new Core.KyruApplication();
+			app = new KyruApplication();
 
 			app.Start();
 
 			Application.EnableVisualStyles();
 			Application.SetCompatibleTextRenderingDefault(false);
 
-			var trayIcon = CreateSystemTray();
+			CreateSystemTray();
 
 			Application.Run();
 		}
 
-		public static NotifyIcon CreateSystemTray()
+		private static void CreateSystemTray()
 		{
 			trayMenu = new ContextMenu();
 			trayMenu.MenuItems.Add("Exit", OnExit);
@@ -48,7 +48,6 @@ namespace Kyru
 
 			trayIcon.ContextMenu = trayMenu;
 			trayIcon.Visible = true;
-			return trayIcon;
 		}
 
 		private static void OnExit(object sender, EventArgs e)

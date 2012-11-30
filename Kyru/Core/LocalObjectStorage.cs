@@ -5,6 +5,7 @@ using System.Linq;
 
 using Kyru.Network;
 using Kyru.Network.Objects;
+using Kyru.Network.TcpMessages;
 using Kyru.Utilities;
 
 using ProtoBuf;
@@ -19,7 +20,7 @@ namespace Kyru.Core
 		/// <remarks>Value: access timestamp</remarks>
 		private readonly Dictionary<KademliaId, DateTime> currentObjects = new Dictionary<KademliaId, DateTime>();
 
-		internal LocalObjectStorage(Config config, Network.Node node)
+		internal LocalObjectStorage(Config config, Node node)
 		{
 			this.config = config;
 			this.node = node;
@@ -63,7 +64,7 @@ namespace Kyru.Core
 		/// Stores an object on this or another node
 		/// </summary>
 		/// <param name="o">the object</param>
-		internal void StoreObject(KyruObject o)
+		internal void StoreObject(KyruObject o, bool replicate)
 		{
 			if (!o.VerifyData())
 			{
@@ -74,7 +75,7 @@ namespace Kyru.Core
 			using (var stream = new MemoryStream())
 			{
 				Serializer.Serialize(stream, o);
-				Store(o.ObjectId, stream.ToArray());
+				Store(o.ObjectId, stream.ToArray(), replicate);
 			}
 		}
 
@@ -83,7 +84,7 @@ namespace Kyru.Core
 		/// </summary>
 		/// <param name="id">the id</param>
 		/// <param name="bytes">data</param>
-		internal void StoreBytes(KademliaId id, byte[] bytes)
+		internal void StoreBytes(KademliaId id, byte[] bytes, bool replicate)
 		{
 			using (var st = new MemoryStream(bytes))
 			{
@@ -94,10 +95,10 @@ namespace Kyru.Core
 				}
 			}
 
-			Store(id, bytes);
+			Store(id, bytes, replicate);
 		}
 
-		private void Store(KademliaId id, byte[] bytes)
+		private void Store(KademliaId id, byte[] bytes, bool replicate)
 		{
 			if (id.Bytes.All(b => b == 0))
 				throw new InvalidOperationException("Possible bug: tried to store object with id zero");
@@ -108,7 +109,8 @@ namespace Kyru.Core
 
 			currentObjects[id] = DateTime.Now;
 
-			node.StoreObject(id, bytes);
+			if (replicate)
+				node.StoreObject(id, bytes);
 		}
 
 		internal KyruObject GetObject(KademliaId id)
@@ -146,6 +148,11 @@ namespace Kyru.Core
 		private string PathFor(KademliaId id)
 		{
 			return Path.Combine(config.StoreDirectory, id.ToString());
+		}
+
+		internal void RetrieveObjects(List<KademliaId> objectIds, Action<Error> done)
+		{
+			throw new NotImplementedException();
 		}
 
 		public void TimerElapsed()

@@ -25,18 +25,18 @@ namespace Kyru.Utilities
 		}
 
 		/// <summary>
-		/// Generates a valid AES key
+		/// Generates an AES key
 		/// </summary>
-		/// <returns>valid 256bit AES key</returns>
+		/// <returns>256 bit AES key</returns>
 		internal static byte[] GenerateAesKey()
 		{
 			return Random.Bytes(32);
 		}
 
 		/// <summary>
-		/// Generates a valid AES key
+		/// Generates an IV
 		/// </summary>
-		/// <returns>valid 256bit AES key</returns>
+		/// <returns>an IV</returns>
 		internal static byte[] GenerateIV()
 		{
 			return Random.Bytes(16);

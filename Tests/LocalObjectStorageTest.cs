@@ -48,14 +48,14 @@ namespace Tests
 			var user = new User();
 			user.ObjectId = KademliaId.RandomId;
 
-			storage.StoreObject(user);
+			storage.StoreObject(user, false);
 			Assert.AreEqual(1, storage.CurrentObjects.Count);
 
-			storage.StoreObject(user);
+			storage.StoreObject(user, false);
 			Assert.AreEqual(1, storage.CurrentObjects.Count);
 
 			user.ObjectId = KademliaId.RandomId;
-			storage.StoreObject(user);
+			storage.StoreObject(user, false);
 			Assert.AreEqual(2, storage.CurrentObjects.Count);
 		}
 
@@ -72,7 +72,7 @@ namespace Tests
 			user.ObjectId = id;
 			user.Add(new UserFile { FileId = fileId, ChunkList = new List<KademliaId> { randomId } });
 
-			storage.StoreObject(user);
+			storage.StoreObject(user, false);
 
 			var readUser = storage.GetObject(id) as User;
 			Assert.AreEqual(1, readUser.Files.Count);
@@ -93,7 +93,7 @@ namespace Tests
 			user.ObjectId = KademliaId.RandomId;
 			user.Add(new UserFile { ChunkList = new List<KademliaId> { KademliaId.RandomId } });
 
-			storage.StoreObject(user);
+			storage.StoreObject(user, false);
 
 			Assert.IsNull(storage.GetObject(KademliaId.RandomId));
 		}
@@ -106,7 +106,7 @@ namespace Tests
 			var user = new User();
 			user.ObjectId = KademliaId.RandomId;
 			user.Add(new UserFile {ChunkList = new List<KademliaId> {KademliaId.RandomId}});
-			storage.StoreObject(user);
+			storage.StoreObject(user, false);
 
 			storage = new LocalObjectStorage(config, node);
 
