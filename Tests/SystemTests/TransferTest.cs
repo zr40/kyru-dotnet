@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using System.Collections.Generic;
+using System.IO;
 using System.Net;
 using System.Threading;
 
@@ -87,7 +88,7 @@ namespace Tests.SystemTests
 			// now retrieve it
 
 			var ct2 = new CallbackTimeout<Error, byte[]>();
-			nodeC.GetObject(nodeBInfo, objectId, ct2.Done);
+			nodeC.GetObject(new List<NodeInformation>{nodeBInfo}, objectId, ct2.Done);
 			if (!ct2.Block(TestParameters.LocalhostCommunicationTimeout))
 			{
 				Assert.Fail("No response within timeout");

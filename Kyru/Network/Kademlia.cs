@@ -221,11 +221,9 @@ namespace Kyru.Network
 			new Thread(new NodeLookup(node, id, done).ThreadStart).Start();
 		}
 
-		internal void ValueLookup(KademliaId id, Action<NodeInformation> done)
+		internal void ValueLookup(KademliaId id, Action<List<NodeInformation>> done)
 		{
-			throw new NotImplementedException();
-
-			// TODO merge multiple responses?
+			new Thread(new ValueLookup(node, id, done).ThreadStart).Start();
 		}
 	}
 }

@@ -32,7 +32,7 @@ namespace Kyru.Network
 		internal readonly KademliaId Id = KademliaId.RandomId;
 
 		private readonly Dictionary<RequestIdentifier, RequestInformation> outstandingRequests = new Dictionary<RequestIdentifier, RequestInformation>();
-		private readonly MetadataStorage metadataStorage;
+		internal readonly MetadataStorage MetadataStorage;
 
 		private struct RequestIdentifier
 		{
@@ -56,7 +56,7 @@ namespace Kyru.Network
 		{
 			Port = port;
 			this.app = app;
-			metadataStorage = new MetadataStorage(this);
+			MetadataStorage = new MetadataStorage(this);
 			Kademlia = new Kademlia(this);
 
 			udp = new UdpClient(port);
@@ -172,7 +172,7 @@ namespace Kyru.Network
 			UdpMessage response = CreateUdpReply(request);
 			Kademlia.HandleIncomingRequest(node, response);
 
-			metadataStorage.Store(request.StoreRequest.ObjectId, request.StoreRequest.Data);
+			MetadataStorage.Store(request.StoreRequest.ObjectId, request.StoreRequest.Data);
 
 			response.StoreResponse = new StoreResponse();
 			SendUdpMessage(response, node);
@@ -188,7 +188,7 @@ namespace Kyru.Network
 
 			response.FindValueResponse = new FindValueResponse();
 
-			var metadata = metadataStorage.Get(request.FindValueRequest.ObjectId);
+			var metadata = MetadataStorage.Get(request.FindValueRequest.ObjectId);
 			if (metadata == null)
 			{
 				var contacts = Kademlia.NearestContactsTo(request.FindValueRequest.ObjectId, request.SenderNodeId);
@@ -254,9 +254,16 @@ namespace Kyru.Network
 			                               });
 		}
 
-		internal void GetObject(NodeInformation targetNode, KademliaId objectId, Action<Error, byte[]> done)
+		internal void GetObject(List<NodeInformation> nodes, KademliaId objectId, Action<Error, byte[]> done)
 		{
-			new Thread(new GetObjectClient(app, targetNode, objectId, done).ThreadStart).Start();
+			if (nodes.Count == 0)
+			{
+				done(Error.NotFound, null);
+				return;
+			}
+
+			// TODO: implement fallback to next nodes in list in GetObjectClient
+			new Thread(new GetObjectClient(app, nodes[0], objectId, done).ThreadStart).Start();
 		}
 
 		internal void StoreObject(KademliaId objectId, byte[] bytes)
