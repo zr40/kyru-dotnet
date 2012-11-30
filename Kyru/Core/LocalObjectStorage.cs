@@ -9,6 +9,7 @@ using Kyru.Network.TcpMessages;
 using Kyru.Utilities;
 
 using ProtoBuf;
+using System.Threading;
 
 namespace Kyru.Core
 {
@@ -111,6 +112,32 @@ namespace Kyru.Core
 
 			if (replicate)
 				node.StoreObject(id, bytes);
+		}
+
+		internal void downloadObjects(List<KademliaId> ids, Action<Error> done) {
+			Semaphore networkLock = new Semaphore(0,Kademlia.α);
+			Error status = Error.Success;
+			foreach(var id in ids){
+				networkLock.WaitOne();
+
+				if (!currentObjects.ContainsKey(id)){
+					node.GetObjectFromNetwork(id,(err,bytes)=>{
+						if (err != Error.Success) {
+							//TODO: What to do on multiple errors.
+							status = err;
+						}
+						Store(id, bytes, false);
+
+						networkLock.Release();
+					});
+				}
+			}
+
+			// Make sure the network is completed
+			for (int i = 0; i < Kademlia.α;i++ )
+				networkLock.WaitOne();
+
+			done(status);
 		}
 
 		internal KyruObject GetObject(KademliaId id)
