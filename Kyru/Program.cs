@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Drawing;
+using System.Numerics;
 using System.Windows.Forms;
 
 using Kyru.Core;
@@ -20,7 +21,15 @@ namespace Kyru
 			Console.WriteLine("Kyru debug console");
 			Console.WriteLine();
 
-			KyruTimer.Start();
+			var x = new BigInteger(int.MaxValue) * int.MaxValue * int.MaxValue * int.MaxValue * int.MaxValue * int.MaxValue * int.MaxValue * int.MaxValue * int.MaxValue * int.MaxValue * int.MaxValue * int.MaxValue * int.MaxValue * int.MaxValue * int.MaxValue * int.MaxValue * int.MaxValue * int.MaxValue * int.MaxValue * int.MaxValue * int.MaxValue * int.MaxValue * int.MaxValue * int.MaxValue * int.MaxValue * int.MaxValue * int.MaxValue * int.MaxValue * int.MaxValue * int.MaxValue * int.MaxValue * int.MaxValue * int.MaxValue;
+
+			var start = DateTime.Now;
+			x.FindPrime();
+			Console.WriteLine(DateTime.Now - start);
+
+			Console.WriteLine("{0} bytes (at most {1} bits)", x.ToByteArray().Length, x.ToByteArray().Length * 8);
+
+			/*KyruTimer.Start();
 
 			app = new KyruApplication();
 
@@ -32,6 +41,7 @@ namespace Kyru
 			CreateSystemTray();
 
 			Application.Run();
+			 */
 		}
 
 		private static void CreateSystemTray()
