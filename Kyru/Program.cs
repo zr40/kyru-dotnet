@@ -21,23 +21,7 @@ namespace Kyru
 			Console.WriteLine("Kyru debug console");
 			Console.WriteLine();
 
-			//var x = new BigInteger(int.MaxValue) * int.MaxValue * int.MaxValue * int.MaxValue * int.MaxValue * int.MaxValue * int.MaxValue * int.MaxValue * int.MaxValue * int.MaxValue * int.MaxValue * int.MaxValue * int.MaxValue * int.MaxValue * int.MaxValue * int.MaxValue * int.MaxValue * int.MaxValue * int.MaxValue * int.MaxValue * int.MaxValue * int.MaxValue * int.MaxValue * int.MaxValue * int.MaxValue * int.MaxValue * int.MaxValue * int.MaxValue * int.MaxValue * int.MaxValue * int.MaxValue * int.MaxValue * int.MaxValue;
-
-			var x = BigInteger.Parse("161521746670640296426473658428859984306663144318152681524054709078245736590366297248377298082656939330673286493230336261991466938596691073112968626710161521746670640296426473658428859984306663144318152681524054709078245736590366297248377298082656939330673286493230336261991466938596691073112968626710");
-
-			Console.WriteLine("{0} bytes (at most {1} bits)", x.ToByteArray().Length, x.ToByteArray().Length * 8);
-
-			var start = DateTime.Now;
-			Console.WriteLine(x.FindPrime());
-			Console.WriteLine(DateTime.Now - start);
-
-
-			start = DateTime.Now;
-			Console.WriteLine(Primes.Next(x));
-			Console.WriteLine(DateTime.Now - start);
-			Console.WriteLine();
-
-			/*KyruTimer.Start();
+			KyruTimer.Start();
 
 			app = new KyruApplication();
 
@@ -49,7 +33,6 @@ namespace Kyru
 			CreateSystemTray();
 
 			Application.Run();
-			 */
 		}
 
 		private static void CreateSystemTray()
