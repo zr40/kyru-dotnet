@@ -2,11 +2,24 @@ using System;
 using System.IO;
 using System.Linq;
 using System.Security.Cryptography;
+using System.Text;
 
 using Emil.GMP;
 
 namespace Kyru.Utilities
 {
+	internal struct RsaKeyPair
+	{
+		internal byte[] Public;
+		internal byte[] Private;
+
+		internal RsaKeyPair(byte[] pubKey, byte[] privKey) : this()
+		{
+			Public = pubKey;
+			Private = privKey;
+		}
+	}
+
 	internal static class Crypto
 	{
 		internal const int RsaPublicKeySize = 2048 / 8;
@@ -15,17 +28,7 @@ namespace Kyru.Utilities
 
 		private const int AesHeaderSize = sizeof(int);
 
-		internal struct RsaKeyPair
-		{
-			internal byte[] Public;
-			internal byte[] Private;
-
-			internal RsaKeyPair(byte[] pubKey, byte[] privKey) : this()
-			{
-				Public = pubKey;
-				Private = privKey;
-			}
-		}
+		private const int rsaExponent = 0x10001;
 
 		/// <summary>
 		/// Derives an RSA from a username and password
@@ -53,7 +56,7 @@ namespace Kyru.Utilities
 
 			var n = p * q;
 			var φn = (p - 1) * (q - 1);
-			var e = (BigInt) 0x10001;
+			var e = new BigInt(rsaExponent);
 			var d = e.InvertMod(φn);
 
 			Console.WriteLine("DeriveRsaKey: done");
@@ -126,47 +129,31 @@ namespace Kyru.Utilities
 		}
 
 		/// <summary>
-		/// Extracts the public key from RSA private key data
-		/// </summary>
-		/// <param name="privateKey">The private key</param>
-		/// <returns>The public key</returns>
-		internal static RSAParameters ExtractPublicKey(RSAParameters privateKey)
-		{
-			using (var rsa = new RSACryptoServiceProvider())
-			{
-				rsa.ImportParameters(privateKey);
-				return rsa.ExportParameters(false);
-			}
-		}
-
-		/// <summary>
 		/// Encrypts data with an RSA public key
 		/// </summary>
 		/// <param name="data">Data to encrypt</param>
 		/// <param name="publicKey">Public key to use for decryption</param>
 		/// <returns>The encrypted data</returns>
-		internal static byte[] EncryptRsa(byte[] data, RSAParameters publicKey)
+		internal static byte[] EncryptRsa(byte[] data, byte[] publicKey)
 		{
-			using (var rsa = new RSACryptoServiceProvider())
-			{
-				rsa.ImportParameters(publicKey);
-				return rsa.Encrypt(data, true);
-			}
+			var m = new BigInt(data);
+			var n = new BigInt(publicKey);
+			return m.PowerMod(rsaExponent, n).ToByteArray();
 		}
 
 		/// <summary>
-		/// Decrypts data with an RSA private key
+		/// Decrypts data with an RSA key pair
 		/// </summary>
 		/// <param name="data">Data to decrypt</param>
+		/// <param name="publicKey">Public key to use for decryption</param>
 		/// <param name="privateKey">Private key to use for decryption</param>
 		/// <returns>The decrypted data</returns>
-		internal static byte[] DecryptRsa(byte[] data, RSAParameters privateKey)
+		internal static byte[] DecryptRsa(byte[] data, byte[] publicKey, byte[] privateKey)
 		{
-			using (var rsa = new RSACryptoServiceProvider())
-			{
-				rsa.ImportParameters(privateKey);
-				return rsa.Decrypt(data, true);
-			}
+			var c = new BigInt(data);
+			var d = new BigInt(privateKey);
+			var n = new BigInt(publicKey);
+			return c.PowerMod(d, n).ToByteArray();
 		}
 
 		/// <summary>
@@ -233,9 +220,9 @@ namespace Kyru.Utilities
 		/// <param name="data">Data to sign</param>
 		/// <param name="privateKey">Key to sign the data with</param>
 		/// <returns>The signature of the hashed data</returns>
-		internal static byte[] Sign(byte[] data, RSAParameters privateKey)
+		internal static byte[] Sign(byte[] data, byte[] publicKey, byte[] privateKey)
 		{
-			return DecryptRsa(Hash(data), privateKey);
+			return DecryptRsa(Hash(data), publicKey, privateKey);
 		}
 
 		/// <summary>
@@ -245,12 +232,12 @@ namespace Kyru.Utilities
 		/// <param name="publicKey">The public key to check the signature with</param>
 		/// <param name="signature">The signature to verify</param>
 		/// <returns></returns>
-		internal static bool VerifySignature(byte[] data, RSAParameters publicKey, byte[] signature)
+		internal static bool VerifySignature(byte[] data, byte[] publicKey, byte[] signature)
 		{
 			byte[] dataHash = Hash(data);
 			byte[] signHash = EncryptRsa(signature, publicKey);
 
-			return (dataHash.Length == signHash.Length) && signHash.SequenceEqual(dataHash);
+			return signHash.SequenceEqual(dataHash);
 		}
 	}
 }

@@ -20,7 +20,7 @@ namespace Kyru.Network.Objects
 		private readonly List<Tuple<byte[], ulong>> deletedFiles = new List<Tuple<byte[], ulong>>();
 
 		[ProtoMember(3)]
-		private readonly RSAParameters publicKey;
+		private readonly byte[] publicKey;
 
 		internal event Action<UserFile> OnFileAdded;
 		internal event Action<ulong> OnFileDeleted;
@@ -31,7 +31,7 @@ namespace Kyru.Network.Objects
 			// used by serialization
 		}
 
-		internal User(RSAParameters publicKey)
+		internal User(byte[] publicKey)
 		{
 			this.publicKey = publicKey;
 		}
