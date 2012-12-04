@@ -110,21 +110,9 @@ namespace Kyru.Core
 		/// <param name="userFile"></param>
 		internal void DeleteFile(UserFile userFile)
 		{
-			// TODO: remove the file from the file list if it is present
-			// Then add it to deleted files.
-			// Finally, store the User.
-			throw new NotImplementedException();
-		}
+			User.AddDeletedFile(Crypto.Sign(BitConverter.GetBytes(userFile.FileId), privateKey), userFile.FileId);
 
-		/// <summary>
-		/// Uses the private key to sign a message
-		/// </summary>
-		/// <param name="message">message to sign</param>
-		/// <returns>signed message</returns>
-		private byte[] SignMessage(byte[] message)
-		{
-			// TODO sign
-			return message;
+			localObjectStorage.StoreObject(User, true);
 		}
 
 		/// <summary>

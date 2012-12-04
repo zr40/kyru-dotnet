@@ -68,7 +68,7 @@ namespace Kyru.Network.Objects
 		/// Checks if the signature is valid and, if so, adds it to the deleted file list and deletes the UserFile object
 		/// </summary>
 		/// <param name="deletedFile">signature + fileId</param>
-		private void AddDeletedFile(byte[] signature, ulong fileId)
+		internal void AddDeletedFile(byte[] signature, ulong fileId)
 		{
 			if (Crypto.VerifySignature(BitConverter.GetBytes(fileId), publicKey, signature))
 			{
@@ -80,6 +80,10 @@ namespace Kyru.Network.Objects
 			}
 		}
 
+		/// <summary>
+		/// Verifies all signatures in the (deleted) file list and checks for inconsistencies
+		/// </summary>
+		/// <returns>True if no problems were found, false if an invalid signature or inconsistency was found</returns>
 		internal override bool VerifyData()
 		{
 			// TODO
