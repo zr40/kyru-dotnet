@@ -1,6 +1,6 @@
 using System;
 using System.Collections.Generic;
-
+using System.Security.Cryptography;
 using Kyru.Utilities;
 
 using ProtoBuf;
@@ -20,7 +20,7 @@ namespace Kyru.Network.Objects
 		private readonly List<Tuple<byte[], ulong>> deletedFiles = new List<Tuple<byte[], ulong>>();
 
 		[ProtoMember(3)]
-		private readonly byte[] publicKey;
+		private readonly RSAParameters publicKey;
 
 		internal event Action<UserFile> OnFileAdded;
 		internal event Action<ulong> OnFileDeleted;
@@ -31,7 +31,7 @@ namespace Kyru.Network.Objects
 			// used by serialization
 		}
 
-		internal User(byte[] publicKey)
+		internal User(RSAParameters publicKey)
 		{
 			this.publicKey = publicKey;
 		}

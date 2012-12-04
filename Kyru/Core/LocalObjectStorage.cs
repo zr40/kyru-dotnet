@@ -45,7 +45,7 @@ namespace Kyru.Core
 			}
 		}
 
-		internal const uint MaxObjectSize = 1024 * 1024 + Crypto.AesHeaderSize; // 1 MiB
+		internal const int MaxObjectSize = 1024 * 1024; // 1 MiB
 
 		/// <summary>
 		/// Determines whether an object is locally stored. If it is, the access timestamp is updated.

@@ -1,10 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
+using System.Security.Cryptography;
 using System.Text;
-
 using Kyru.Network;
 using Kyru.Network.Objects;
+using Kyru.Network.TcpMessages;
 using Kyru.Utilities;
 
 namespace Kyru.Core
@@ -14,37 +16,31 @@ namespace Kyru.Core
 	/// </summary>
 	internal sealed class Session
 	{
-		private byte[] privateKey;
-		private LocalObjectStorage localObjectStorage;
 		internal readonly User User;
-		internal string Username { get; private set; }
+		private readonly LocalObjectStorage localObjectStorage;
+		private readonly RSAParameters privateKey;
 
 		/// <summary>
 		/// Constructor of Session class for a new User
 		/// </summary>
 		/// <param name="username">Username of the user</param>
 		/// <param name="password">Password of the user</param>
+		/// <param name="localObjectStorage">LocalObjectStorage</param>
 		internal Session(string username, string password, LocalObjectStorage localObjectStorage)
 		{
 			this.localObjectStorage = localObjectStorage;
 
-			// TODO: Derive privateKey from username and password (in order to encrypt/decrypt files)
+			privateKey = Crypto.GenerateRsaKey(Encoding.UTF8.GetBytes(username), Encoding.UTF8.GetBytes(password));
+			RSAParameters publicKey = Crypto.ExtractPublicKey(privateKey);
 
-			// TODO: id must be hash of public key
-			var bytes = Crypto.Hash(Encoding.UTF8.GetBytes(username));
-			var id = new KademliaId(bytes);
+			var id = new KademliaId(Crypto.Hash(publicKey.Modulus.Concat(publicKey.Exponent).ToArray()));
 
 			Username = username;
 
-			// TODO: this is the wrong place; create session only when the user object exists or has been created
-			User = localObjectStorage.GetObject(id) as User;
-			if (User == null)
-			{
-				// A new user
-				User = new User(null); // TODO public key
-				User.ObjectId = id;
-			}
+			User = localObjectStorage.GetObject(id) as User ?? new User(publicKey) {ObjectId = id};
 		}
+
+		internal string Username { get; private set; }
 
 		/// <summary>
 		/// Decrypts the file name of a given UserFile
@@ -54,7 +50,12 @@ namespace Kyru.Core
 		internal string DecryptFileName(UserFile userFile)
 		{
 			return Encoding.UTF8.GetString(Crypto.DecryptAes(userFile.EncryptedFileName, DecryptFileKey(userFile), userFile.IV));
-			//TODO: decryption
+		}
+
+		private void AddChunk(List<KademliaId> chunks, byte[] chunk)
+		{
+			chunks.Add(new KademliaId(Crypto.Hash(chunk)));
+			localObjectStorage.StoreObject(new Chunk(chunk), true);
 		}
 
 		/// <summary>
@@ -70,25 +71,35 @@ namespace Kyru.Core
 			byte[] fileKey = Crypto.GenerateAesKey();
 			byte[] fileIV = Crypto.GenerateIV();
 
-			// TODO: split into 1 MiB chunks
 			input.Read(data, 0, (int) input.Length);
-			data = Crypto.EncryptAes(data,fileKey,fileIV);
-			var chunk = new Chunk(data);
+			data = Crypto.EncryptAes(data, fileKey, fileIV);
 
-			chunk.ObjectId = chunk.CalculateHash();
-			chunkList.Add(chunk.ObjectId);
-			
-			var userFile = new UserFile {
-				ChunkList = chunkList,
-				EncryptedFileName = Crypto.EncryptAes(Encoding.UTF8.GetBytes(fileName),fileKey, fileIV),
-				EncryptedKey = fileKey, // TODO: RSA encrypt the key
-				IV = fileIV
-				// TODO: Missing fields
-			};
+			int lastChunkSize = data.Length%LocalObjectStorage.MaxObjectSize;
+			int chunks = data.Length/LocalObjectStorage.MaxObjectSize;
+			var chunkData = new byte[LocalObjectStorage.MaxObjectSize];
+
+			for (int i = 0; i < chunks; i++)
+			{
+				Array.Copy(data, i*LocalObjectStorage.MaxObjectSize, chunkData, 0, LocalObjectStorage.MaxObjectSize);
+				AddChunk(chunkList, chunkData);
+			}
+
+			if (lastChunkSize != 0)
+			{
+				Array.Copy(data, chunks*LocalObjectStorage.MaxObjectSize, chunkData, 0, lastChunkSize);
+				AddChunk(chunkList, chunkData.Take(lastChunkSize).ToArray());
+			}
+
+			var userFile = new UserFile
+			               	{
+			               		ChunkList = chunkList,
+			               		EncryptedFileName = Crypto.EncryptAes(Encoding.UTF8.GetBytes(fileName), fileKey, fileIV),
+			               		EncryptedKey = Crypto.EncryptRsa(fileKey, privateKey),
+			               		IV = fileIV
+			               	};
 
 			User.Add(userFile);
 
-			localObjectStorage.StoreObject(chunk, true);
 			localObjectStorage.StoreObject(User, true);
 			return userFile;
 		}
@@ -123,8 +134,7 @@ namespace Kyru.Core
 		/// <returns>the decrypted filekey</returns>
 		private byte[] DecryptFileKey(UserFile userFile)
 		{
-			return userFile.EncryptedKey;
-			//TODO: decryption;
+			return Crypto.DecryptRsa(userFile.EncryptedKey, privateKey);
 		}
 
 		/// <summary>
@@ -142,12 +152,12 @@ namespace Kyru.Core
 				ms.Write(chunk.Data, 0, chunk.Data.Length);
 			}
 
-			var bytes = ms.ToArray();
+			byte[] bytes = ms.ToArray();
 			bytes = Crypto.DecryptAes(bytes, DecryptFileKey(userFile), userFile.IV);
 			output.Write(bytes, 0, bytes.Length);
 		}
 
-		internal void DownloadObjects(List<KademliaId> ids, Action<Network.TcpMessages.Error> done)
+		internal void DownloadObjects(List<KademliaId> ids, Action<Error> done)
 		{
 			localObjectStorage.DownloadObjects(ids, done);
 		}
