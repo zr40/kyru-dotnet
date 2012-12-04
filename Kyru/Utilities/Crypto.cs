@@ -3,15 +3,29 @@ using System.IO;
 using System.Linq;
 using System.Security.Cryptography;
 
+using Emil.GMP;
+
 namespace Kyru.Utilities
 {
 	internal static class Crypto
 	{
-		internal const int RsaPublicKeySize = 2048;
+		internal const int RsaPublicKeySize = 2048 / 8;
 		private const int Iterations = 10000;
 		private static readonly SHA1CryptoServiceProvider hash = new SHA1CryptoServiceProvider();
 
 		internal const int AesHeaderSize = sizeof(int);
+
+		internal struct RsaKeyPair
+		{
+			internal byte[] Public;
+			internal byte[] Private;
+
+			internal RsaKeyPair(byte[] pubKey, byte[] privKey) : this()
+			{
+				Public = pubKey;
+				Private = privKey;
+			}
+		}
 
 		/// <summary>
 		/// Generates an RSA from a username and password
@@ -19,9 +33,78 @@ namespace Kyru.Utilities
 		/// <param name="username">Username</param>
 		/// <param name="password">Password</param>
 		/// <returns>The private key</returns>
-		internal static byte[] GenerateRsaKey(byte[] username, byte[] password)
+		internal static RsaKeyPair DeriveRsaKey(byte[] username, byte[] password)
 		{
-			throw new NotImplementedException();
+			Console.WriteLine("DeriveRsaKey: deriving key...");
+
+			var derived = PBKDF2(password, username, RsaPublicKeySize);
+			var one = new byte[RsaPublicKeySize / 2];
+			var two = new byte[RsaPublicKeySize / 2];
+			Array.Copy(derived, 0, one, 0, RsaPublicKeySize / 2);
+			Array.Copy(derived, RsaPublicKeySize / 2, two, 0, RsaPublicKeySize / 2);
+
+			Console.WriteLine("DeriveRsaKey: finding prime 1...");
+
+			var p = new BigInt(one).NextPrimeGMP();
+			Console.WriteLine("DeriveRsaKey: finding prime 2...");
+			var q = new BigInt(two).NextPrimeGMP();
+
+			Console.WriteLine("DeriveRsaKey: creating key pair...");
+
+			var n = p * q;
+			var φn = (p - 1) * (q - 1);
+			var e = (BigInt) 0x10001;
+			var d = e.InvertMod(φn);
+
+			Console.WriteLine("DeriveRsaKey: done");
+
+			return new RsaKeyPair(n.ToByteArray(), d.ToByteArray());
+		}
+
+		private static byte[] PBKDF2(byte[] P, byte[] S, int dkLen)
+		{
+			const int iterations = 10000;
+
+			var hashAlg = new HMACSHA512();
+			var hLen = hashAlg.HashSize / 8;
+
+			if (dkLen > (uint.MaxValue) * hLen)
+			{
+				throw new ArgumentException("Output size too long");
+			}
+			if (dkLen % hLen != 0)
+			{
+				// shouldn't happen in kyru
+				throw new NotImplementedException();
+			}
+
+			var l = (dkLen - 1) / hLen + 1;
+			//var r = dkLen - (l - 1) * hLen;
+
+			var DK = new byte[dkLen];
+
+			for (uint i = 1; i <= l; i++)
+			{
+				// F
+				var block = new byte[S.Length + 4];
+				S.CopyTo(block, 0);
+				BitConverter.GetBytes(i).CopyTo(block, S.Length);
+
+				// iteration 1
+				hashAlg = new HMACSHA512(block);
+				block = hashAlg.ComputeHash(P);
+
+				// following iterations
+				for (int x = 2; x <= iterations; x++)
+				{
+					hashAlg = new HMACSHA512(block);
+					block = hashAlg.ComputeHash(P);
+				}
+
+				block.CopyTo(DK, (i - 1) * hLen);
+			}
+
+			return DK;
 		}
 
 		/// <summary>
