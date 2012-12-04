@@ -58,6 +58,7 @@ namespace Kyru.Network.Objects
 		/// <param name="userFile">file to add</param>
 		internal void Add(UserFile userFile)
 		{
+			if (Crypto.VerifySignature(BitConverter.GetBytes(userFile.FileId), publicKey, userFile.Signature))
 			// TODO: check signature
 			files.Add(userFile);
 			if (OnFileAdded != null)
@@ -67,7 +68,8 @@ namespace Kyru.Network.Objects
 		/// <summary>
 		/// Checks if the signature is valid and, if so, adds it to the deleted file list and deletes the UserFile object
 		/// </summary>
-		/// <param name="deletedFile">signature + fileId</param>
+		/// <param name="fileId">fileId</param>
+		/// <param name="signature">Cryptographic signature of the fileId</param>
 		internal void AddDeletedFile(byte[] signature, ulong fileId)
 		{
 			if (Crypto.VerifySignature(BitConverter.GetBytes(fileId), publicKey, signature))

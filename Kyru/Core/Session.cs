@@ -8,6 +8,7 @@ using Kyru.Network;
 using Kyru.Network.Objects;
 using Kyru.Network.TcpMessages;
 using Kyru.Utilities;
+using Random = Kyru.Utilities.Random;
 
 namespace Kyru.Core
 {
@@ -90,12 +91,14 @@ namespace Kyru.Core
 				AddChunk(chunkList, chunkData.Take(lastChunkSize).ToArray());
 			}
 
+			var id = Random.UInt64();
 			var userFile = new UserFile
 			               	{
+			               		FileId = id,
 			               		ChunkList = chunkList,
 			               		EncryptedFileName = Crypto.EncryptAes(Encoding.UTF8.GetBytes(fileName), fileKey, fileIV),
 			               		EncryptedKey = Crypto.EncryptRsa(fileKey, privateKey),
-			               		IV = fileIV
+			               		IV = fileIV,
 			               	};
 
 			User.Add(userFile);
