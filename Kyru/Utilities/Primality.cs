@@ -8,7 +8,7 @@ namespace Kyru.Utilities
 	{
 		private static bool IsProbablyPrime(BigInteger num)
 		{
-			const int iterations = 1000;
+			const int iterations = 40;
 
 			// Miller-Rabin probabilistic test
 			// code adapted from http://rosettacode.org/wiki/Miller-Rabin_primality_test#C.23
@@ -70,10 +70,10 @@ namespace Kyru.Utilities
 		{
 			while (!num.IsPrime())
 			{
-				Console.WriteLine("Primality: {0} is not prime", num);
+				//Console.WriteLine("Primality: {0} is not prime", num);
 				num++;
 			}
-			Console.WriteLine("Primality: {0} is probably prime", num);
+			//Console.WriteLine("Primality: {0} is probably prime", num);
 			return num;
 		}
 	}

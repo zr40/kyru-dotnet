@@ -102,6 +102,7 @@
     <Compile Include="Network\TcpMessages\ServerState\IServerState.cs" />
     <Compile Include="Network\TcpMessages\StoreObjectRequest.cs" />
     <Compile Include="Utilities\Primality.cs" />
+    <Compile Include="Utilities\Primes.cs" />
     <Compile Include="Utilities\Random.cs" />
     <Compile Include="KyruForm.cs">
       <SubType>Form</SubType>
