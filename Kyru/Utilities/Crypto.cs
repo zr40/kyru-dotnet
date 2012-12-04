@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.IO;
 using System.Linq;
 using System.Security.Cryptography;
@@ -13,7 +13,7 @@ namespace Kyru.Utilities
 		private const int Iterations = 10000;
 		private static readonly SHA1CryptoServiceProvider hash = new SHA1CryptoServiceProvider();
 
-		internal const int AesHeaderSize = sizeof(int);
+		private const int AesHeaderSize = sizeof(int);
 
 		internal struct RsaKeyPair
 		{
@@ -28,11 +28,11 @@ namespace Kyru.Utilities
 		}
 
 		/// <summary>
-		/// Generates an RSA from a username and password
+		/// Derives an RSA from a username and password
 		/// </summary>
 		/// <param name="username">Username</param>
 		/// <param name="password">Password</param>
-		/// <returns>The private key</returns>
+		/// <returns>The derived private and public key</returns>
 		internal static RsaKeyPair DeriveRsaKey(byte[] username, byte[] password)
 		{
 			Console.WriteLine("DeriveRsaKey: deriving key...");
@@ -130,12 +130,12 @@ namespace Kyru.Utilities
 		/// </summary>
 		/// <param name="privateKey">The private key</param>
 		/// <returns>The public key</returns>
-		internal static byte[] ExtractPublicKey(byte[] privateKey)
+		internal static RSAParameters ExtractPublicKey(RSAParameters privateKey)
 		{
 			using (var rsa = new RSACryptoServiceProvider())
 			{
-				rsa.ImportCspBlob(privateKey);
-				return rsa.ExportCspBlob(false);
+				rsa.ImportParameters(privateKey);
+				return rsa.ExportParameters(false);
 			}
 		}
 
@@ -145,11 +145,11 @@ namespace Kyru.Utilities
 		/// <param name="data">Data to encrypt</param>
 		/// <param name="publicKey">Public key to use for decryption</param>
 		/// <returns>The encrypted data</returns>
-		internal static byte[] EncryptRsa(byte[] data, byte[] publicKey)
+		internal static byte[] EncryptRsa(byte[] data, RSAParameters publicKey)
 		{
 			using (var rsa = new RSACryptoServiceProvider())
 			{
-				rsa.ImportCspBlob(publicKey);
+				rsa.ImportParameters(publicKey);
 				return rsa.Encrypt(data, true);
 			}
 		}
@@ -160,11 +160,11 @@ namespace Kyru.Utilities
 		/// <param name="data">Data to decrypt</param>
 		/// <param name="privateKey">Private key to use for decryption</param>
 		/// <returns>The decrypted data</returns>
-		internal static byte[] DecryptRsa(byte[] data, byte[] privateKey)
+		internal static byte[] DecryptRsa(byte[] data, RSAParameters privateKey)
 		{
 			using (var rsa = new RSACryptoServiceProvider())
 			{
-				rsa.ImportCspBlob(privateKey);
+				rsa.ImportParameters(privateKey);
 				return rsa.Decrypt(data, true);
 			}
 		}
@@ -233,7 +233,7 @@ namespace Kyru.Utilities
 		/// <param name="data">Data to sign</param>
 		/// <param name="privateKey">Key to sign the data with</param>
 		/// <returns>The signature of the hashed data</returns>
-		internal static byte[] Sign(byte[] data, byte[] privateKey)
+		internal static byte[] Sign(byte[] data, RSAParameters privateKey)
 		{
 			return DecryptRsa(Hash(data), privateKey);
 		}
@@ -245,7 +245,7 @@ namespace Kyru.Utilities
 		/// <param name="publicKey">The public key to check the signature with</param>
 		/// <param name="signature">The signature to verify</param>
 		/// <returns></returns>
-		internal static bool VerifySignature(byte[] data, byte[] publicKey, byte[] signature)
+		internal static bool VerifySignature(byte[] data, RSAParameters publicKey, byte[] signature)
 		{
 			byte[] dataHash = Hash(data);
 			byte[] signHash = EncryptRsa(signature, publicKey);

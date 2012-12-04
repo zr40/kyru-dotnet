@@ -21,10 +21,6 @@ namespace Kyru
 			Console.WriteLine("Kyru debug console");
 			Console.WriteLine();
 
-			var start = DateTime.Now;
-			var output = Crypto.DeriveRsaKey(Encoding.UTF8.GetBytes("Foo"), Encoding.UTF8.GetBytes("Bar"));
-			Console.WriteLine(DateTime.Now - start);
-			Environment.Exit(0);
 			KyruTimer.Start();
 
 			app = new KyruApplication();

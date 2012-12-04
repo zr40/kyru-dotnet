@@ -1,6 +1,6 @@
 using System;
 using System.Collections.Generic;
-
+using System.Security.Cryptography;
 using Kyru.Utilities;
 
 using ProtoBuf;
@@ -20,7 +20,7 @@ namespace Kyru.Network.Objects
 		private readonly List<Tuple<byte[], ulong>> deletedFiles = new List<Tuple<byte[], ulong>>();
 
 		[ProtoMember(3)]
-		private readonly byte[] publicKey;
+		private readonly RSAParameters publicKey;
 
 		internal event Action<UserFile> OnFileAdded;
 		internal event Action<ulong> OnFileDeleted;
@@ -31,7 +31,7 @@ namespace Kyru.Network.Objects
 			// used by serialization
 		}
 
-		internal User(byte[] publicKey)
+		internal User(RSAParameters publicKey)
 		{
 			this.publicKey = publicKey;
 		}
@@ -58,6 +58,7 @@ namespace Kyru.Network.Objects
 		/// <param name="userFile">file to add</param>
 		internal void Add(UserFile userFile)
 		{
+			if (Crypto.VerifySignature(BitConverter.GetBytes(userFile.FileId), publicKey, userFile.Signature))
 			// TODO: check signature
 			files.Add(userFile);
 			if (OnFileAdded != null)
@@ -67,8 +68,9 @@ namespace Kyru.Network.Objects
 		/// <summary>
 		/// Checks if the signature is valid and, if so, adds it to the deleted file list and deletes the UserFile object
 		/// </summary>
-		/// <param name="deletedFile">signature + fileId</param>
-		private void AddDeletedFile(byte[] signature, ulong fileId)
+		/// <param name="fileId">fileId</param>
+		/// <param name="signature">Cryptographic signature of the fileId</param>
+		internal void AddDeletedFile(byte[] signature, ulong fileId)
 		{
 			if (Crypto.VerifySignature(BitConverter.GetBytes(fileId), publicKey, signature))
 			{
@@ -80,6 +82,10 @@ namespace Kyru.Network.Objects
 			}
 		}
 
+		/// <summary>
+		/// Verifies all signatures in the (deleted) file list and checks for inconsistencies
+		/// </summary>
+		/// <returns>True if no problems were found, false if an invalid signature or inconsistency was found</returns>
 		internal override bool VerifyData()
 		{
 			// TODO
