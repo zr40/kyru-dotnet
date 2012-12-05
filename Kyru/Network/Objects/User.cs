@@ -47,9 +47,19 @@ namespace Kyru.Network.Objects
 
 		internal void Merge(User user)
 		{
-			throw new NotImplementedException();
-		}
+			foreach (var file in user.files)
+			{
+				if (files.All(f => f.FileId != file.FileId) || deletedFiles.All(f => f.Item2 != file.FileId))
+					Add(file);
+			}
 
+			foreach (var file in user.deletedFiles)
+			{
+				if (deletedFiles.All(f => f.Item2 != file.Item2))
+					AddDeletedFile(file.Item1, file.Item2);
+			}
+
+		}
 		internal IList<Tuple<byte[], ulong>> DeletedFiles
 		{
 			get
