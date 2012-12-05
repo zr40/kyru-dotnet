@@ -10,9 +10,10 @@ namespace Kyru.Network.Objects
 		[ProtoMember(1)]
 		internal readonly byte[] Data;
 
-		internal Chunk(byte[] data)
+		internal Chunk(byte[] data, KademliaId objectId)
 		{
 			Data = data;
+			ObjectId = objectId;
 		}
 
 		internal override bool VerifyData()

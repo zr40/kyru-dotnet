@@ -53,10 +53,11 @@ namespace Kyru.Core
 			return Encoding.UTF8.GetString(Crypto.DecryptAes(userFile.EncryptedFileName, DecryptFileKey(userFile), userFile.IV));
 		}
 
-		private void AddChunk(List<KademliaId> chunks, byte[] chunk)
+		private void AddChunk(List<KademliaId> chunkIDs, byte[] chunkData)
 		{
-			chunks.Add(new KademliaId(Crypto.Hash(chunk)));
-			localObjectStorage.StoreObject(new Chunk(chunk), true);
+			var chunkId = new KademliaId(Crypto.Hash(chunkData));
+			chunkIDs.Add(chunkId);
+			localObjectStorage.StoreObject(new Chunk(chunkData, chunkId), true);
 		}
 
 		/// <summary>
@@ -92,7 +93,10 @@ namespace Kyru.Core
 			}
 
 			var id = Random.UInt64();
-			var userFile = new UserFile {FileId = id, ChunkList = chunkList, EncryptedFileName = Crypto.EncryptAes(Encoding.UTF8.GetBytes(fileName), fileKey, fileIV), EncryptedKey = Crypto.EncryptRsa(fileKey, rsaKeyPair.Public), IV = fileIV,};
+			var signedID = Crypto.Sign(BitConverter.GetBytes(id), rsaKeyPair.Public, rsaKeyPair.Private);
+			var hashedData = Crypto.Hash(data);
+
+			var userFile = new UserFile {FileId = id, ChunkList = chunkList, EncryptedFileName = Crypto.EncryptAes(Encoding.UTF8.GetBytes(fileName), fileKey, fileIV), EncryptedKey = Crypto.EncryptRsa(fileKey, rsaKeyPair.Public), IV = fileIV, Hash = hashedData, Signature = signedID};
 
 			User.Add(userFile);
 

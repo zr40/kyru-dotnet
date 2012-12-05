@@ -115,13 +115,13 @@ namespace Kyru.Core
 		}
 
 		internal void DownloadObjects(List<KademliaId> ids, Action<Error> done) {
-			Semaphore networkLock = new Semaphore(0,Kademlia.α);
+			//Semaphore networkLock = new Semaphore(0,Kademlia.α);
 			Error status = Error.Success;
 			new Thread(() =>
 			{
 				foreach (var id in ids)
 				{
-					networkLock.WaitOne();
+					//networkLock.WaitOne();
 
 					if (!currentObjects.ContainsKey(id))
 					{
@@ -134,14 +134,14 @@ namespace Kyru.Core
 							}
 							Store(id, bytes, false);
 
-							networkLock.Release();
+							//networkLock.Release();
 						});
 					}
 				}
 
 				// Make sure the network is completed
-				for (int i = 0; i < Kademlia.α; i++)
-					networkLock.WaitOne();
+				//for (int i = 0; i < Kademlia.α; i++)
+					//networkLock.WaitOne();
 
 				done(status);
 			}).Start();

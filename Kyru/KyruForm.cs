@@ -68,8 +68,9 @@ namespace Kyru
 						session.AddFile(fs, filename);
 					}
 				}
-				catch
+				catch (IOException ex)
 				{
+					Console.WriteLine(ex.Message);
 					MessageBox.Show("Could not add file " + filename);
 				}
 			}
