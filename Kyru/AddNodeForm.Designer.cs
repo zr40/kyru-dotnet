@@ -40,7 +40,7 @@
 			this.btOk.Location = new System.Drawing.Point(91, 58);
 			this.btOk.Name = "btOk";
 			this.btOk.Size = new System.Drawing.Size(75, 23);
-			this.btOk.TabIndex = 0;
+			this.btOk.TabIndex = 2;
 			this.btOk.Text = "Add Node";
 			this.btOk.UseVisualStyleBackColor = true;
 			this.btOk.Click += new System.EventHandler(this.btOk_Click);
@@ -68,18 +68,19 @@
 			this.txtIp.Location = new System.Drawing.Point(91, 5);
 			this.txtIp.Name = "txtIp";
 			this.txtIp.Size = new System.Drawing.Size(100, 20);
-			this.txtIp.TabIndex = 5;
+			this.txtIp.TabIndex = 0;
 			// 
 			// txtPort
 			// 
 			this.txtPort.Location = new System.Drawing.Point(91, 32);
 			this.txtPort.Name = "txtPort";
 			this.txtPort.Size = new System.Drawing.Size(100, 20);
-			this.txtPort.TabIndex = 6;
+			this.txtPort.TabIndex = 1;
 			this.txtPort.Text = "12045";
 			// 
 			// AddNodeForm
 			// 
+			this.AcceptButton = this.btOk;
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
 			this.ClientSize = new System.Drawing.Size(202, 87);
@@ -88,6 +89,9 @@
 			this.Controls.Add(this.label2);
 			this.Controls.Add(this.label1);
 			this.Controls.Add(this.btOk);
+			this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
+			this.MaximizeBox = false;
+			this.MinimizeBox = false;
 			this.Name = "AddNodeForm";
 			this.Text = "Add Node";
 			this.ResumeLayout(false);
