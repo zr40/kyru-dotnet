@@ -67,10 +67,16 @@ namespace Kyru.Core
 		/// <param name="o">the object</param>
 		internal void StoreObject(KyruObject o, bool replicate)
 		{
-			if (!o.VerifyData())
+			if (!VerifyObject(o)) return;
+
+			if (o is User)
 			{
-				this.Warn("Object failed verification; it will not be stored. ID: {0}", o.ObjectId);
-				return;
+				var oldUser = GetObject(o.ObjectId);
+				if (oldUser is User)
+				{
+					var user = o as User;
+					user.Merge(oldUser as User);
+				}
 			}
 
 			using (var stream = new MemoryStream())
@@ -78,6 +84,16 @@ namespace Kyru.Core
 				Serializer.Serialize(stream, o);
 				Store(o.ObjectId, stream.ToArray(), replicate);
 			}
+		}
+
+		private bool VerifyObject(KyruObject o)
+		{
+			if (!o.VerifyData())
+			{
+				this.Warn("Object failed verification; it will not be stored. ID: {0}", o.ObjectId);
+				return false;
+			}
+			return true;
 		}
 
 		/// <summary>
@@ -91,11 +107,14 @@ namespace Kyru.Core
 			{
 				var obj = Serializer.Deserialize<KyruObject>(st);
 				obj.ObjectId = id;
-				if (!obj.VerifyData())
+
+				if (obj is User)
 				{
-					this.Warn("Object failed verification; it will not be stored. ID: {0}", id);
+					StoreObject(obj, replicate);
 					return;
 				}
+
+				if (!VerifyObject(obj)) return;
 			}
 
 			Store(id, bytes, replicate);
