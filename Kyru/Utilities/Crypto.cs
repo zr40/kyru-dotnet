@@ -28,7 +28,7 @@ namespace Kyru.Utilities
 
 		private const int AesHeaderSize = sizeof(int);
 
-		private const int rsaExponent = 0x10001;
+		private const int RsaExponent = 0x10001;
 
 		/// <summary>
 		/// Derives an RSA from a username and password
@@ -38,13 +38,15 @@ namespace Kyru.Utilities
 		/// <returns>The derived private and public key</returns>
 		internal static RsaKeyPair DeriveRsaKey(byte[] username, byte[] password)
 		{
+			const int primeSize = RsaPublicKeySize / 2;
+
 			Console.WriteLine("DeriveRsaKey: deriving key...");
 
 			var derived = PBKDF2(password, username, RsaPublicKeySize);
-			var one = new byte[RsaPublicKeySize / 2];
-			var two = new byte[RsaPublicKeySize / 2];
-			Array.Copy(derived, 0, one, 0, RsaPublicKeySize / 2);
-			Array.Copy(derived, RsaPublicKeySize / 2, two, 0, RsaPublicKeySize / 2);
+			var one = new byte[primeSize];
+			var two = new byte[primeSize];
+			Array.Copy(derived, 0, one, 0, primeSize);
+			Array.Copy(derived, primeSize, two, 0, primeSize);
 
 			Console.WriteLine("DeriveRsaKey: finding prime 1...");
 
@@ -56,7 +58,7 @@ namespace Kyru.Utilities
 
 			var n = p * q;
 			var φn = (p - 1) * (q - 1);
-			var e = new BigInt(rsaExponent);
+			var e = new BigInt(RsaExponent);
 			var d = e.InvertMod(φn);
 
 			Console.WriteLine("DeriveRsaKey: done");
@@ -138,7 +140,7 @@ namespace Kyru.Utilities
 		{
 			var m = new BigInt(data);
 			var n = new BigInt(publicKey);
-			return m.PowerMod(rsaExponent, n).ToByteArray();
+			return m.PowerMod(RsaExponent, n).ToByteArray();
 		}
 
 		/// <summary>
