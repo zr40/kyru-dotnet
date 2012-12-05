@@ -45,6 +45,11 @@ namespace Kyru.Network.Objects
 			}
 		}
 
+		internal void Merge(User user)
+		{
+			throw new NotImplementedException();
+		}
+
 		internal IList<Tuple<byte[], ulong>> DeletedFiles
 		{
 			get
