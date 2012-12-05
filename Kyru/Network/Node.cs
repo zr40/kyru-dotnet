@@ -268,7 +268,8 @@ namespace Kyru.Network
 
 		internal void StoreObject(KademliaId objectId, byte[] bytes)
 		{
-			new Thread(() => Kademlia.NodeLookup(objectId, list =>
+			// TODO: store at one node, not at all
+			new Thread(() => Kademlia.NodeLookup(KademliaId.RandomId, list =>
 			                                               {
 				                                               foreach (var item in list)
 				                                               {
