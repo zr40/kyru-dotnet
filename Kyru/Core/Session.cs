@@ -48,7 +48,7 @@ namespace Kyru.Core
 		/// <returns>The filename</returns>
 		internal string DecryptFileName(UserFile userFile)
 		{
-			return Encoding.UTF8.GetString(Crypto.DecryptAes(userFile.EncryptedFileName, DecryptFileKey(userFile), userFile.FileIV));
+			return Encoding.UTF8.GetString(Crypto.DecryptAes(userFile.EncryptedFileName, DecryptKey(userFile), userFile.NameIV));
 		}
 
 		private void AddChunk(List<KademliaId> chunkIDs, byte[] chunkData)
@@ -126,7 +126,7 @@ namespace Kyru.Core
 		/// </summary>
 		/// <param name="userFile">Kfile object containing an encrypted filekey</param>
 		/// <returns>the decrypted filekey</returns>
-		private byte[] DecryptFileKey(UserFile userFile)
+		private byte[] DecryptKey(UserFile userFile)
 		{
 			return Crypto.DecryptRsa(userFile.EncryptedKey, rsaKeyPair);
 		}
@@ -150,7 +150,7 @@ namespace Kyru.Core
 				
 				bytes = ms.ToArray();
 			}
-			bytes = Crypto.DecryptAes(bytes, DecryptFileKey(userFile), userFile.FileIV);
+			bytes = Crypto.DecryptAes(bytes, DecryptKey(userFile), userFile.FileIV);
 			output.Write(bytes, 0, bytes.Length);
 		}
 
