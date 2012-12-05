@@ -15,13 +15,15 @@ namespace Kyru.Network.Objects
 
 		[ProtoMember(3)] internal byte[] EncryptedKey;
 
-		[ProtoMember(4)] internal byte[] IV;
+		[ProtoMember(4)] internal byte[] FileIV;
 
-		[ProtoMember(5)] internal byte[] EncryptedFileName;
+		[ProtoMember(5)] internal byte[] NameIV;
 
-		[ProtoMember(6)] internal byte[] Hash; // Hash of encrypted file contents.
+		[ProtoMember(6)] internal byte[] EncryptedFileName;
 
-		[ProtoMember(7)] internal List<KademliaId> ChunkList = new List<KademliaId>();
+		[ProtoMember(7)] internal byte[] Hash; // Hash of encrypted file contents.
+
+		[ProtoMember(8)] internal List<KademliaId> ChunkList = new List<KademliaId>();
 
 		internal byte[] HashObject()
 		{

@@ -48,7 +48,7 @@ namespace Kyru.Core
 		/// <returns>The filename</returns>
 		internal string DecryptFileName(UserFile userFile)
 		{
-			return Encoding.UTF8.GetString(Crypto.DecryptAes(userFile.EncryptedFileName, DecryptFileKey(userFile), userFile.IV));
+			return Encoding.UTF8.GetString(Crypto.DecryptAes(userFile.EncryptedFileName, DecryptFileKey(userFile), userFile.FileIV));
 		}
 
 		private void AddChunk(List<KademliaId> chunkIDs, byte[] chunkData)
@@ -70,6 +70,7 @@ namespace Kyru.Core
 			var chunkList = new List<KademliaId>();
 			byte[] fileKey = Crypto.GenerateAesKey();
 			byte[] fileIV = Crypto.GenerateIV();
+			byte[] nameIV = Crypto.GenerateIV();
 
 			input.Read(data, 0, (int) input.Length);
 			data = Crypto.EncryptAes(data, fileKey, fileIV);
@@ -90,20 +91,16 @@ namespace Kyru.Core
 				AddChunk(chunkList, chunkData.Take(lastChunkSize).ToArray());
 			}
 
-			ulong id = Random.UInt64();
-			byte[] signedID = Crypto.Sign(BitConverter.GetBytes(id), rsaKeyPair.Public, rsaKeyPair.Private);
-			byte[] hashedData = Crypto.Hash(data);
-
 			var userFile = new UserFile
 			               	{
-			               		FileId = id,
+			               		FileId = Random.UInt64(),
 			               		ChunkList = chunkList,
-			               		EncryptedFileName = Crypto.EncryptAes(Encoding.UTF8.GetBytes(fileName), fileKey, fileIV),
+			               		EncryptedFileName = Crypto.EncryptAes(Encoding.UTF8.GetBytes(fileName), fileKey, nameIV),
 			               		EncryptedKey = Crypto.EncryptRsa(fileKey, rsaKeyPair.Public),
-			               		IV = fileIV,
-			               		Hash = hashedData,
-			               		Signature = signedID
+			               		FileIV = fileIV,
+			               		Hash = Crypto.Hash(data),
 			               	};
+			userFile.Signature = Crypto.Sign(userFile.HashObject(), rsaKeyPair.Public, rsaKeyPair.Private);
 
 			User.Add(userFile);
 
@@ -141,15 +138,18 @@ namespace Kyru.Core
 		/// <exception cref="NullReferenceException">One or more of the chunks could not be found</exception>
 		internal void DecryptFile(UserFile userFile, Stream output)
 		{
-			var ms = new MemoryStream();
-			foreach (KademliaId chunkId in userFile.ChunkList)
+			byte[] bytes;
+			using (var ms = new MemoryStream())
 			{
-				var chunk = localObjectStorage.GetObject(chunkId) as Chunk;
-				ms.Write(chunk.Data, 0, chunk.Data.Length);
+				foreach (KademliaId chunkId in userFile.ChunkList)
+				{
+					var chunk = localObjectStorage.GetObject(chunkId) as Chunk;
+					ms.Write(chunk.Data, 0, chunk.Data.Length);
+				}
+				
+				bytes = ms.ToArray();
 			}
-
-			byte[] bytes = ms.ToArray();
-			bytes = Crypto.DecryptAes(bytes, DecryptFileKey(userFile), userFile.IV);
+			bytes = Crypto.DecryptAes(bytes, DecryptFileKey(userFile), userFile.FileIV);
 			output.Write(bytes, 0, bytes.Length);
 		}
 
