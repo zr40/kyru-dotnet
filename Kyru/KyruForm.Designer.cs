@@ -38,6 +38,7 @@
 			  this.saveToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			  this.deleteToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			  this.infoToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+			  this.refreshToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			  this.topMenu.SuspendLayout();
 			  this.rightClickMenu.SuspendLayout();
 			  this.SuspendLayout();
@@ -70,7 +71,8 @@
 			  // systemToolStripMenuItem
 			  // 
 			  this.systemToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.addAFileToolStripMenuItem});
+            this.addAFileToolStripMenuItem,
+            this.refreshToolStripMenuItem});
 			  this.systemToolStripMenuItem.Name = "systemToolStripMenuItem";
 			  this.systemToolStripMenuItem.Size = new System.Drawing.Size(57, 20);
 			  this.systemToolStripMenuItem.Text = "System";
@@ -112,6 +114,13 @@
 			  this.infoToolStripMenuItem.Text = "Info";
 			  this.infoToolStripMenuItem.Click += new System.EventHandler(this.infoToolStripMenuItem_Click);
 			  // 
+			  // refreshToolStripMenuItem
+			  // 
+			  this.refreshToolStripMenuItem.Name = "refreshToolStripMenuItem";
+			  this.refreshToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+			  this.refreshToolStripMenuItem.Text = "Refresh";
+			  this.refreshToolStripMenuItem.Click += new System.EventHandler(this.refreshToolStripMenuItem_Click);
+			  // 
 			  // KyruForm
 			  // 
 			  this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
@@ -142,6 +151,7 @@
 		  private System.Windows.Forms.ToolStripMenuItem saveToolStripMenuItem;
 		  private System.Windows.Forms.ToolStripMenuItem deleteToolStripMenuItem;
 		  private System.Windows.Forms.ToolStripMenuItem infoToolStripMenuItem;
+		  private System.Windows.Forms.ToolStripMenuItem refreshToolStripMenuItem;
     }
 }
 

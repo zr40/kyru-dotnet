@@ -78,6 +78,12 @@ namespace Kyru
 			}
 		}
 
+		private void refreshToolStripMenuItem_Click(object sender, EventArgs e)
+		{
+			virtualLocalFileTree.Nodes.Clear();
+			virtualLocalFileTreeInit();
+		}
+
 		private void virtualLocalFileTree_MouseUp(object sender, MouseEventArgs e)
 		{
 			if (e.Button == MouseButtons.Right)
