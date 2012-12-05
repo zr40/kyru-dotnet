@@ -28,7 +28,7 @@ namespace Kyru.Network.TcpMessages.ServerState
 				// TODO: allow user object merges if the hash is different
 				response.Error = Error.ObjectAlreadyStored;
 			}
-			else if (storeObjectRequest.Length > LocalObjectStorage.MaxObjectSize)
+			else if (storeObjectRequest.Length > LocalObjectStorage.MaxObjectSize*2) // TODO: remove hack
 			{
 				response.Error = Error.StoreRejected;
 			}
