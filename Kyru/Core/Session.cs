@@ -101,7 +101,7 @@ namespace Kyru.Core
 			               		NameIV = nameIV,
 			               		Hash = Crypto.Hash(data),
 			               	};
-			userFile.Signature = Crypto.Sign(userFile.HashObject(), rsaKeyPair.Public, rsaKeyPair.Private);
+			userFile.Signature = Crypto.Sign(userFile.HashObject(), rsaKeyPair);
 
 			User.Add(userFile);
 
@@ -115,7 +115,7 @@ namespace Kyru.Core
 		/// <param name="userFile"></param>
 		internal void DeleteFile(UserFile userFile)
 		{
-			User.AddDeletedFile(Crypto.Sign(BitConverter.GetBytes(userFile.FileId), rsaKeyPair.Public, rsaKeyPair.Private),
+			User.AddDeletedFile(Crypto.Sign(BitConverter.GetBytes(userFile.FileId), rsaKeyPair),
 			                    userFile.FileId);
 
 			localObjectStorage.StoreObject(User, true);
@@ -128,7 +128,7 @@ namespace Kyru.Core
 		/// <returns>the decrypted filekey</returns>
 		private byte[] DecryptFileKey(UserFile userFile)
 		{
-			return Crypto.DecryptRsa(userFile.EncryptedKey, rsaKeyPair.Public, rsaKeyPair.Private);
+			return Crypto.DecryptRsa(userFile.EncryptedKey, rsaKeyPair);
 		}
 
 		/// <summary>

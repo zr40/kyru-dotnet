@@ -35,7 +35,7 @@ namespace Tests
 			var encrypted = Crypto.EncryptRsa(data, keyPair.Public);
 			Assert.AreElementsNotEqual(data, encrypted);
 
-			var decrypted = Crypto.DecryptRsa(encrypted, keyPair.Public, keyPair.Private);
+			var decrypted = Crypto.DecryptRsa(encrypted, keyPair);
 			Assert.AreElementsEqual(data, decrypted);
 		}
 
@@ -53,7 +53,7 @@ namespace Tests
 			var data = new byte[64];
 			r.NextBytes(data);
 
-			var signature = Crypto.Sign(data, keyPair.Public, keyPair.Private);
+			var signature = Crypto.Sign(data, keyPair);
 			Assert.IsTrue(Crypto.VerifySignature(data, keyPair.Public, signature));
 
 			signature[0] = (byte) ~signature[0];

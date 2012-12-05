@@ -10,8 +10,8 @@ namespace Kyru.Utilities
 {
 	internal struct RsaKeyPair
 	{
-		internal byte[] Public;
-		internal byte[] Private;
+		internal readonly byte[] Public;
+		internal readonly byte[] Private;
 
 		internal RsaKeyPair(byte[] pubKey, byte[] privKey) : this()
 		{
@@ -147,14 +147,13 @@ namespace Kyru.Utilities
 		/// Decrypts data with an RSA key pair
 		/// </summary>
 		/// <param name="data">Data to decrypt</param>
-		/// <param name="publicKey">Public key to use for decryption</param>
-		/// <param name="privateKey">Private key to use for decryption</param>
+		/// <param name="keyPair">RSA Key pair to use for decryption</param>
 		/// <returns>The decrypted data</returns>
-		internal static byte[] DecryptRsa(byte[] data, byte[] publicKey, byte[] privateKey)
+		internal static byte[] DecryptRsa(byte[] data, RsaKeyPair keyPair)
 		{
 			var c = new BigInt(data);
-			var d = new BigInt(privateKey);
-			var n = new BigInt(publicKey);
+			var d = new BigInt(keyPair.Private);
+			var n = new BigInt(keyPair.Public);
 			return c.PowerMod(d, n).ToByteArray();
 		}
 
@@ -222,9 +221,9 @@ namespace Kyru.Utilities
 		/// <param name="data">Data to sign</param>
 		/// <param name="privateKey">Key to sign the data with</param>
 		/// <returns>The signature of the hashed data</returns>
-		internal static byte[] Sign(byte[] data, byte[] publicKey, byte[] privateKey)
+		internal static byte[] Sign(byte[] data, RsaKeyPair keyPair)
 		{
-			return DecryptRsa(Hash(data), publicKey, privateKey);
+			return DecryptRsa(Hash(data), keyPair);
 		}
 
 		/// <summary>
