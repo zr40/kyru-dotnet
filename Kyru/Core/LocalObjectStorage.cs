@@ -120,6 +120,7 @@ namespace Kyru.Core
 				if (obj is User)
 				{
 					StoreObject(obj, replicate);
+					return;
 				}
 
 				if (!VerifyObject(obj)) return;
