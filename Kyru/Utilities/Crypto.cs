@@ -235,10 +235,9 @@ namespace Kyru.Utilities
 		/// <returns></returns>
 		internal static bool VerifySignature(byte[] data, byte[] publicKey, byte[] signature)
 		{
-			byte[] dataHash = Hash(data);
 			byte[] signHash = EncryptRsa(signature, publicKey);
 
-			return signHash.SequenceEqual(dataHash);
+			return signHash.SequenceEqual(data);
 		}
 	}
 }

@@ -58,11 +58,12 @@ namespace Kyru.Network.Objects
 		/// <param name="userFile">file to add</param>
 		internal void Add(UserFile userFile)
 		{
-			if (Crypto.VerifySignature(BitConverter.GetBytes(userFile.FileId), publicKey, userFile.Signature))
-			// TODO: check signature
-			files.Add(userFile);
-			if (OnFileAdded != null)
-				OnFileAdded(userFile);
+			if (Crypto.VerifySignature(userFile.HashObject(), publicKey, userFile.Signature))
+			{
+				files.Add(userFile);
+				if (OnFileAdded != null)
+					OnFileAdded(userFile);
+			}
 		}
 
 		/// <summary>
