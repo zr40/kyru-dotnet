@@ -5,6 +5,7 @@ using System.Windows.Forms;
 using Kyru.Core;
 using Kyru.Network.Objects;
 using System.Threading;
+using System.Text;
 
 namespace Kyru
 {
@@ -134,7 +135,23 @@ namespace Kyru
 
 		private void infoToolStripMenuItem_Click(object sender, EventArgs e)
 		{
-			throw new NotImplementedException();
+			var userFile = virtualLocalFileTree.SelectedNode.Tag as UserFile;
+			if (userFile == null)
+				return;
+
+			StringBuilder builder = new StringBuilder();
+
+			builder.Append(session.DecryptFileName(userFile));
+			builder.Append("\nID: ");
+			builder.Append(userFile.FileId);
+
+			builder.Append("\nChunks:");
+			foreach(var c in userFile.ChunkList){
+				builder.Append("\n");
+				builder.Append(c);
+			}
+
+			MessageBox.Show(builder.ToString());
 		}
 	}
 }
