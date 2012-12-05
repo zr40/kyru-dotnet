@@ -37,6 +37,13 @@ namespace Kyru.Core
 			Username = username;
 
 			User = localObjectStorage.GetObject(id) as User ?? new User(rsaKeyPair.Public) {ObjectId = id};
+
+			localObjectStorage.OnUserUpdated += UpdateUser;
+		}
+
+		internal void UpdateUser(User updatedUser)
+		{
+			User.Merge(updatedUser);
 		}
 
 		internal string Username { get; private set; }

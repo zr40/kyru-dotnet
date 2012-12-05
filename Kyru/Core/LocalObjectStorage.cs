@@ -37,6 +37,8 @@ namespace Kyru.Core
 			KyruTimer.Register(this, 60);
 		}
 
+		internal event Action<User> OnUserUpdated;
+
 		internal IList<KademliaId> CurrentObjects
 		{
 			get
@@ -69,6 +71,7 @@ namespace Kyru.Core
 		{
 			if (!VerifyObject(o)) return;
 
+			var userUpdated = false;
 			if (o is User)
 			{
 				var oldUser = GetObject(o.ObjectId);
@@ -76,6 +79,7 @@ namespace Kyru.Core
 				{
 					var user = o as User;
 					user.Merge(oldUser as User);
+					userUpdated = true;
 				}
 			}
 
@@ -83,6 +87,11 @@ namespace Kyru.Core
 			{
 				Serializer.Serialize(stream, o);
 				Store(o.ObjectId, stream.ToArray(), replicate);
+			}
+
+			if (userUpdated && OnUserUpdated != null)
+			{
+				OnUserUpdated(o as User);
 			}
 		}
 
