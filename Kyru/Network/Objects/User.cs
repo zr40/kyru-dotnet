@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Security.Cryptography;
 using Kyru.Utilities;
 
@@ -89,7 +90,17 @@ namespace Kyru.Network.Objects
 		/// <returns>True if no problems were found, false if an invalid signature or inconsistency was found</returns>
 		internal override bool VerifyData()
 		{
-			// TODO
+			if (files.Any(file => !Crypto.VerifySignature(file.HashObject(), publicKey, file.Signature)))
+			{
+				return false;
+			}
+			foreach (Tuple<byte[], ulong> file in deletedFiles)
+			{
+				if (!Crypto.VerifySignature(BitConverter.GetBytes(file.Item2), publicKey, file.Item1))
+					return false;
+				if (files.Any(f => f.FileId == file.Item2)) 
+					return false;
+			}
 			return true;
 		}
 	}

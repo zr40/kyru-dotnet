@@ -48,10 +48,7 @@ namespace Kyru.Network.Objects
 
 		internal bool ValidateData()
 		{
-			if (EncryptedKey.Length != 32 || FileIV.Length != 16 || NameIV.Length != 16 | Hash.Length != 20)
-				return false;
-
-			return true;
+			return EncryptedKey.Length == 32 && FileIV.Length == 16 && NameIV.Length == 16 && Hash.Length == 20;
 		}
 	}
 }
