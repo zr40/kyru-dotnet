@@ -43,9 +43,6 @@ namespace Kyru.Network.Operations
 
 		internal void ThreadStart()
 		{
-			// TODO matthijs: this has a valid reason; write it down
-			Thread.Sleep(1000);
-
 			foreach (var nearNode in node.Kademlia.NearestContactsTo(id, null))
 			{
 				nodeList.Add(new LookupListItem(id - nearNode.NodeId, nearNode));
