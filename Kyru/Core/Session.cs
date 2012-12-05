@@ -3,12 +3,10 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
-
 using Kyru.Network;
 using Kyru.Network.Objects;
 using Kyru.Network.TcpMessages;
 using Kyru.Utilities;
-
 using Random = Kyru.Utilities.Random;
 
 namespace Kyru.Core
@@ -76,27 +74,36 @@ namespace Kyru.Core
 			input.Read(data, 0, (int) input.Length);
 			data = Crypto.EncryptAes(data, fileKey, fileIV);
 
-			int lastChunkSize = data.Length % LocalObjectStorage.MaxObjectSize;
-			int chunks = data.Length / LocalObjectStorage.MaxObjectSize;
+			int lastChunkSize = data.Length%LocalObjectStorage.MaxObjectSize;
+			int chunks = data.Length/LocalObjectStorage.MaxObjectSize;
 			var chunkData = new byte[LocalObjectStorage.MaxObjectSize];
 
 			for (int i = 0; i < chunks; i++)
 			{
-				Array.Copy(data, i * LocalObjectStorage.MaxObjectSize, chunkData, 0, LocalObjectStorage.MaxObjectSize);
+				Array.Copy(data, i*LocalObjectStorage.MaxObjectSize, chunkData, 0, LocalObjectStorage.MaxObjectSize);
 				AddChunk(chunkList, chunkData);
 			}
 
 			if (lastChunkSize != 0)
 			{
-				Array.Copy(data, chunks * LocalObjectStorage.MaxObjectSize, chunkData, 0, lastChunkSize);
+				Array.Copy(data, chunks*LocalObjectStorage.MaxObjectSize, chunkData, 0, lastChunkSize);
 				AddChunk(chunkList, chunkData.Take(lastChunkSize).ToArray());
 			}
 
-			var id = Random.UInt64();
-			var signedID = Crypto.Sign(BitConverter.GetBytes(id), rsaKeyPair.Public, rsaKeyPair.Private);
-			var hashedData = Crypto.Hash(data);
+			ulong id = Random.UInt64();
+			byte[] signedID = Crypto.Sign(BitConverter.GetBytes(id), rsaKeyPair.Public, rsaKeyPair.Private);
+			byte[] hashedData = Crypto.Hash(data);
 
-			var userFile = new UserFile {FileId = id, ChunkList = chunkList, EncryptedFileName = Crypto.EncryptAes(Encoding.UTF8.GetBytes(fileName), fileKey, fileIV), EncryptedKey = Crypto.EncryptRsa(fileKey, rsaKeyPair.Public), IV = fileIV, Hash = hashedData, Signature = signedID};
+			var userFile = new UserFile
+			               	{
+			               		FileId = id,
+			               		ChunkList = chunkList,
+			               		EncryptedFileName = Crypto.EncryptAes(Encoding.UTF8.GetBytes(fileName), fileKey, fileIV),
+			               		EncryptedKey = Crypto.EncryptRsa(fileKey, rsaKeyPair.Public),
+			               		IV = fileIV,
+			               		Hash = hashedData,
+			               		Signature = signedID
+			               	};
 
 			User.Add(userFile);
 
@@ -110,7 +117,8 @@ namespace Kyru.Core
 		/// <param name="userFile"></param>
 		internal void DeleteFile(UserFile userFile)
 		{
-			User.AddDeletedFile(Crypto.Sign(BitConverter.GetBytes(userFile.FileId), rsaKeyPair.Public, rsaKeyPair.Private), userFile.FileId);
+			User.AddDeletedFile(Crypto.Sign(BitConverter.GetBytes(userFile.FileId), rsaKeyPair.Public, rsaKeyPair.Private),
+			                    userFile.FileId);
 
 			localObjectStorage.StoreObject(User, true);
 		}
