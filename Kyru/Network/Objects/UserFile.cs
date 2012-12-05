@@ -2,6 +2,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
+using Kyru.Utilities;
+
 using ProtoBuf;
 
 namespace Kyru.Network.Objects
@@ -27,7 +29,29 @@ namespace Kyru.Network.Objects
 
 		internal byte[] HashObject()
 		{
-			throw new NotImplementedException();
+			var bytes = new List<byte>();
+
+			bytes.AddRange(BitConverter.GetBytes(FileId));
+			bytes.AddRange(EncryptedKey);
+			bytes.AddRange(FileIV);
+			bytes.AddRange(NameIV);
+			bytes.AddRange(BitConverter.GetBytes(EncryptedFileName.Length));
+			bytes.AddRange(EncryptedFileName);
+			bytes.AddRange(BitConverter.GetBytes(ChunkList.Count));
+			foreach (var chunkId in ChunkList)
+			{
+				bytes.AddRange(chunkId.Bytes);
+			}
+
+			return Crypto.Hash(bytes.ToArray());
+		}
+
+		internal bool ValidateData()
+		{
+			if (EncryptedKey.Length != 32 || FileIV.Length != 16 || NameIV.Length != 16 | Hash.Length != 20)
+				return false;
+
+			return true;
 		}
 	}
 }
