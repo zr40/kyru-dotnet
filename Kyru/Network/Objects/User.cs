@@ -49,7 +49,7 @@ namespace Kyru.Network.Objects
 		{
 			foreach (var file in user.files)
 			{
-				if (files.All(f => f.FileId != file.FileId) || deletedFiles.All(f => f.Item2 != file.FileId))
+				if (files.All(f => f.FileId != file.FileId) && deletedFiles.All(f => f.Item2 != file.FileId))
 					Add(file);
 			}
 
