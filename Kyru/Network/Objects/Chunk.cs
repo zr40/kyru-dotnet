@@ -1,3 +1,4 @@
+using System.Linq;
 using Kyru.Utilities;
 
 using ProtoBuf;
@@ -18,13 +19,7 @@ namespace Kyru.Network.Objects
 
 		internal override bool VerifyData()
 		{
-			return ObjectId == CalculateHash();
-		}
-
-		internal KademliaId CalculateHash()
-		{
-			byte[] hash = Crypto.Hash(Data);
-			return new KademliaId(hash);
+			return ObjectId.Bytes.SequenceEqual(Crypto.Hash(Data));
 		}
 	}
 }
