@@ -1,7 +1,10 @@
+using System.IO;
+using System.Linq;
 using System.Net.Sockets;
 
 using Kyru.Core;
-
+using Kyru.Network.Objects;
+using Kyru.Utilities;
 using ProtoBuf;
 
 namespace Kyru.Network.TcpMessages.ServerState
@@ -22,21 +25,26 @@ namespace Kyru.Network.TcpMessages.ServerState
 		public IServerState Process()
 		{
 			var response = new StoreObjectResponse();
+			using (var mstream = new MemoryStream()) // TODO: Clean up user object detection
+			{
+				var oldObject = app.LocalObjectStorage.GetObject(storeObjectRequest.ObjectId);
+				if (oldObject != null) Serializer.Serialize(mstream, oldObject);
 
-			if (app.LocalObjectStorage.KeepObject(storeObjectRequest.ObjectId))
-			{
-				// TODO: allow user object merges if the hash is different
-				response.Error = Error.ObjectAlreadyStored;
-			}
-			else if (storeObjectRequest.Length > LocalObjectStorage.MaxObjectSize*2) // TODO: remove hack
-			{
-				response.Error = Error.StoreRejected;
-			}
+				if (app.LocalObjectStorage.KeepObject(storeObjectRequest.ObjectId)
+				    && !(oldObject is User && Crypto.Hash(mstream.ToArray()).SequenceEqual(storeObjectRequest.Hash)))
+				{
+					response.Error = Error.ObjectAlreadyStored;
+				}
 			else
-			{
-				response.Error = Error.Success;
+				if (storeObjectRequest.Length > LocalObjectStorage.MaxObjectSize*2) // TODO: remove hack
+				{
+					response.Error = Error.StoreRejected;
+				}
+				else
+				{
+					response.Error = Error.Success;
+				}
 			}
-
 			Serializer.SerializeWithLengthPrefix(stream, response, PrefixStyle.Base128);
 
 			if (response.Error == Error.Success)
