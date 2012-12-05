@@ -34,6 +34,7 @@ namespace Kyru
 		internal void showFile(UserFile fileToShow)
 		{
 			string fileName = session.DecryptFileName(fileToShow);
+			Console.Write("showing file" + fileName);
 			var dirs = fileName.Split('\\');
 			TreeNode node = null;
 			TreeNodeCollection nodes = virtualLocalFileTree.Nodes;
@@ -65,7 +66,8 @@ namespace Kyru
 				{
 					using (var fs = new FileStream(filename, FileMode.Open))
 					{
-						session.AddFile(fs, filename);
+						var splitted = filename.Split('\\');
+						session.AddFile(fs, splitted[splitted.Length - 1]);
 					}
 				}
 				catch (IOException ex)
