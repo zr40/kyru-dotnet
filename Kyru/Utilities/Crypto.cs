@@ -237,7 +237,7 @@ namespace Kyru.Utilities
 		{
 			byte[] signHash = EncryptRsa(signature, publicKey);
 
-			return signHash.SequenceEqual(data);
+			return signHash.SequenceEqual(Hash(data));
 		}
 	}
 }
