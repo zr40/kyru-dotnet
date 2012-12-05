@@ -89,7 +89,9 @@ namespace Kyru.Core
 		{
 			using (var st = new MemoryStream(bytes))
 			{
-				if (!Serializer.Deserialize<KyruObject>(st).VerifyData())
+				var obj = Serializer.Deserialize<KyruObject>(st);
+				obj.ObjectId = id;
+				if (!obj.VerifyData())
 				{
 					this.Warn("Object failed verification; it will not be stored. ID: {0}", id);
 					return;
