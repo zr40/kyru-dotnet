@@ -98,6 +98,7 @@ namespace Kyru.Core
 			               		EncryptedFileName = Crypto.EncryptAes(Encoding.UTF8.GetBytes(fileName), fileKey, nameIV),
 			               		EncryptedKey = Crypto.EncryptRsa(fileKey, rsaKeyPair.Public),
 			               		FileIV = fileIV,
+			               		NameIV = nameIV,
 			               		Hash = Crypto.Hash(data),
 			               	};
 			userFile.Signature = Crypto.Sign(userFile.HashObject(), rsaKeyPair.Public, rsaKeyPair.Private);
