@@ -167,5 +167,10 @@ namespace Kyru
 
 			MessageBox.Show(builder.ToString());
 		}
+
+		private void KyruForm_FormClosing(object sender, FormClosingEventArgs e)
+		{
+			session.Dispose();
+		}
 	}
 }

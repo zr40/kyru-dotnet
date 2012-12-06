@@ -14,7 +14,7 @@ namespace Kyru.Core
 	/// <summary>
 	/// The Session class provides the ability to change a user object in a way that other nodes will accept, by signing it with the appropriate key
 	/// </summary>
-	internal sealed class Session
+	internal sealed class Session: IDisposable
 	{
 		internal readonly User User;
 		private readonly LocalObjectStorage localObjectStorage;
@@ -168,6 +168,11 @@ namespace Kyru.Core
 		internal void DownloadObjects(List<KademliaId> ids, Action<Error> done)
 		{
 			localObjectStorage.DownloadObjects(ids, done);
+		}
+
+		public void Dispose()
+		{
+			localObjectStorage.OnUserUpdated -= UpdateUser;
 		}
 	}
 }
