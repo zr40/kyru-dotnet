@@ -82,19 +82,8 @@ namespace Kyru
 
 		private void refreshToolStripMenuItem_Click(object sender, EventArgs e)
 		{
-			if (this.InvokeRequired)
-			{
-				this.Invoke((Action)(() => {
-					virtualLocalFileTree.Nodes.Clear();
-					virtualLocalFileTreeInit();
-				}));
-			}
-			else
-			{
-				virtualLocalFileTree.Nodes.Clear();
-				virtualLocalFileTreeInit();
-			}
-	
+			virtualLocalFileTree.Nodes.Clear();
+			virtualLocalFileTreeInit();
 		}
 
 		private void virtualLocalFileTree_MouseUp(object sender, MouseEventArgs e)
