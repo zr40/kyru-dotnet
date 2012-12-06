@@ -29,7 +29,7 @@ namespace Kyru
 		{
 			foreach (var fileToShow in session.User.Files)
 			{
-				BeginInvoke(new Action<UserFile>(showFile), fileToShow);
+				showFile(fileToShow);
 			}
 		}
 
@@ -82,8 +82,19 @@ namespace Kyru
 
 		private void refreshToolStripMenuItem_Click(object sender, EventArgs e)
 		{
-			virtualLocalFileTree.Nodes.Clear();
-			virtualLocalFileTreeInit();
+			if (this.InvokeRequired)
+			{
+				this.Invoke((Action)(() => {
+					virtualLocalFileTree.Nodes.Clear();
+					virtualLocalFileTreeInit();
+				}));
+			}
+			else
+			{
+				virtualLocalFileTree.Nodes.Clear();
+				virtualLocalFileTreeInit();
+			}
+	
 		}
 
 		private void virtualLocalFileTree_MouseUp(object sender, MouseEventArgs e)
