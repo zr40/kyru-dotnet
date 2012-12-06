@@ -2,7 +2,6 @@ using System;
 using System.IO;
 using System.Linq;
 using System.Security.Cryptography;
-using System.Text;
 
 using Emil.GMP;
 
@@ -24,7 +23,6 @@ namespace Kyru.Utilities
 	{
 		internal const int RsaPublicKeySize = 2048 / 8;
 		private const int Iterations = 10000;
-		private static readonly SHA1CryptoServiceProvider hash = new SHA1CryptoServiceProvider();
 
 		private const int AesHeaderSize = sizeof(int);
 
@@ -212,7 +210,8 @@ namespace Kyru.Utilities
 		/// <returns>The Hash of the data</returns>
 		internal static byte[] Hash(byte[] data)
 		{
-			return hash.ComputeHash(data);
+			using (var hash = new SHA1CryptoServiceProvider())
+				return hash.ComputeHash(data);
 		}
 
 		/// <summary>
