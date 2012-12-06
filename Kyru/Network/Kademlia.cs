@@ -126,7 +126,7 @@ namespace Kyru.Network
 					// the bucket is full
 					return;
 				}
-				this.Log("Adding contact {0} ({1})", contact.NodeId, contact.EndPoint);
+				//this.Log("Adding contact {0} ({1})", contact.NodeId, contact.EndPoint);
 				bucket.Add(new KnownNode(contact));
 
 				if (CurrentContactCount == 1)

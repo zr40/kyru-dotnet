@@ -22,7 +22,7 @@ namespace Kyru.Network.TcpMessages.Clients
 
 		protected override void Execute(Stream stream)
 		{
-			this.Log("Sending GetObject request to {0} for object ID {1}", TargetNode.EndPoint, objectId);
+			this.Log("Sending StoreObject request to {0} for object ID {1}", TargetNode.EndPoint, objectId);
 
 			var clientHandshake = new ClientHandshake();
 			clientHandshake.NodeId = App.Node.Id;

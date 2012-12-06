@@ -328,7 +328,7 @@ namespace Kyru.Network
 			var s = new MemoryStream();
 			Serializer.Serialize(s, message);
 
-			this.Log("Sending {4} with length {0} with request ID {1:X16} to {2} (response ID {3:X16})", s.Length, message.RequestId, target, message.ResponseId, message.Inspect());
+			//this.Log("Sending {4} with length {0} with request ID {1:X16} to {2} (response ID {3:X16})", s.Length, message.RequestId, target, message.ResponseId, message.Inspect());
 			udp.Send(s.GetBuffer(), (int) s.Length, target);
 		}
 

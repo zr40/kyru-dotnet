@@ -70,8 +70,8 @@ namespace Kyru.Network.Operations
 							Monitor.Enter(nodeList);
 						}
 
-						if (nodeList.Count != 0)
-							this.Warn("After wake, closest is {0}", id - nodeList[0].NodeInformation.NodeId);
+						//if (nodeList.Count != 0)
+							//this.Warn("After wake, closest is {0}", id - nodeList[0].NodeInformation.NodeId);
 
 						continue;
 					}
@@ -86,8 +86,6 @@ namespace Kyru.Network.Operations
 		private void SendRequest(LookupListItem queryNode)
 		{
 			queryNode.Queried = true;
-
-			this.Warn("{1} sending FindNode to {0}", queryNode.NodeInformation.Port, node.Port);
 
 			var message = new UdpMessage();
 			message.FindNodeRequest = new FindNodeRequest();

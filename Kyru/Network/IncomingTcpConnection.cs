@@ -28,13 +28,11 @@ namespace Kyru.Network
 			using (client)
 			using (var stream = client.GetStream())
 			{
-				this.Log("Accepted TCP connection from {0}", client.Client.RemoteEndPoint);
 				serverState = new HandshakeState(client, stream, app);
 				while (serverState != null)
 				{
 					serverState = serverState.Process();
 				}
-				this.Log("TCP connection from {0} closed", client.Client.RemoteEndPoint);
 			}
 		}
 	}
