@@ -1,11 +1,12 @@
 ﻿using System;
 using System.IO;
+using System.Text;
+using System.Threading;
 using System.Windows.Forms;
 
 using Kyru.Core;
 using Kyru.Network.Objects;
-using System.Threading;
-using System.Text;
+using Kyru.Network.TcpMessages;
 
 namespace Kyru
 {
@@ -21,21 +22,21 @@ namespace Kyru
 			virtualLocalFileTreeInit();
 			Text = session.Username + " - " + Text;
 
-			session.User.OnFileAdded += new Action<UserFile>(showFile);
+			session.User.OnFileAdded += f => BeginInvoke(new Action<UserFile>(showFile), f);
 		}
 
 		internal void virtualLocalFileTreeInit()
 		{
 			foreach (var fileToShow in session.User.Files)
 			{
-				showFile(fileToShow);
+				BeginInvoke(new Action<UserFile>(showFile), fileToShow);
 			}
 		}
 
 		internal void showFile(UserFile fileToShow)
 		{
 			string fileName = session.DecryptFileName(fileToShow);
-			Console.Write("showing file" + fileName);
+			//Console.Write("showing file" + fileName);
 			var dirs = fileName.Split('\\');
 			TreeNode node = null;
 			TreeNodeCollection nodes = virtualLocalFileTree.Nodes;
@@ -110,17 +111,18 @@ namespace Kyru
 			if (dialog.ShowDialog() == DialogResult.OK)
 			{
 				session.DownloadObjects(userFile.ChunkList, (error) =>
-				{
-					if (error != Network.TcpMessages.Error.Success){
-						MessageBox.Show("Saving failed: Could not find all parts of the file. Try to connect to the network or save the file later");
-						return;
-					}
+				                                            {
+					                                            if (error != Error.Success)
+					                                            {
+						                                            MessageBox.Show("Saving failed: Could not find all parts of the file. Try to connect to the network or save the file later");
+						                                            return;
+					                                            }
 
-					using (FileStream fs = new FileStream(dialog.FileName, FileMode.Create))
-					{
-						session.DecryptFile(userFile, fs);
-					}
-				});
+					                                            using (var fs = new FileStream(dialog.FileName, FileMode.Create))
+					                                            {
+						                                            session.DecryptFile(userFile, fs);
+					                                            }
+				                                            });
 			}
 		}
 
@@ -139,14 +141,15 @@ namespace Kyru
 			if (userFile == null)
 				return;
 
-			StringBuilder builder = new StringBuilder();
+			var builder = new StringBuilder();
 
 			builder.Append(session.DecryptFileName(userFile));
 			builder.Append("\nID: ");
 			builder.Append(userFile.FileId);
 
 			builder.Append("\nChunks:");
-			foreach(var c in userFile.ChunkList){
+			foreach (var c in userFile.ChunkList)
+			{
 				builder.Append("\n");
 				builder.Append(c);
 			}
