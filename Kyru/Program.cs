@@ -32,6 +32,8 @@ namespace Kyru
 			CreateSystemTray();
 
 			Application.Run();
+
+			trayIcon.Visible = false;
 		}
 
 		private static void CreateSystemTray()
