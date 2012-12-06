@@ -35,8 +35,12 @@ namespace Kyru.Core
 			var id = new KademliaId(Crypto.Hash(rsaKeyPair.Public));
 
 			Username = username;
-
-			User = localObjectStorage.GetObject(id) as User ?? new User(rsaKeyPair.Public) {ObjectId = id};
+			User = localObjectStorage.GetObject(id) as User;
+			if (User == null)
+			{
+				User = new User(rsaKeyPair.Public) {ObjectId = id};
+				localObjectStorage.StoreObject(User, true);
+			}
 
 			localObjectStorage.OnUserUpdated += UpdateUser;
 		}
