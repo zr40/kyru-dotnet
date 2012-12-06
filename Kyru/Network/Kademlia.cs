@@ -68,6 +68,9 @@ namespace Kyru.Network
 		/// <param name="outgoingMessage">The message object that will be sent.</param>
 		internal void HandleIncomingRequest(NodeInformation sendingNode, UdpMessage outgoingMessage)
 		{
+			if (sendingNode.NodeId == node.Id)
+				return;
+
 			if (IsNewContact(sendingNode))
 			{
 				outgoingMessage.PingRequest = new PingRequest();
@@ -147,6 +150,9 @@ namespace Kyru.Network
 		/// <returns>Whether the contact needs to be pinged.</returns>
 		private bool IsNewContact(NodeInformation contact)
 		{
+			if (node.Id == contact.NodeId)
+				return false;
+
 			var bucket = buckets[(node.Id - contact.NodeId).KademliaBucket()];
 			if (bucket.Count >= k)
 			{
