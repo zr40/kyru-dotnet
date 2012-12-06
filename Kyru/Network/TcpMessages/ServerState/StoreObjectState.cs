@@ -31,7 +31,7 @@ namespace Kyru.Network.TcpMessages.ServerState
 				if (oldObject != null) Serializer.Serialize(mstream, oldObject);
 
 				if (app.LocalObjectStorage.KeepObject(storeObjectRequest.ObjectId)
-				    && !(oldObject is User && Crypto.Hash(mstream.ToArray()).SequenceEqual(storeObjectRequest.Hash)))
+				    && !(oldObject is User && !Crypto.Hash(mstream.ToArray()).SequenceEqual(storeObjectRequest.Hash)))
 				{
 					response.Error = Error.ObjectAlreadyStored;
 				}
