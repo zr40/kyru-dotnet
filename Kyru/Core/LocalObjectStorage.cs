@@ -133,8 +133,11 @@ namespace Kyru.Core
 		{
 			if (id.Bytes.All(b => b == 0))
 				throw new InvalidOperationException("Possible bug: tried to store object with id zero");
-			if (bytes.Length > MaxObjectSize)
+			if (bytes.Length > MaxObjectSize + 8) // TODO: remove hack. (8 bytes overhead for 1 MiB chunk)
+			{
 				this.Warn("Object larger than 1 MiB; it will not be stored. ID: {0}", id);
+				return;
+			}
 
 			File.WriteAllBytes(PathFor(id), bytes);
 

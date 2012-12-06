@@ -30,13 +30,11 @@ namespace Kyru.Network.TcpMessages.ServerState
 				var oldObject = app.LocalObjectStorage.GetObject(storeObjectRequest.ObjectId);
 				if (oldObject != null) Serializer.Serialize(mstream, oldObject);
 
-				if (app.LocalObjectStorage.KeepObject(storeObjectRequest.ObjectId)
-				    && !(oldObject is User && !Crypto.Hash(mstream.ToArray()).SequenceEqual(storeObjectRequest.Hash)))
+				if (app.LocalObjectStorage.KeepObject(storeObjectRequest.ObjectId) && !(oldObject is User && !Crypto.Hash(mstream.ToArray()).SequenceEqual(storeObjectRequest.Hash)))
 				{
 					response.Error = Error.ObjectAlreadyStored;
 				}
-			else
-				if (storeObjectRequest.Length > LocalObjectStorage.MaxObjectSize*2) // TODO: remove hack
+				else if (storeObjectRequest.Length > LocalObjectStorage.MaxObjectSize + 8) // TODO: remove hack. (8 bytes overhead for 1 MiB chunk)
 				{
 					response.Error = Error.StoreRejected;
 				}
