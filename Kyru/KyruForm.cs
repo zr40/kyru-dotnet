@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Windows.Forms;
@@ -68,8 +69,8 @@ namespace Kyru
 				{
 					using (var fs = new FileStream(filename, FileMode.Open))
 					{
-						var splitted = filename.Split('\\');
-						session.AddFile(fs, splitted[splitted.Length - 1]);
+						var split = filename.Split('\\');
+						session.AddFile(fs, split.Last());
 					}
 				}
 				catch (IOException ex)
@@ -110,19 +111,19 @@ namespace Kyru
 			dialog.FileName = virtualLocalFileTree.SelectedNode.Text;
 			if (dialog.ShowDialog() == DialogResult.OK)
 			{
-				session.DownloadObjects(userFile.ChunkList, (error) =>
-				                                            {
-					                                            if (error != Error.Success)
-					                                            {
-						                                            MessageBox.Show("Saving failed: Could not find all parts of the file. Try to connect to the network or save the file later");
-						                                            return;
-					                                            }
+				session.LocalObjectStorage.DownloadObjects(userFile.ChunkList, (error) =>
+				                                                               {
+					                                                               if (error != Error.Success)
+					                                                               {
+						                                                               MessageBox.Show("Saving failed: Could not find all parts of the file. Try to connect to the network or save the file later");
+						                                                               return;
+					                                                               }
 
-					                                            using (var fs = new FileStream(dialog.FileName, FileMode.Create))
-					                                            {
-						                                            session.DecryptFile(userFile, fs);
-					                                            }
-				                                            });
+					                                                               using (var fs = new FileStream(dialog.FileName, FileMode.Create))
+					                                                               {
+						                                                               session.DecryptFile(userFile, fs);
+					                                                               }
+				                                                               });
 			}
 		}
 

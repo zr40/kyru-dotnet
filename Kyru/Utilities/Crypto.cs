@@ -22,7 +22,7 @@ namespace Kyru.Utilities
 	internal static class Crypto
 	{
 		internal const int RsaPublicKeySize = 2048 / 8;
-		private const int Iterations = 10000;
+		private const int Pbkdf2Iterations = 10000;
 
 		private const int AesHeaderSize = sizeof(int);
 
@@ -66,8 +66,6 @@ namespace Kyru.Utilities
 
 		private static byte[] PBKDF2(byte[] P, byte[] S, int dkLen)
 		{
-			const int iterations = 10000;
-
 			var hashAlg = new HMACSHA512();
 			var hLen = hashAlg.HashSize / 8;
 
@@ -77,7 +75,8 @@ namespace Kyru.Utilities
 			}
 			if (dkLen % hLen != 0)
 			{
-				// shouldn't happen in kyru
+				// shouldn't happen in kyru; dkLen is always a multiple of hLen (64)
+				// if it does happen, implement this case (see rfc)
 				throw new NotImplementedException();
 			}
 
@@ -98,7 +97,7 @@ namespace Kyru.Utilities
 				block = hashAlg.ComputeHash(P);
 
 				// following iterations
-				for (int x = 2; x <= iterations; x++)
+				for (int x = 2; x <= Pbkdf2Iterations; x++)
 				{
 					hashAlg = new HMACSHA512(block);
 					block = hashAlg.ComputeHash(P);
@@ -218,7 +217,6 @@ namespace Kyru.Utilities
 		/// Generates a signature for the data
 		/// </summary>
 		/// <param name="data">Data to sign</param>
-		/// <param name="privateKey">Key to sign the data with</param>
 		/// <returns>The signature of the hashed data</returns>
 		internal static byte[] Sign(byte[] data, RsaKeyPair keyPair)
 		{
@@ -231,7 +229,6 @@ namespace Kyru.Utilities
 		/// <param name="data">The data that is signed</param>
 		/// <param name="publicKey">The public key to check the signature with</param>
 		/// <param name="signature">The signature to verify</param>
-		/// <returns></returns>
 		internal static bool VerifySignature(byte[] data, byte[] publicKey, byte[] signature)
 		{
 			byte[] signHash = EncryptRsa(signature, publicKey);

@@ -69,8 +69,6 @@ namespace Kyru.Core
 		/// <param name="o">the object</param>
 		internal void StoreObject(KyruObject o, bool replicate)
 		{
-			if (!VerifyObject(o)) return;
-
 			var userUpdated = false;
 			if (o is User)
 			{
@@ -82,6 +80,8 @@ namespace Kyru.Core
 					userUpdated = true;
 				}
 			}
+
+			if (!VerifyObject(o)) return;
 
 			using (var stream = new MemoryStream())
 			{

@@ -28,7 +28,8 @@ namespace Kyru.Network.TcpMessages.ServerState
 			using (var mstream = new MemoryStream()) // TODO: Clean up user object detection
 			{
 				var oldObject = app.LocalObjectStorage.GetObject(storeObjectRequest.ObjectId);
-				if (oldObject != null) Serializer.Serialize(mstream, oldObject);
+				if (oldObject != null)
+					Serializer.Serialize(mstream, oldObject);
 
 				if (app.LocalObjectStorage.KeepObject(storeObjectRequest.ObjectId) && !(oldObject is User && !Crypto.Hash(mstream.ToArray()).SequenceEqual(storeObjectRequest.Hash)))
 				{
