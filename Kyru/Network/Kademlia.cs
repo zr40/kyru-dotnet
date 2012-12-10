@@ -115,6 +115,9 @@ namespace Kyru.Network
 
 		private void AddContact(NodeInformation contact)
 		{
+			if (node.Id == contact.NodeId)
+				return;
+
 			var bucketIndex = (node.Id - contact.NodeId).KademliaBucket();
 			var bucket = buckets[bucketIndex];
 
