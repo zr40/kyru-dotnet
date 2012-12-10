@@ -39,9 +39,10 @@ namespace Kyru
 		private static void CreateSystemTray()
 		{
 			trayMenu = new ContextMenu();
+			trayMenu.MenuItems.Add("Log in", OnLogin);
+			trayMenu.MenuItems.Add("Add node", OnRegisterNode);
+			trayMenu.MenuItems.Add("-");
 			trayMenu.MenuItems.Add("Exit", OnExit);
-			trayMenu.MenuItems.Add("Login", OnLogin);
-			trayMenu.MenuItems.Add("Add Node", OnRegisterNode);
 
 			trayIcon = new NotifyIcon();
 			trayIcon.Text = "Kyru";
