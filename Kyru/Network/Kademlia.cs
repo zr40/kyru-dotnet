@@ -39,6 +39,38 @@ namespace Kyru.Network
 			}
 		}
 
+		public long EstimatedNetworkSize
+		{
+			get
+			{
+				long nodes = 0;
+				bool full = false;
+				long currentFull = 0;
+				for (int i = 0; i < 160; i++)
+				{
+					if (full)
+					{
+						currentFull *= 2;
+						nodes += currentFull;
+					}
+					else if (buckets[i].Count == k)
+					{
+						full = true;
+						if (buckets[i].Count < k / 2)
+							currentFull = buckets[i].Count * 2;
+						else
+							currentFull = k;
+						nodes += currentFull;
+					}
+					else
+					{
+						nodes += buckets[i].Count;
+					}
+				}
+				return nodes;
+			}
+		}
+
 		/// <remarks>Used by tests</remarks>
 		private KnownNode FirstContact()
 		{

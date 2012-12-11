@@ -42,6 +42,8 @@ namespace Kyru
 			trayMenu.MenuItems.Add("Log in", OnLogin);
 			trayMenu.MenuItems.Add("Add node", OnRegisterNode);
 			trayMenu.MenuItems.Add("-");
+			trayMenu.MenuItems.Add("System status", OnSystemStatus);
+			trayMenu.MenuItems.Add("-");
 			trayMenu.MenuItems.Add("Exit", OnExit);
 
 			trayIcon = new NotifyIcon();
@@ -60,14 +62,17 @@ namespace Kyru
 
 		private static void OnLogin(object sender, EventArgs e)
 		{
-			Form f = new LoginForm(app.LocalObjectStorage);
-			f.Show();
+			new LoginForm(app.LocalObjectStorage).Show();
 		}
 
 		private static void OnRegisterNode(object sender, EventArgs e)
 		{
-			Form f = new AddNodeForm(app.Node.Kademlia);
-			f.Show();
+			new AddNodeForm(app.Node.Kademlia).Show();
+		}
+
+		private static void OnSystemStatus(object sender, EventArgs e)
+		{
+			new SystemStatusForm(app).Show();
 		}
 	}
 }

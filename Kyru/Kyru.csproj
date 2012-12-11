@@ -66,6 +66,12 @@
     <Compile Include="Core\LocalObjectStorage.cs" />
     <Compile Include="Network\Operations\NodeLookup.cs" />
     <Compile Include="Network\Operations\ValueLookup.cs" />
+    <Compile Include="SystemStatusForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="SystemStatusForm.Designer.cs">
+      <DependentUpon>SystemStatusForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="Utilities\Crypto.cs" />
     <Compile Include="DateTimeExtension.cs" />
     <Compile Include="Logging.cs" />
@@ -145,6 +151,9 @@
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="SystemStatusForm.resx">
+      <DependentUpon>SystemStatusForm.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
