@@ -11,12 +11,16 @@ using Kyru.Utilities;
 
 namespace Kyru
 {
-	internal class SystemTray
+	internal class SystemTray : ITimerListener
 	{
 		private KyruApplication app;
 
 		private NotifyIcon trayIcon;
 		private ContextMenu trayMenu;
+		private bool connected;
+
+		private Icon iconNotConnected;
+		private Icon iconConnected;
 
 		internal SystemTray(KyruApplication app)
 		{
@@ -24,23 +28,27 @@ namespace Kyru
 
 			trayMenu = new ContextMenu();
 			trayMenu.MenuItems.Add("Log in", OnLogin);
-			trayMenu.MenuItems.Add("Add node", OnRegisterNode);
+			trayMenu.MenuItems.Add("Connect", OnRegisterNode);
 			trayMenu.MenuItems.Add("-");
 			trayMenu.MenuItems.Add("System status", OnSystemStatus);
 			trayMenu.MenuItems.Add("-");
 			trayMenu.MenuItems.Add("Exit", OnExit);
 
 			trayIcon = new NotifyIcon();
-			trayIcon.Text = "Kyru";
-			trayIcon.Icon = new Icon("Icons/kyru.ico");
+			iconConnected = new Icon("Icons/kyru.ico");
+			iconNotConnected = SystemIcons.Exclamation;
+			//TimerElapsed();
 			trayIcon.MouseDoubleClick += OnLogin;
 
 			trayIcon.ContextMenu = trayMenu;
 			trayIcon.Visible = true;
+
+			KyruTimer.Register(this, 2);
 		}
 
 		private void OnExit(object sender, EventArgs e)
 		{
+			trayMenu.Dispose();
 			Application.Exit();
 		}
 
@@ -57,6 +65,25 @@ namespace Kyru
 		private void OnSystemStatus(object sender, EventArgs e)
 		{
 			new SystemStatusForm(app).Show();
+		}
+
+		public void TimerElapsed()
+		{
+			bool newConnected = app.Node.Kademlia.CurrentContactCount > 0;
+			if (connected != newConnected)
+				return;
+			connected = newConnected;
+
+			if (connected)
+			{
+				trayIcon.Text = "Kyru - Connected";
+				trayIcon.Icon = iconConnected;
+			}
+			else
+			{
+				trayIcon.Text = "Kyru - Not Connected";
+				trayIcon.Icon = iconNotConnected;
+			}
 		}
 	}
 }

@@ -3,6 +3,7 @@ using System.Windows.Forms;
 
 using Kyru.Core;
 using Kyru;
+using Kyru.Utilities;
 
 namespace Kyru
 {
@@ -15,6 +16,8 @@ namespace Kyru
 		{
 			Console.WriteLine("Kyru debug console");
 			Console.WriteLine();
+
+			KyruTimer.Start();
 
 			app = new KyruApplication();
 
