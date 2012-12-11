@@ -23,9 +23,6 @@ namespace Kyru.Network.Objects
 		[ProtoMember(3)]
 		private readonly byte[] publicKey;
 
-		internal event Action<UserFile> OnFileAdded;
-		internal event Action<ulong> OnFileDeleted;
-
 		[Obsolete("TODO: use other constructor")]
 		internal User()
 		{
@@ -77,8 +74,6 @@ namespace Kyru.Network.Objects
 			if (Crypto.VerifySignature(userFile.HashObject(), publicKey, userFile.Signature))
 			{
 				files.Add(userFile);
-				if (OnFileAdded != null)
-					OnFileAdded(userFile);
 			}
 		}
 
@@ -93,9 +88,6 @@ namespace Kyru.Network.Objects
 			{
 				deletedFiles.Add(new Tuple<byte[], ulong>(signature, fileId));
 				files.RemoveAll(kf => kf.FileId == fileId);
-
-				if (OnFileDeleted != null)
-					OnFileDeleted(fileId);
 			}
 		}
 

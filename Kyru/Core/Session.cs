@@ -22,6 +22,7 @@ namespace Kyru.Core
 		private readonly RsaKeyPair rsaKeyPair;
 
 		private readonly Action<User> onUserUpdated;
+		internal event Action OnUserMerged;
 
 		/// <summary>
 		/// Constructor of Session class for a new User
@@ -52,6 +53,8 @@ namespace Kyru.Core
 		private void UpdateUser(User updatedUser)
 		{
 			User.Merge(updatedUser);
+			if (OnUserMerged != null)
+				OnUserMerged();
 		}
 
 		internal string Username { get; private set; }
