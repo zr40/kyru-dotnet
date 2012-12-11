@@ -20,21 +20,23 @@ namespace Kyru
 			this.session = session;
 			InitializeComponent();
 
-			virtualLocalFileTreeInit();
+			ResetVirtualLocalFileTree();
 			Text = session.Username + " - " + Text;
 
-			session.User.OnFileAdded += f => BeginInvoke(new Action<UserFile>(showFile), f);
+			session.OnUserMerged += () => BeginInvoke(new Action(ResetVirtualLocalFileTree));
 		}
 
-		internal void virtualLocalFileTreeInit()
+		internal void ResetVirtualLocalFileTree()
 		{
+			virtualLocalFileTree.Nodes.Clear();
+
 			foreach (var fileToShow in session.User.Files)
 			{
-				showFile(fileToShow);
+				ShowFile(fileToShow);
 			}
 		}
 
-		internal void showFile(UserFile fileToShow)
+		internal void ShowFile(UserFile fileToShow)
 		{
 			string fileName = session.DecryptFileName(fileToShow);
 			//Console.Write("showing file" + fileName);
@@ -70,7 +72,8 @@ namespace Kyru
 					using (var fs = new FileStream(filename, FileMode.Open))
 					{
 						var split = filename.Split('\\');
-						session.AddFile(fs, split.Last());
+						var file = session.AddFile(fs, split.Last());
+						ShowFile(file);
 					}
 				}
 				catch (IOException ex)
@@ -84,7 +87,7 @@ namespace Kyru
 		private void refreshToolStripMenuItem_Click(object sender, EventArgs e)
 		{
 			virtualLocalFileTree.Nodes.Clear();
-			virtualLocalFileTreeInit();
+			ResetVirtualLocalFileTree();
 		}
 
 		private void virtualLocalFileTree_MouseUp(object sender, MouseEventArgs e)
