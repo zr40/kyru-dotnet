@@ -27,7 +27,7 @@ namespace Kyru.Network
 		internal readonly Kademlia Kademlia;
 		private bool running;
 
-		internal const uint ProtocolVersion = 0;
+		internal const uint ProtocolVersion = 1;
 		internal const int TimeoutTicks = 2 + 1;
 		internal readonly KademliaId Id = KademliaId.RandomId;
 
