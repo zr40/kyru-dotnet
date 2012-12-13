@@ -25,15 +25,19 @@ namespace Kyru.Network.TcpMessages.ServerState
 		public IServerState Process()
 		{
 			var response = new StoreObjectResponse();
-			using (var mstream = new MemoryStream()) // TODO: Clean up user object detection
-			{
-				var oldObject = app.LocalObjectStorage.GetObject(storeObjectRequest.ObjectId);
-				if (oldObject != null)
-					Serializer.Serialize(mstream, oldObject);
-
-				if (app.LocalObjectStorage.KeepObject(storeObjectRequest.ObjectId) && !(oldObject is User && !Crypto.Hash(mstream.ToArray()).SequenceEqual(storeObjectRequest.Hash)))
+			
+				if (app.LocalObjectStorage.KeepObject(storeObjectRequest.ObjectId)) // Object already exists
 				{
-					response.Error = Error.ObjectAlreadyStored;
+					var oldObject = app.LocalObjectStorage.GetObject(storeObjectRequest.ObjectId);
+					using (var mstream = new MemoryStream())
+					{
+						if (oldObject != null)
+							Serializer.Serialize(mstream, oldObject);
+						if (oldObject is User && !Crypto.Hash(mstream.ToArray()).SequenceEqual(storeObjectRequest.Hash)) // New object is a different version of an existing User object
+							response.Error = Error.Success;
+						else
+							response.Error = Error.ObjectAlreadyStored;
+					}
 				}
 				else if (storeObjectRequest.Length > LocalObjectStorage.MaxObjectSize + 8) // TODO: remove hack. (8 bytes overhead for 1 MiB chunk)
 				{
@@ -43,7 +47,7 @@ namespace Kyru.Network.TcpMessages.ServerState
 				{
 					response.Error = Error.Success;
 				}
-			}
+			
 			Serializer.SerializeWithLengthPrefix(stream, response, PrefixStyle.Base128);
 
 			if (response.Error == Error.Success)
