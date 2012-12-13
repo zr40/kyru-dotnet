@@ -30,11 +30,21 @@
 		{
 			this.components = new System.ComponentModel.Container();
 			System.Windows.Forms.Timer timer1;
-			this.label1 = new System.Windows.Forms.Label();
+			System.Windows.Forms.Label label1;
+			System.Windows.Forms.Label label3;
+			System.Windows.Forms.Label label2;
+			System.Windows.Forms.Label label4;
+			System.Windows.Forms.Button button1;
 			this.CurrentContactsLabel = new System.Windows.Forms.Label();
-			this.label3 = new System.Windows.Forms.Label();
 			this.EstimatedNetworkSizeLabel = new System.Windows.Forms.Label();
+			this.ObjectsStoredLabel = new System.Windows.Forms.Label();
+			this.LowestAvailabilityLabel = new System.Windows.Forms.Label();
 			timer1 = new System.Windows.Forms.Timer(this.components);
+			label1 = new System.Windows.Forms.Label();
+			label3 = new System.Windows.Forms.Label();
+			label2 = new System.Windows.Forms.Label();
+			label4 = new System.Windows.Forms.Label();
+			button1 = new System.Windows.Forms.Button();
 			this.SuspendLayout();
 			// 
 			// timer1
@@ -45,12 +55,12 @@
 			// 
 			// label1
 			// 
-			this.label1.AutoSize = true;
-			this.label1.Location = new System.Drawing.Point(12, 9);
-			this.label1.Name = "label1";
-			this.label1.Size = new System.Drawing.Size(95, 13);
-			this.label1.TabIndex = 0;
-			this.label1.Text = "Current contacts:";
+			label1.AutoSize = true;
+			label1.Location = new System.Drawing.Point(12, 9);
+			label1.Name = "label1";
+			label1.Size = new System.Drawing.Size(95, 13);
+			label1.TabIndex = 0;
+			label1.Text = "Current contacts:";
 			// 
 			// CurrentContactsLabel
 			// 
@@ -63,12 +73,12 @@
 			// 
 			// label3
 			// 
-			this.label3.AutoSize = true;
-			this.label3.Location = new System.Drawing.Point(12, 26);
-			this.label3.Name = "label3";
-			this.label3.Size = new System.Drawing.Size(128, 13);
-			this.label3.TabIndex = 2;
-			this.label3.Text = "Estimated network size:";
+			label3.AutoSize = true;
+			label3.Location = new System.Drawing.Point(12, 26);
+			label3.Name = "label3";
+			label3.Size = new System.Drawing.Size(128, 13);
+			label3.TabIndex = 2;
+			label3.Text = "Estimated network size:";
 			// 
 			// EstimatedNetworkSizeLabel
 			// 
@@ -79,18 +89,76 @@
 			this.EstimatedNetworkSizeLabel.TabIndex = 3;
 			this.EstimatedNetworkSizeLabel.Text = "label4";
 			// 
+			// label2
+			// 
+			label2.AutoSize = true;
+			label2.Location = new System.Drawing.Point(12, 67);
+			label2.Name = "label2";
+			label2.Size = new System.Drawing.Size(85, 13);
+			label2.TabIndex = 4;
+			label2.Text = "Objects stored:";
+			// 
+			// label4
+			// 
+			label4.AutoSize = true;
+			label4.Location = new System.Drawing.Point(12, 84);
+			label4.Name = "label4";
+			label4.Size = new System.Drawing.Size(103, 13);
+			label4.TabIndex = 5;
+			label4.Text = "Lowest availability:";
+			// 
+			// ObjectsStoredLabel
+			// 
+			this.ObjectsStoredLabel.AutoSize = true;
+			this.ObjectsStoredLabel.Location = new System.Drawing.Point(155, 67);
+			this.ObjectsStoredLabel.Name = "ObjectsStoredLabel";
+			this.ObjectsStoredLabel.Size = new System.Drawing.Size(38, 13);
+			this.ObjectsStoredLabel.TabIndex = 6;
+			this.ObjectsStoredLabel.Text = "label5";
+			// 
+			// LowestAvailabilityLabel
+			// 
+			this.LowestAvailabilityLabel.AutoSize = true;
+			this.LowestAvailabilityLabel.Location = new System.Drawing.Point(155, 84);
+			this.LowestAvailabilityLabel.Name = "LowestAvailabilityLabel";
+			this.LowestAvailabilityLabel.Size = new System.Drawing.Size(38, 13);
+			this.LowestAvailabilityLabel.TabIndex = 7;
+			this.LowestAvailabilityLabel.Text = "label5";
+			// 
+			// button1
+			// 
+			button1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+			button1.DialogResult = System.Windows.Forms.DialogResult.Cancel;
+			button1.Location = new System.Drawing.Point(173, 118);
+			button1.Name = "button1";
+			button1.Size = new System.Drawing.Size(75, 23);
+			button1.TabIndex = 8;
+			button1.Text = "Close";
+			button1.UseVisualStyleBackColor = true;
+			button1.Click += new System.EventHandler(this.button1_Click);
+			// 
 			// SystemStatusForm
 			// 
+			this.AcceptButton = button1;
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-			this.ClientSize = new System.Drawing.Size(284, 261);
+			this.CancelButton = button1;
+			this.ClientSize = new System.Drawing.Size(260, 153);
+			this.Controls.Add(button1);
+			this.Controls.Add(this.LowestAvailabilityLabel);
+			this.Controls.Add(this.ObjectsStoredLabel);
+			this.Controls.Add(label4);
+			this.Controls.Add(label2);
 			this.Controls.Add(this.EstimatedNetworkSizeLabel);
-			this.Controls.Add(this.label3);
+			this.Controls.Add(label3);
 			this.Controls.Add(this.CurrentContactsLabel);
-			this.Controls.Add(this.label1);
+			this.Controls.Add(label1);
 			this.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+			this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
+			this.MaximizeBox = false;
+			this.MinimizeBox = false;
 			this.Name = "SystemStatusForm";
-			this.Text = "SystemStatusForm";
+			this.Text = "Kyru system status";
 			this.ResumeLayout(false);
 			this.PerformLayout();
 
@@ -98,10 +166,10 @@
 
 		#endregion
 
-		private System.Windows.Forms.Label label1;
 		private System.Windows.Forms.Label CurrentContactsLabel;
-		private System.Windows.Forms.Label label3;
 		private System.Windows.Forms.Label EstimatedNetworkSizeLabel;
+		private System.Windows.Forms.Label ObjectsStoredLabel;
+		private System.Windows.Forms.Label LowestAvailabilityLabel;
 
 
 	}

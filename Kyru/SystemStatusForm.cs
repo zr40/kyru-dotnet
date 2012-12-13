@@ -19,6 +19,13 @@ namespace Kyru
 		{
 			CurrentContactsLabel.Text = app.Node.Kademlia.CurrentContactCount.ToString();
 			EstimatedNetworkSizeLabel.Text = app.Node.Kademlia.EstimatedNetworkSize.ToString();
+
+			ObjectsStoredLabel.Text = app.LocalObjectStorage.CurrentObjects.Count.ToString();
+		}
+
+		private void button1_Click(object sender, System.EventArgs e)
+		{
+			Close();
 		}
 	}
 }
