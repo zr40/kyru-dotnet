@@ -14,7 +14,6 @@ namespace Kyru.Network.TcpMessages.ServerState
 		private readonly NetworkStream stream;
 		private readonly KyruApplication app;
 		private readonly StoreObjectRequest storeObjectRequest;
-		private const int ObjectHeaderSize = 8;
 
 		internal StoreObjectState(NetworkStream stream, KyruApplication app, StoreObjectRequest storeObjectRequest)
 		{
@@ -36,7 +35,7 @@ namespace Kyru.Network.TcpMessages.ServerState
 				{
 					response.Error = Error.ObjectAlreadyStored;
 				}
-				else if (storeObjectRequest.Length > LocalObjectStorage.MaxObjectSize + ObjectHeaderSize)
+				else if (storeObjectRequest.Length > LocalObjectStorage.MaxObjectSize + 8) // TODO: remove hack. (8 bytes overhead for 1 MiB chunk)
 				{
 					response.Error = Error.StoreRejected;
 				}
@@ -61,7 +60,7 @@ namespace Kyru.Network.TcpMessages.ServerState
 
 				app.LocalObjectStorage.StoreBytes(storeObjectRequest.ObjectId, buffer, false);
 			}
-			return null; // No next server state
+			return null;
 		}
 	}
 }
