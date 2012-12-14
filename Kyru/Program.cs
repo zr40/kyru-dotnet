@@ -2,7 +2,6 @@
 using System.Windows.Forms;
 
 using Kyru.Core;
-using Kyru;
 using Kyru.Utilities;
 
 namespace Kyru
@@ -11,6 +10,7 @@ namespace Kyru
 	{
 		private static KyruApplication app;
 		private static SystemTray tray;
+
 		[STAThread]
 		private static void Main()
 		{

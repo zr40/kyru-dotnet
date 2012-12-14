@@ -31,5 +31,10 @@ namespace Kyru
 				MessageBox.Show("You seem to be missing your username or password", "Warning");
 			}
 		}
+
+		private void button1_Click(object sender, EventArgs e)
+		{
+			Close();
+		}
 	}
 }
