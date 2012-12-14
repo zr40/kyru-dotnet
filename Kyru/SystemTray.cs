@@ -13,14 +13,14 @@ namespace Kyru
 {
 	internal class SystemTray : ITimerListener
 	{
-		private KyruApplication app;
+		private readonly KyruApplication app;
 
-		private NotifyIcon trayIcon;
-		private ContextMenu trayMenu;
+		private readonly NotifyIcon trayIcon;
+		private readonly ContextMenu trayMenu;
 		private bool connected;
 
-		private Icon iconNotConnected;
-		private Icon iconConnected;
+		private readonly Icon iconNotConnected;
+		private readonly Icon iconConnected;
 
 		internal SystemTray(KyruApplication app)
 		{
@@ -43,12 +43,13 @@ namespace Kyru
 			trayIcon.ContextMenu = trayMenu;
 			trayIcon.Visible = true;
 
+			TimerElapsed();
 			KyruTimer.Register(this, 2);
 		}
 
 		private void OnExit(object sender, EventArgs e)
 		{
-			trayMenu.Dispose();
+			trayIcon.Dispose();
 			Application.Exit();
 		}
 
