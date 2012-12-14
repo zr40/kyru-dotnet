@@ -25,29 +25,31 @@ namespace Kyru.Network.TcpMessages.ServerState
 		public IServerState Process()
 		{
 			var response = new StoreObjectResponse();
-			
-				if (app.LocalObjectStorage.KeepObject(storeObjectRequest.ObjectId)) // Object already exists
+
+			if (app.LocalObjectStorage.KeepObject(storeObjectRequest.ObjectId)) // Object already exists
+			{
+				var oldObject = app.LocalObjectStorage.GetObject(storeObjectRequest.ObjectId);
+				using (var mstream = new MemoryStream())
 				{
-					var oldObject = app.LocalObjectStorage.GetObject(storeObjectRequest.ObjectId);
-					using (var mstream = new MemoryStream())
-					{
-						if (oldObject != null)
-							Serializer.Serialize(mstream, oldObject);
-						if (oldObject is User && !Crypto.Hash(mstream.ToArray()).SequenceEqual(storeObjectRequest.Hash)) // New object is a different version of an existing User object
-							response.Error = Error.Success;
-						else
-							response.Error = Error.ObjectAlreadyStored;
-					}
+					if (oldObject != null)
+						Serializer.Serialize(mstream, oldObject);
+					if (oldObject is User && !Crypto.Hash(mstream.ToArray()).SequenceEqual(storeObjectRequest.Hash))
+						// New object is a different version of an existing User object
+						response.Error = Error.Success;
+					else
+						response.Error = Error.ObjectAlreadyStored;
 				}
-				else if (storeObjectRequest.Length > LocalObjectStorage.MaxObjectSize + 8) // TODO: remove hack. (8 bytes overhead for 1 MiB chunk)
-				{
-					response.Error = Error.StoreRejected;
-				}
-				else
-				{
-					response.Error = Error.Success;
-				}
-			
+			}
+			else if (storeObjectRequest.Length > LocalObjectStorage.MaxObjectSize + 8)
+				// TODO: remove hack. (8 bytes overhead for 1 MiB chunk)
+			{
+				response.Error = Error.StoreRejected;
+			}
+			else
+			{
+				response.Error = Error.Success;
+			}
+
 			Serializer.SerializeWithLengthPrefix(stream, response, PrefixStyle.Base128);
 
 			if (response.Error == Error.Success)
