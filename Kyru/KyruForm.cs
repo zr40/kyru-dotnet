@@ -6,6 +6,7 @@ using System.Threading;
 using System.Windows.Forms;
 
 using Kyru.Core;
+using Kyru.Network;
 using Kyru.Network.Objects;
 using Kyru.Network.TcpMessages;
 
@@ -114,7 +115,7 @@ namespace Kyru
 			dialog.FileName = virtualLocalFileTree.SelectedNode.Text;
 			if (dialog.ShowDialog() == DialogResult.OK)
 			{
-				session.LocalObjectStorage.DownloadObjects(userFile.ChunkList, (error) =>
+				session.LocalObjectStorage.DownloadObjects(userFile.ChunkList.Cast<KademliaId>().ToList(), (error) =>
 				                                                               {
 					                                                               if (error != Error.Success)
 					                                                               {

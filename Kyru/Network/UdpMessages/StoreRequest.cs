@@ -1,5 +1,3 @@
-using System.Collections.Generic;
-
 using ProtoBuf;
 
 namespace Kyru.Network.UdpMessages
@@ -8,7 +6,7 @@ namespace Kyru.Network.UdpMessages
 	internal sealed class StoreRequest
 	{
 		[ProtoMember(1)]
-		internal KademliaId ObjectId;
+		internal byte[] ObjectId;
 
 		[ProtoMember(2)]
 		internal KyruObjectMetadata[] Data = new KyruObjectMetadata[0];

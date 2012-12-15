@@ -6,6 +6,6 @@ namespace Kyru.Network.UdpMessages
 	internal sealed class KeepObjectRequest
 	{
 		[ProtoMember(1)]
-		internal KademliaId ObjectId;
+		internal byte[] ObjectId;
 	}
 }

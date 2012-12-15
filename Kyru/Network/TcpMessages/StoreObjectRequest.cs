@@ -6,7 +6,7 @@ namespace Kyru.Network.TcpMessages
 	internal sealed class StoreObjectRequest
 	{
 		[ProtoMember(1)]
-		internal KademliaId ObjectId;
+		internal byte[] ObjectId;
 
 		[ProtoMember(2)]
 		internal byte[] Hash;

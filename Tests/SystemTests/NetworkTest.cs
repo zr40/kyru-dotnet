@@ -110,7 +110,7 @@ namespace Tests.SystemTests
 
 			Assert.AreNotEqual(0, nodes.Count);
 			Assert.AreEqual(nodes[0].Port, ct.Result[0].EndPoint.Port);
-			Assert.AreEqual(nodes[0].Id, ct.Result[0].NodeId);
+			Assert.AreEqual(nodes[0].Id, (KademliaId)ct.Result[0].NodeId);
 		}
 
 		[Test, Ignore]

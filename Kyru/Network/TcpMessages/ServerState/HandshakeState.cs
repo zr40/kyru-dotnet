@@ -22,8 +22,8 @@ namespace Kyru.Network.TcpMessages.ServerState
 
 		public IServerState Process()
 		{
+			stream.WriteByte(Node.ProtocolVersion);
 			var serverHandshake = new ServerHandshake();
-			serverHandshake.ProtocolVersion = Node.ProtocolVersion;
 			serverHandshake.NodeId = app.Node.Id;
 			Serializer.SerializeWithLengthPrefix(stream, serverHandshake, PrefixStyle.Base128);
 

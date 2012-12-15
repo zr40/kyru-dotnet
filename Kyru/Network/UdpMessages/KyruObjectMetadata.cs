@@ -6,7 +6,7 @@ namespace Kyru.Network.UdpMessages
 	internal sealed class KyruObjectMetadata
 	{
 		[ProtoMember(1)]
-		internal KademliaId NodeId;
+		internal byte[] NodeId;
 
 		[ProtoMember(2)]
 		internal uint IpAddress;

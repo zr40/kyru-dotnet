@@ -10,42 +10,39 @@ namespace Kyru.Network.UdpMessages
 	internal sealed class UdpMessage
 	{
 		[ProtoMember(1)]
-		internal uint ProtocolVersion;
+		internal byte[] SenderNodeId;
 
 		[ProtoMember(2)]
-		internal KademliaId SenderNodeId;
-
-		[ProtoMember(3)]
 		internal ulong RequestId;
 
-		[ProtoMember(4)]
+		[ProtoMember(3)]
 		internal ulong ResponseId;
 
-		[ProtoMember(5)]
+		[ProtoMember(4)]
 		internal PingRequest PingRequest;
 
-		[ProtoMember(6)]
+		[ProtoMember(5)]
 		internal FindNodeRequest FindNodeRequest;
 
-		[ProtoMember(7)]
+		[ProtoMember(6)]
 		internal FindNodeResponse FindNodeResponse;
 
-		[ProtoMember(8)]
+		[ProtoMember(7)]
 		internal FindValueRequest FindValueRequest;
 
-		[ProtoMember(9)]
+		[ProtoMember(8)]
 		internal FindValueResponse FindValueResponse;
 
-		[ProtoMember(10)]
+		[ProtoMember(9)]
 		internal StoreRequest StoreRequest;
 
-		[ProtoMember(11)]
+		[ProtoMember(10)]
 		internal StoreResponse StoreResponse;
 
-		[ProtoMember(12)]
+		[ProtoMember(11)]
 		internal KeepObjectRequest KeepObjectRequest;
 
-		[ProtoMember(13)]
+		[ProtoMember(12)]
 		internal KeepObjectResponse KeepObjectResponse;
 
 		internal Action<UdpMessage> ResponseCallback;
@@ -128,12 +125,6 @@ namespace Kyru.Network.UdpMessages
 		/// <returns> true when no error is found </returns>
 		internal bool Validate(IPEndPoint endPoint)
 		{
-			if (Node.ProtocolVersion != ProtocolVersion)
-			{
-				this.Warn("Ignoring message from {0} with unknown protocol version {1}", endPoint, ProtocolVersion);
-				return false;
-			}
-
 			if (ResponseId != 0)
 			{
 				// responses may not contain any requests besides ping

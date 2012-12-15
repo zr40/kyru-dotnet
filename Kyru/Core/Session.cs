@@ -111,7 +111,7 @@ namespace Kyru.Core
 
 			var userFile = new UserFile {
 				                            FileId = Random.UInt64(),
-				                            ChunkList = chunkList,
+				                            ChunkList = chunkList.Select(c => c.Bytes).ToList(),
 				                            EncryptedFileName = Crypto.EncryptAes(Encoding.UTF8.GetBytes(fileName), fileKey, nameIV),
 				                            EncryptedKey = Crypto.EncryptRsa(fileKey, rsaKeyPair.Public),
 				                            FileIV = fileIV,

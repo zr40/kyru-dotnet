@@ -25,7 +25,7 @@ namespace Kyru.Network.Objects
 
 		[ProtoMember(7)] internal byte[] Hash; // Hash of encrypted file contents.
 
-		[ProtoMember(8)] internal List<KademliaId> ChunkList = new List<KademliaId>();
+		[ProtoMember(8)] internal List<byte[]> ChunkList = new List<byte[]>();
 
 		internal byte[] HashObject()
 		{
@@ -40,7 +40,7 @@ namespace Kyru.Network.Objects
 			bytes.AddRange(BitConverter.GetBytes(ChunkList.Count));
 			foreach (var chunkId in ChunkList)
 			{
-				bytes.AddRange(chunkId.Bytes);
+				bytes.AddRange(chunkId);
 			}
 
 			return Crypto.Hash(bytes.ToArray());

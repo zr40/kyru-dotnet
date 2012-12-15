@@ -2,19 +2,16 @@
 using System.Globalization;
 using System.Linq;
 
-using ProtoBuf;
 using Random = Kyru.Utilities.Random;
 
 namespace Kyru.Network
 {
-	[ProtoContract(SkipConstructor = true)]
 	internal sealed class KademliaId : IComparable<KademliaId>
 	{
 		internal const int Size = 160;
 
 		private const int ArraySize = Size / 8;
 
-		[ProtoMember(1)]
 		private readonly byte[] id;
 
 		public KademliaId(byte[] bytes)
@@ -43,6 +40,16 @@ namespace Kyru.Network
 
 				return new KademliaId(bytes);
 			}
+		}
+
+		public static implicit operator byte[](KademliaId id)
+		{
+			return id.Bytes;
+		}
+
+		public static implicit operator KademliaId(byte[] bytes)
+		{
+			return new KademliaId(bytes);
 		}
 
 		internal byte[] Bytes
@@ -132,7 +139,7 @@ namespace Kyru.Network
 
 		public static KademliaId FromHex(string hex)
 		{
-			byte[] bytes = new byte[ArraySize];
+			var bytes = new byte[ArraySize];
 			for (int i = 0; i < ArraySize; i++)
 			{
 				bytes[i] = byte.Parse(hex.Substring(i * 2, 2), NumberStyles.HexNumber);

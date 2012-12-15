@@ -6,6 +6,6 @@ namespace Kyru.Network.UdpMessages
 	internal sealed class FindNodeRequest
 	{
 		[ProtoMember(1)]
-		internal KademliaId NodeId;
+		internal byte[] NodeId;
 	}
 }

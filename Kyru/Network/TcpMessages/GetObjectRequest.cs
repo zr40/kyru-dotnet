@@ -6,6 +6,6 @@ namespace Kyru.Network.TcpMessages
 	internal sealed class GetObjectRequest
 	{
 		[ProtoMember(1)]
-		internal KademliaId ObjectId;
+		internal byte[] ObjectId;
 	}
 }

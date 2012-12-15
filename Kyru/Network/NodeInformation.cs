@@ -9,7 +9,7 @@ namespace Kyru.Network
 	internal sealed class NodeInformation
 	{
 		[ProtoMember(1)]
-		internal readonly KademliaId NodeId;
+		internal readonly byte[] NodeId;
 
 		[ProtoMember(2)]
 		internal readonly uint IpAddress;

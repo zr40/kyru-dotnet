@@ -27,7 +27,7 @@ namespace Kyru.Network
 		internal readonly Kademlia Kademlia;
 		private bool running;
 
-		internal const uint ProtocolVersion = 1;
+		internal const byte ProtocolVersion = 2;
 		internal const int TimeoutTicks = 2 + 1;
 		internal readonly KademliaId Id = KademliaId.RandomId;
 
@@ -91,6 +91,14 @@ namespace Kyru.Network
 			var endPoint = new IPEndPoint(IPAddress.Any, 0);
 			var data = udp.EndReceive(ar, ref endPoint);
 			UdpListen();
+
+			var ms = new MemoryStream(data);
+			var protocolVersion = ms.ReadByte();
+			if (protocolVersion != ProtocolVersion)
+			{
+				this.Warn("Ignoring message from {0} with unknown protocol version {1}", endPoint, protocolVersion);
+				return;
+			}
 
 			var incomingMessage = Serializer.Deserialize<UdpMessage>(new MemoryStream(data));
 
@@ -305,7 +313,6 @@ namespace Kyru.Network
 		/// <param name="targetNodeId">The target node ID.</param>
 		internal void SendUdpMessage(UdpMessage message, IPEndPoint target, KademliaId targetNodeId)
 		{
-			message.ProtocolVersion = ProtocolVersion;
 			message.RequestId = Random.UInt64();
 			message.SenderNodeId = Id;
 
@@ -326,6 +333,7 @@ namespace Kyru.Network
 		private void SendUdp(UdpMessage message, IPEndPoint target)
 		{
 			var s = new MemoryStream();
+			s.WriteByte(ProtocolVersion);
 			Serializer.Serialize(s, message);
 
 			//this.Log("Sending {4} with length {0} with request ID {1:X16} to {2} (response ID {3:X16})", s.Length, message.RequestId, target, message.ResponseId, message.Inspect());

@@ -6,7 +6,7 @@ namespace Kyru.Network.TcpMessages
 	internal sealed class ClientHandshake
 	{
 		[ProtoMember(1)]
-		internal KademliaId NodeId;
+		internal byte[] NodeId;
 
 		[ProtoMember(2)]
 		internal GetObjectRequest GetObjectRequest;
