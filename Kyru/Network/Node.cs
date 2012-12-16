@@ -100,7 +100,7 @@ namespace Kyru.Network
 				return;
 			}
 
-			var incomingMessage = Serializer.Deserialize<UdpMessage>(new MemoryStream(data));
+			var incomingMessage = Serializer.Deserialize<UdpMessage>(ms);
 
 			if (!incomingMessage.Validate(endPoint))
 				return;
