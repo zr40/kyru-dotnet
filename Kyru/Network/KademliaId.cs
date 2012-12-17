@@ -14,7 +14,7 @@ namespace Kyru.Network
 
 		private readonly byte[] id;
 
-		public KademliaId(byte[] bytes)
+		internal KademliaId(byte[] bytes)
 		{
 			if (bytes.Length != ArraySize)
 				throw new InvalidOperationException("The array must of size " + ArraySize);
@@ -29,16 +29,14 @@ namespace Kyru.Network
 			{
 				result[i] = (byte) (left.id[i] ^ right.id[i]);
 			}
-			return new KademliaId(result);
+			return result;
 		}
 
 		internal static KademliaId RandomId
 		{
 			get
 			{
-				var bytes = Random.Bytes(ArraySize);
-
-				return new KademliaId(bytes);
+				return Random.Bytes(ArraySize);
 			}
 		}
 
@@ -144,7 +142,7 @@ namespace Kyru.Network
 			{
 				bytes[i] = byte.Parse(hex.Substring(i * 2, 2), NumberStyles.HexNumber);
 			}
-			return new KademliaId(bytes);
+			return bytes;
 		}
 	}
 }
