@@ -35,6 +35,7 @@
 			System.Windows.Forms.Label label2;
 			System.Windows.Forms.Label label4;
 			System.Windows.Forms.Button button1;
+			System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(SystemStatusForm));
 			this.CurrentContactsLabel = new System.Windows.Forms.Label();
 			this.EstimatedNetworkSizeLabel = new System.Windows.Forms.Label();
 			this.ObjectsStoredLabel = new System.Windows.Forms.Label();
@@ -62,15 +63,6 @@
 			label1.TabIndex = 0;
 			label1.Text = "Current contacts:";
 			// 
-			// CurrentContactsLabel
-			// 
-			this.CurrentContactsLabel.AutoSize = true;
-			this.CurrentContactsLabel.Location = new System.Drawing.Point(155, 9);
-			this.CurrentContactsLabel.Name = "CurrentContactsLabel";
-			this.CurrentContactsLabel.Size = new System.Drawing.Size(38, 13);
-			this.CurrentContactsLabel.TabIndex = 1;
-			this.CurrentContactsLabel.Text = "label2";
-			// 
 			// label3
 			// 
 			label3.AutoSize = true;
@@ -79,15 +71,6 @@
 			label3.Size = new System.Drawing.Size(128, 13);
 			label3.TabIndex = 2;
 			label3.Text = "Estimated network size:";
-			// 
-			// EstimatedNetworkSizeLabel
-			// 
-			this.EstimatedNetworkSizeLabel.AutoSize = true;
-			this.EstimatedNetworkSizeLabel.Location = new System.Drawing.Point(155, 26);
-			this.EstimatedNetworkSizeLabel.Name = "EstimatedNetworkSizeLabel";
-			this.EstimatedNetworkSizeLabel.Size = new System.Drawing.Size(38, 13);
-			this.EstimatedNetworkSizeLabel.TabIndex = 3;
-			this.EstimatedNetworkSizeLabel.Text = "label4";
 			// 
 			// label2
 			// 
@@ -107,6 +90,36 @@
 			label4.TabIndex = 5;
 			label4.Text = "Lowest availability:";
 			// 
+			// button1
+			// 
+			button1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+			button1.DialogResult = System.Windows.Forms.DialogResult.Cancel;
+			button1.Location = new System.Drawing.Point(173, 118);
+			button1.Name = "button1";
+			button1.Size = new System.Drawing.Size(75, 23);
+			button1.TabIndex = 8;
+			button1.Text = "Close";
+			button1.UseVisualStyleBackColor = true;
+			button1.Click += new System.EventHandler(this.button1_Click);
+			// 
+			// CurrentContactsLabel
+			// 
+			this.CurrentContactsLabel.AutoSize = true;
+			this.CurrentContactsLabel.Location = new System.Drawing.Point(155, 9);
+			this.CurrentContactsLabel.Name = "CurrentContactsLabel";
+			this.CurrentContactsLabel.Size = new System.Drawing.Size(38, 13);
+			this.CurrentContactsLabel.TabIndex = 1;
+			this.CurrentContactsLabel.Text = "label2";
+			// 
+			// EstimatedNetworkSizeLabel
+			// 
+			this.EstimatedNetworkSizeLabel.AutoSize = true;
+			this.EstimatedNetworkSizeLabel.Location = new System.Drawing.Point(155, 26);
+			this.EstimatedNetworkSizeLabel.Name = "EstimatedNetworkSizeLabel";
+			this.EstimatedNetworkSizeLabel.Size = new System.Drawing.Size(38, 13);
+			this.EstimatedNetworkSizeLabel.TabIndex = 3;
+			this.EstimatedNetworkSizeLabel.Text = "label4";
+			// 
 			// ObjectsStoredLabel
 			// 
 			this.ObjectsStoredLabel.AutoSize = true;
@@ -124,18 +137,6 @@
 			this.LowestAvailabilityLabel.Size = new System.Drawing.Size(38, 13);
 			this.LowestAvailabilityLabel.TabIndex = 7;
 			this.LowestAvailabilityLabel.Text = "label5";
-			// 
-			// button1
-			// 
-			button1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-			button1.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-			button1.Location = new System.Drawing.Point(173, 118);
-			button1.Name = "button1";
-			button1.Size = new System.Drawing.Size(75, 23);
-			button1.TabIndex = 8;
-			button1.Text = "Close";
-			button1.UseVisualStyleBackColor = true;
-			button1.Click += new System.EventHandler(this.button1_Click);
 			// 
 			// SystemStatusForm
 			// 
@@ -155,6 +156,7 @@
 			this.Controls.Add(label1);
 			this.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
 			this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
+			this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
 			this.MaximizeBox = false;
 			this.MinimizeBox = false;
 			this.Name = "SystemStatusForm";

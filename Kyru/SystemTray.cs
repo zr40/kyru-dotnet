@@ -17,10 +17,9 @@ namespace Kyru
 
 		private readonly NotifyIcon trayIcon;
 		private readonly ContextMenu trayMenu;
-		private bool connected;
 
-		private readonly Icon iconNotConnected;
-		private readonly Icon iconConnected;
+		private int[] nodesPerLine = { 0, 1, 4, 20 };
+		private readonly List<Icon> nodesIcon;
 
 		internal SystemTray(KyruApplication app)
 		{
@@ -35,8 +34,12 @@ namespace Kyru
 			trayMenu.MenuItems.Add("Exit", OnExit);
 
 			trayIcon = new NotifyIcon();
-			iconConnected = new Icon("Icons/kyru.ico");
-			iconNotConnected = SystemIcons.Exclamation;
+
+			nodesIcon = new List<Icon>();
+
+			for (int i = 0; i < 4; i++){
+				nodesIcon.Add(new Icon("Icons/kyru"+ i.ToString() + ".ico"));
+			}
 			//TimerElapsed();
 			trayIcon.MouseDoubleClick += OnLogin;
 
@@ -70,21 +73,20 @@ namespace Kyru
 
 		public void TimerElapsed()
 		{
-			bool newConnected = app.Node.Kademlia.CurrentContactCount > 0;
-			if (connected != newConnected)
-				return;
-			connected = newConnected;
+			int connectedCount = app.Node.Kademlia.CurrentContactCount;
+			int lineCount = 0;
+			for (int i = 0; i < nodesPerLine.Count(); i++)
+			{
+				if (nodesPerLine[i] <= connectedCount)
+					lineCount = i;
+			}
 
-			if (connected)
-			{
-				trayIcon.Text = "Kyru - Connected";
-				trayIcon.Icon = iconConnected;
-			}
-			else
-			{
+			if (lineCount == 0)
 				trayIcon.Text = "Kyru - Not Connected";
-				trayIcon.Icon = iconNotConnected;
-			}
+			else
+				trayIcon.Text = "Kyru - Connected";
+
+			trayIcon.Icon = nodesIcon[lineCount];
 		}
 	}
 }
