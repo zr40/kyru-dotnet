@@ -30,6 +30,7 @@ namespace Kyru
 		internal void ResetVirtualLocalFileTree()
 		{
 			virtualLocalFileTree.Nodes.Clear();
+			virtualLocalFileTree.Nodes.Add("", session.Username, 0,0);
 
 			foreach (var fileToShow in session.User.Files)
 			{
@@ -42,20 +43,26 @@ namespace Kyru
 			string fileName = session.DecryptFileName(fileToShow);
 			//Console.Write("showing file" + fileName);
 			var dirs = fileName.Split('\\');
-			TreeNode node = null;
-			TreeNodeCollection nodes = virtualLocalFileTree.Nodes;
-			foreach (var dir in dirs)
+			TreeNode node = virtualLocalFileTree.Nodes[0];
+			//TreeNodeCollection nodes = virtualLocalFileTree.Nodes;
+			for (int i = 0; i < dirs.Count(); i++)
 			{
-				if (nodes.ContainsKey(dir))
+				TreeNodeCollection nodes = node.Nodes;
+
+				if (nodes.ContainsKey(dirs[i]))
 				{
-					node = nodes[dir];
+					node = nodes[dirs[i]];
 				}
 				else
 				{
-					node = nodes.Add(dir, dir);
-					// TODO: Add images
+					node = nodes.Add(dirs[i], dirs[i]);
+					if (i == dirs.Count() - 1)
+						node.ImageIndex = 3;
+					else
+						node.ImageIndex = 1;
+
+					node.SelectedImageIndex = node.ImageIndex;
 				}
-				nodes = node.Nodes;
 			}
 			node.Tag = fileToShow;
 		}
@@ -156,7 +163,7 @@ namespace Kyru
 			foreach (var c in userFile.ChunkList)
 			{
 				builder.Append("\n");
-				builder.Append(c);
+				builder.Append(BitConverter.ToString(c));
 			}
 
 			MessageBox.Show(builder.ToString());

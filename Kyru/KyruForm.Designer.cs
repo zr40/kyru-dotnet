@@ -47,17 +47,23 @@
 			  // virtualLocalFileTree
 			  // 
 			  this.virtualLocalFileTree.Dock = System.Windows.Forms.DockStyle.Fill;
+			  this.virtualLocalFileTree.ImageIndex = 0;
+			  this.virtualLocalFileTree.ImageList = this.iconList;
 			  this.virtualLocalFileTree.Location = new System.Drawing.Point(0, 24);
 			  this.virtualLocalFileTree.Name = "virtualLocalFileTree";
+			  this.virtualLocalFileTree.SelectedImageIndex = 0;
 			  this.virtualLocalFileTree.Size = new System.Drawing.Size(292, 242);
 			  this.virtualLocalFileTree.TabIndex = 0;
 			  this.virtualLocalFileTree.MouseUp += new System.Windows.Forms.MouseEventHandler(this.virtualLocalFileTree_MouseUp);
 			  // 
 			  // iconList
 			  // 
-			  this.iconList.ColorDepth = System.Windows.Forms.ColorDepth.Depth8Bit;
-			  this.iconList.ImageSize = new System.Drawing.Size(16, 16);
+			  this.iconList.ImageStream = ((System.Windows.Forms.ImageListStreamer)(resources.GetObject("iconList.ImageStream")));
 			  this.iconList.TransparentColor = System.Drawing.Color.Transparent;
+			  this.iconList.Images.SetKeyName(0, "root.gif");
+			  this.iconList.Images.SetKeyName(1, "folder.gif");
+			  this.iconList.Images.SetKeyName(2, "uploading.gif");
+			  this.iconList.Images.SetKeyName(3, "file.gif");
 			  // 
 			  // topMenu
 			  // 
