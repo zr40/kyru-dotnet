@@ -138,9 +138,9 @@
     <Compile Include="Utilities\KyruTimer.cs" />
     <None Include="ClassDiagram1.cd" />
     <None Include="Core\ClassDiagram.cd" />
-    <None Include="KyruForm.resx">
+    <EmbeddedResource Include="KyruForm.resx">
       <DependentUpon>KyruForm.cs</DependentUpon>
-    </None>
+    </EmbeddedResource>
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>

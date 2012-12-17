@@ -35,6 +35,7 @@
 			System.Windows.Forms.Label label2;
 			System.Windows.Forms.Label label4;
 			System.Windows.Forms.Button button1;
+			System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(SystemStatusForm));
 			this.CurrentContactsLabel = new System.Windows.Forms.Label();
 			this.EstimatedNetworkSizeLabel = new System.Windows.Forms.Label();
 			this.ObjectsStoredLabel = new System.Windows.Forms.Label();
@@ -155,6 +156,7 @@
 			this.Controls.Add(label1);
 			this.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
 			this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
+			this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
 			this.MaximizeBox = false;
 			this.MinimizeBox = false;
 			this.Name = "SystemStatusForm";

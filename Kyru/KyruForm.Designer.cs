@@ -29,6 +29,7 @@
         private void InitializeComponent()
         {
 			  this.components = new System.ComponentModel.Container();
+			  System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(KyruForm));
 			  this.virtualLocalFileTree = new System.Windows.Forms.TreeView();
 			  this.iconList = new System.Windows.Forms.ImageList(this.components);
 			  this.topMenu = new System.Windows.Forms.MenuStrip();
@@ -129,6 +130,7 @@
 			  this.Controls.Add(this.virtualLocalFileTree);
 			  this.Controls.Add(this.topMenu);
 			  this.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+			  this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
 			  this.MainMenuStrip = this.topMenu;
 			  this.Name = "KyruForm";
 			  this.Text = "Kyru";
