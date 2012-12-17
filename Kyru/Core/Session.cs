@@ -36,7 +36,7 @@ namespace Kyru.Core
 
 			rsaKeyPair = Crypto.DeriveRsaKey(Encoding.UTF8.GetBytes(username), Encoding.UTF8.GetBytes(password));
 
-			var id = new KademliaId(Crypto.Hash(rsaKeyPair.Public));
+			KademliaId id = Crypto.Hash(rsaKeyPair.Public);
 
 			Username = username;
 			User = localObjectStorage.GetObject(id) as User;
@@ -71,7 +71,7 @@ namespace Kyru.Core
 
 		private void AddChunk(List<KademliaId> chunkIDs, byte[] chunkData)
 		{
-			var chunkId = new KademliaId(Crypto.Hash(chunkData));
+			KademliaId chunkId = Crypto.Hash(chunkData);
 			chunkIDs.Add(chunkId);
 			LocalObjectStorage.StoreObject(new Chunk(chunkData, chunkId), true);
 		}
