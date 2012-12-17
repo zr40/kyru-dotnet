@@ -148,33 +148,38 @@ namespace Kyru.Core
 		}
 
 		internal void DownloadObjects(List<KademliaId> ids, Action<Error> done) {
-			//Semaphore networkLock = new Semaphore(0,Kademlia.α);
+			int pendingRequests = 0;
+			int nextCount = 0;
+
 			Error status = Error.Success;
+
 			new Thread(() =>
 			{
-				foreach (var id in ids)
+				while (pendingRequests != 0 || nextCount < ids.Count())
 				{
-					//networkLock.WaitOne();
+					if (pendingRequests == Kademlia.α || nextCount == ids.Count())
+					{
+						Thread.Sleep(0);
+						continue;
+					}
+
+					var id = ids[nextCount];
+					nextCount++;
 
 					if (!currentObjects.ContainsKey(id))
 					{
-						node.GetObjectFromNetwork(id, (err, bytes) =>
+						pendingRequests++;
+						node.GetObjectFromNetwork(id, (newStatus, bytes) =>
 						{
-							if (err != Error.Success)
+							pendingRequests--;
+							if (newStatus != Error.Success)
 							{
-								//TODO: What to do on multiple errors.
-								status = err;
+								status = newStatus;
 							}
 							Store(id, bytes, false);
-
-							//networkLock.Release();
 						});
 					}
 				}
-
-				// Make sure the network is completed
-				//for (int i = 0; i < Kademlia.α; i++)
-					//networkLock.WaitOne();
 
 				done(status);
 			}).Start();
