@@ -223,12 +223,9 @@ namespace Kyru.Network
 		internal List<NodeInformation> NearestContactsTo(KademliaId nearToId, KademliaId ignoreId)
 		{
 			var bucketId = nearToId.KademliaBucket();
-
 			var contacts = new List<NodeInformation>();
-			if (GetKContacts(contacts, bucketId, ignoreId))
-				return contacts;
 
-			for (int i = bucketId - 1; i >= 0; i--)
+			for (int i = bucketId; i >= 0; i--)
 			{
 				if (GetKContacts(contacts, i, ignoreId))
 					return contacts;
