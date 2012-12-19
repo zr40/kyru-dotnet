@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -67,19 +68,20 @@ namespace Kyru
 			node.Tag = fileToShow;
 		}
 
-		private void addAFileToolStripMenuItem_Click(object sender, EventArgs e)
+		private void AddFiles(IEnumerable<string> filenames)
 		{
-			var dialog = new OpenFileDialog();
-			dialog.Multiselect = true;
-			Thread.CurrentThread.SetApartmentState(ApartmentState.STA);
-			dialog.ShowDialog();
-			foreach (string filename in dialog.FileNames)
+			foreach (string path in filenames)
 			{
+				if (Directory.Exists(path)) // pathrefers to directory
+				{
+					AddFiles(Directory.EnumerateFileSystemEntries(path));
+					continue;
+				}
 				try
 				{
-					using (var fs = new FileStream(filename, FileMode.Open))
+					using (var fs = new FileStream(path, FileMode.Open))
 					{
-						var split = filename.Split('\\');
+						var split = path.Split('\\');
 						var file = session.AddFile(fs, split.Last());
 						ShowFile(file);
 					}
@@ -87,9 +89,19 @@ namespace Kyru
 				catch (IOException ex)
 				{
 					Console.WriteLine(ex.Message);
-					MessageBox.Show("Could not add file " + filename);
+					MessageBox.Show("Could not add file " + path);
 				}
 			}
+		}
+
+		private void addAFileToolStripMenuItem_Click(object sender, EventArgs e)
+		{
+			var dialog = new OpenFileDialog();
+			dialog.Multiselect = true;
+			Thread.CurrentThread.SetApartmentState(ApartmentState.STA);
+			var result = dialog.ShowDialog();
+			if (result == DialogResult.OK) 
+				AddFiles(dialog.FileNames);
 		}
 
 		private void refreshToolStripMenuItem_Click(object sender, EventArgs e)
@@ -172,6 +184,21 @@ namespace Kyru
 		private void KyruForm_FormClosing(object sender, FormClosingEventArgs e)
 		{
 			session.Dispose();
+		}
+
+		private void virtualLocalFileTree_DragDrop(object sender, DragEventArgs e)
+		{
+			if (!e.Data.GetDataPresent(DataFormats.FileDrop)) return;
+
+			AddFiles((string[])e.Data.GetData(DataFormats.FileDrop));
+		}
+
+		private void virtualLocalFileTree_DragEnter(object sender, DragEventArgs e)
+		{
+			if (e.Data.GetDataPresent(DataFormats.FileDrop))
+				e.Effect = DragDropEffects.Copy; 
+			else
+				e.Effect = DragDropEffects.None;
 		}
 	}
 }
