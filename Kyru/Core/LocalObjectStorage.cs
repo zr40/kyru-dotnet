@@ -76,8 +76,8 @@ namespace Kyru.Core
 				if (oldUser is User)
 				{
 					var user = o as User;
-					user.Merge(oldUser as User);
-					userUpdated = true;
+					if (user.Merge(oldUser as User))
+						userUpdated = true;
 				}
 			}
 

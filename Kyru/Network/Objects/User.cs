@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Security.Cryptography;
 using Kyru.Utilities;
@@ -42,8 +43,19 @@ namespace Kyru.Network.Objects
 			}
 		}
 
-		internal void Merge(User user)
+		/// <summary>
+		/// Merges the user object with the current object if they are different
+		/// </summary>
+		/// <param name="user">user object to merge this object with</param>
+		/// <returns>True if merged, false if they where identical</returns>
+		internal bool Merge(User user)
 		{
+			using (MemoryStream msThis = new MemoryStream(), msOther = new MemoryStream())
+			{
+				Serializer.Serialize(msThis, this);
+				Serializer.Serialize(msOther, this);
+				if (!Crypto.Hash(msThis.ToArray()).SequenceEqual(Crypto.Hash(msThis.ToArray()))) return false;
+			}
 			foreach (var file in user.files)
 			{
 				if (files.All(f => f.FileId != file.FileId) && deletedFiles.All(f => f.Item2 != file.FileId))
@@ -55,7 +67,7 @@ namespace Kyru.Network.Objects
 				if (deletedFiles.All(f => f.Item2 != file.Item2))
 					AddDeletedFile(file.Item1, file.Item2);
 			}
-
+			return true;
 		}
 		internal IList<Tuple<byte[], ulong>> DeletedFiles
 		{
