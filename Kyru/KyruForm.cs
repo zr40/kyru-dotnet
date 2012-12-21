@@ -43,7 +43,7 @@ namespace Kyru
 		{
 			string fileName = session.DecryptFileName(fileToShow);
 			//Console.Write("showing file" + fileName);
-			var dirs = fileName.Split('\\');
+			var dirs = fileName.Split('/');
 			TreeNode node = virtualLocalFileTree.Nodes[0];
 			//TreeNodeCollection nodes = virtualLocalFileTree.Nodes;
 			for (int i = 0; i < dirs.Count(); i++)
@@ -67,21 +67,23 @@ namespace Kyru
 			}
 			node.Tag = fileToShow;
 		}
+
 		private void AddFiles(IEnumerable<string> fileNames, string rootPath)
 		{
+			rootPath = rootPath == null ? "" : rootPath + "/";
 			foreach (string fullPath in fileNames)
 			{
 				var path = fullPath.Split(Path.DirectorySeparatorChar).Last();
 				if (Directory.Exists(fullPath)) // pathrefers to directory
 				{
-					AddFiles(Directory.EnumerateFileSystemEntries(fullPath), rootPath + '/' + path);
+					AddFiles(Directory.EnumerateFileSystemEntries(fullPath), rootPath + path);
 					continue;
 				}
 				try
 				{
 					using (var fs = new FileStream(fullPath, FileMode.Open))
 					{
-						var file = session.AddFile(fs, path);
+						var file = session.AddFile(fs, rootPath + path);
 						ShowFile(file);
 					}
 				}
@@ -95,7 +97,7 @@ namespace Kyru
 
 		private void AddFiles(IEnumerable<string> fileNames)
 		{
-			AddFiles(fileNames, "");
+			AddFiles(fileNames, null);
 		}
 
 		private void addAFileToolStripMenuItem_Click(object sender, EventArgs e)
