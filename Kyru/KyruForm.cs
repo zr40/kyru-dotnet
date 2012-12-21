@@ -68,7 +68,7 @@ namespace Kyru
 			node.Tag = fileToShow;
 		}
 
-		private void AddFiles(IEnumerable<string> fileNames, string rootPath)
+		private void AddFiles(IEnumerable<string> fileNames, string rootPath = null)
 		{
 			rootPath = rootPath == null ? "" : rootPath + "/";
 			foreach (string fullPath in fileNames)
@@ -93,11 +93,6 @@ namespace Kyru
 					MessageBox.Show("Could not add file " + fullPath);
 				}
 			}
-		}
-
-		private void AddFiles(IEnumerable<string> fileNames)
-		{
-			AddFiles(fileNames, null);
 		}
 
 		private void addAFileToolStripMenuItem_Click(object sender, EventArgs e)
