@@ -54,7 +54,7 @@ namespace Kyru.Network.Operations
 			{
 				while (pendingRequests != 0 || nodeList.Any(n => !n.Queried))
 				{
-					if (pendingRequests == Kademlia.α || nodeList.All(n => n.Queried))
+					if (pendingRequests == Kademlia.alpha || nodeList.All(n => n.Queried))
 					{
 						try // unlock nodeList while waiting on the event
 						{

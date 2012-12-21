@@ -13,7 +13,7 @@ namespace Kyru.Network
 	internal sealed class Kademlia : ITimerListener
 	{
 		internal const int k = 20;
-		internal const int α = 3;
+		internal const int alpha = 3;
 
 		private class KnownNode
 		{

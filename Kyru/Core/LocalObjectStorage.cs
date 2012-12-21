@@ -157,7 +157,7 @@ namespace Kyru.Core
 			{
 				while (pendingRequests != 0 || nextCount < ids.Count())
 				{
-					if (pendingRequests == Kademlia.α || nextCount == ids.Count())
+					if (pendingRequests == Kademlia.alpha || nextCount == ids.Count())
 					{
 						Thread.Sleep(0);
 						continue;

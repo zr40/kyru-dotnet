@@ -67,31 +67,35 @@ namespace Kyru
 			}
 			node.Tag = fileToShow;
 		}
-
-		private void AddFiles(IEnumerable<string> filenames)
+		private void AddFiles(IEnumerable<string> fileNames, string rootPath)
 		{
-			foreach (string path in filenames)
+			foreach (string fullPath in fileNames)
 			{
-				if (Directory.Exists(path)) // pathrefers to directory
+				var path = fullPath.Split(Path.DirectorySeparatorChar).Last();
+				if (Directory.Exists(fullPath)) // pathrefers to directory
 				{
-					AddFiles(Directory.EnumerateFileSystemEntries(path));
+					AddFiles(Directory.EnumerateFileSystemEntries(fullPath), rootPath + '/' + path);
 					continue;
 				}
 				try
 				{
-					using (var fs = new FileStream(path, FileMode.Open))
+					using (var fs = new FileStream(fullPath, FileMode.Open))
 					{
-						var split = path.Split('\\');
-						var file = session.AddFile(fs, split.Last());
+						var file = session.AddFile(fs, path);
 						ShowFile(file);
 					}
 				}
 				catch (IOException ex)
 				{
 					Console.WriteLine(ex.Message);
-					MessageBox.Show("Could not add file " + path);
+					MessageBox.Show("Could not add file " + fullPath);
 				}
 			}
+		}
+
+		private void AddFiles(IEnumerable<string> fileNames)
+		{
+			AddFiles(fileNames, "");
 		}
 
 		private void addAFileToolStripMenuItem_Click(object sender, EventArgs e)
