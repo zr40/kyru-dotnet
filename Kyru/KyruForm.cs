@@ -17,35 +17,54 @@ namespace Kyru
 	{
 		private Session session;
 
+		private List<ulong> shownFileIDs = new List<ulong>();
+		private List<ulong> deletedFileIDs = new List<ulong>();
+
 		internal KyruForm(Session session)
 		{
 			this.session = session;
 			InitializeComponent();
 
-			ResetVirtualLocalFileTree();
+			InitLocalFileTree();
 			Text = session.Username + " - " + Text;
 
-			session.OnUserMerged += () => BeginInvoke(new Action(ResetVirtualLocalFileTree));
+			session.OnUserMerged += () => BeginInvoke(new Action(UpdateLocalFileTree));
 		}
 
-		internal void ResetVirtualLocalFileTree()
+		internal void InitLocalFileTree()
 		{
 			virtualLocalFileTree.Nodes.Clear();
-			virtualLocalFileTree.Nodes.Add("", session.Username, 0,0);
+			virtualLocalFileTree.Nodes.Add("", session.Username, 0, 0);
+			virtualLocalFileTree.Nodes[0].Expand();
+			shownFileIDs.Clear();
+			deletedFileIDs.Clear();
+			UpdateLocalFileTree();
+		}
 
+		internal void UpdateLocalFileTree()
+		{
 			foreach (var fileToShow in session.User.Files)
 			{
+				if (shownFileIDs.Contains(fileToShow.FileId))
+					continue;
+				shownFileIDs.Add(fileToShow.FileId);
 				ShowFile(fileToShow);
+			}
+
+			foreach (var deletedFile in session.User.DeletedFiles)
+			{
+				if (deletedFileIDs.Contains(deletedFile.Item2))
+					continue;
+				deletedFileIDs.Add(deletedFile.Item2);
+				removeShownFile(deletedFile.Item2);
 			}
 		}
 
 		internal void ShowFile(UserFile fileToShow)
 		{
 			string fileName = session.DecryptFileName(fileToShow);
-			//Console.Write("showing file" + fileName);
 			var dirs = fileName.Split('/');
 			TreeNode node = virtualLocalFileTree.Nodes[0];
-			//TreeNodeCollection nodes = virtualLocalFileTree.Nodes;
 			for (int i = 0; i < dirs.Count(); i++)
 			{
 				TreeNodeCollection nodes = node.Nodes;
@@ -66,6 +85,31 @@ namespace Kyru
 				}
 			}
 			node.Tag = fileToShow;
+		}
+
+		internal bool removeShownFile(ulong fileID, TreeNode parentNode = null)
+		{
+			if (parentNode == null)
+				parentNode = virtualLocalFileTree.Nodes[0];
+
+			foreach (TreeNode childNode in parentNode.Nodes)
+			{
+				var checkedFile = childNode.Tag as UserFile;
+
+				if (checkedFile == null) // File is a directory.
+				{
+					if (removeShownFile(fileID, childNode))
+						return true;
+					continue;
+				}
+
+				if (checkedFile.FileId == fileID)
+				{
+					childNode.Remove();
+					return true;
+				}
+			}
+			return false;
 		}
 
 		private void AddFiles(IEnumerable<string> fileNames, string rootPath = null)
@@ -107,8 +151,7 @@ namespace Kyru
 
 		private void refreshToolStripMenuItem_Click(object sender, EventArgs e)
 		{
-			virtualLocalFileTree.Nodes.Clear();
-			ResetVirtualLocalFileTree();
+			InitLocalFileTree();
 		}
 
 		private void virtualLocalFileTree_MouseUp(object sender, MouseEventArgs e)
@@ -157,7 +200,7 @@ namespace Kyru
 			if (userFile == null)
 				return;
 			session.DeleteFile(userFile);
-			virtualLocalFileTree.Nodes.Remove(virtualLocalFileTree.SelectedNode);
+			UpdateLocalFileTree();
 		}
 
 		private void infoToolStripMenuItem_Click(object sender, EventArgs e)
