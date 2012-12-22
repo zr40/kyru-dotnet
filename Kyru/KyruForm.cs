@@ -135,7 +135,7 @@ namespace Kyru
 			dialog.FileName = virtualLocalFileTree.SelectedNode.Text;
 			if (dialog.ShowDialog() == DialogResult.OK)
 			{
-				session.LocalObjectStorage.DownloadObjects(userFile.ChunkList.Cast<KademliaId>().ToList(), (error) =>
+				session.LocalObjectStorage.RetrieveObjects(userFile.ChunkList.Cast<KademliaId>().ToList(), (error) =>
 				                                                               {
 					                                                               if (error != Error.Success)
 					                                                               {

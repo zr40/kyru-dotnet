@@ -147,7 +147,7 @@ namespace Kyru.Core
 				node.StoreObject(id, bytes);
 		}
 
-		internal void DownloadObjects(List<KademliaId> ids, Action<Error> done) {
+		internal void RetrieveObjects(List<KademliaId> ids, Action<Error> done) {
 			int pendingRequests = 0;
 			int nextCount = 0;
 
@@ -220,11 +220,6 @@ namespace Kyru.Core
 		private string PathFor(KademliaId id)
 		{
 			return Path.Combine(config.StoreDirectory, id.ToString());
-		}
-
-		internal void RetrieveObjects(List<KademliaId> objectIds, Action<Error> done)
-		{
-			throw new NotImplementedException();
 		}
 
 		public void TimerElapsed()
