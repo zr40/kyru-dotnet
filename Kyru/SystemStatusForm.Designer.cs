@@ -33,18 +33,15 @@
 			System.Windows.Forms.Label label1;
 			System.Windows.Forms.Label label3;
 			System.Windows.Forms.Label label2;
-			System.Windows.Forms.Label label4;
 			System.Windows.Forms.Button button1;
 			System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(SystemStatusForm));
 			this.CurrentContactsLabel = new System.Windows.Forms.Label();
 			this.EstimatedNetworkSizeLabel = new System.Windows.Forms.Label();
 			this.ObjectsStoredLabel = new System.Windows.Forms.Label();
-			this.LowestAvailabilityLabel = new System.Windows.Forms.Label();
 			timer1 = new System.Windows.Forms.Timer(this.components);
 			label1 = new System.Windows.Forms.Label();
 			label3 = new System.Windows.Forms.Label();
 			label2 = new System.Windows.Forms.Label();
-			label4 = new System.Windows.Forms.Label();
 			button1 = new System.Windows.Forms.Button();
 			this.SuspendLayout();
 			// 
@@ -75,26 +72,17 @@
 			// label2
 			// 
 			label2.AutoSize = true;
-			label2.Location = new System.Drawing.Point(12, 67);
+			label2.Location = new System.Drawing.Point(12, 57);
 			label2.Name = "label2";
 			label2.Size = new System.Drawing.Size(85, 13);
 			label2.TabIndex = 4;
 			label2.Text = "Objects stored:";
 			// 
-			// label4
-			// 
-			label4.AutoSize = true;
-			label4.Location = new System.Drawing.Point(12, 84);
-			label4.Name = "label4";
-			label4.Size = new System.Drawing.Size(103, 13);
-			label4.TabIndex = 5;
-			label4.Text = "Lowest availability:";
-			// 
 			// button1
 			// 
 			button1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
 			button1.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-			button1.Location = new System.Drawing.Point(173, 118);
+			button1.Location = new System.Drawing.Point(173, 90);
 			button1.Name = "button1";
 			button1.Size = new System.Drawing.Size(75, 23);
 			button1.TabIndex = 8;
@@ -123,20 +111,11 @@
 			// ObjectsStoredLabel
 			// 
 			this.ObjectsStoredLabel.AutoSize = true;
-			this.ObjectsStoredLabel.Location = new System.Drawing.Point(155, 67);
+			this.ObjectsStoredLabel.Location = new System.Drawing.Point(155, 57);
 			this.ObjectsStoredLabel.Name = "ObjectsStoredLabel";
 			this.ObjectsStoredLabel.Size = new System.Drawing.Size(38, 13);
 			this.ObjectsStoredLabel.TabIndex = 6;
 			this.ObjectsStoredLabel.Text = "label5";
-			// 
-			// LowestAvailabilityLabel
-			// 
-			this.LowestAvailabilityLabel.AutoSize = true;
-			this.LowestAvailabilityLabel.Location = new System.Drawing.Point(155, 84);
-			this.LowestAvailabilityLabel.Name = "LowestAvailabilityLabel";
-			this.LowestAvailabilityLabel.Size = new System.Drawing.Size(38, 13);
-			this.LowestAvailabilityLabel.TabIndex = 7;
-			this.LowestAvailabilityLabel.Text = "label5";
 			// 
 			// SystemStatusForm
 			// 
@@ -144,11 +123,9 @@
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
 			this.CancelButton = button1;
-			this.ClientSize = new System.Drawing.Size(260, 153);
+			this.ClientSize = new System.Drawing.Size(260, 125);
 			this.Controls.Add(button1);
-			this.Controls.Add(this.LowestAvailabilityLabel);
 			this.Controls.Add(this.ObjectsStoredLabel);
-			this.Controls.Add(label4);
 			this.Controls.Add(label2);
 			this.Controls.Add(this.EstimatedNetworkSizeLabel);
 			this.Controls.Add(label3);
@@ -171,7 +148,6 @@
 		private System.Windows.Forms.Label CurrentContactsLabel;
 		private System.Windows.Forms.Label EstimatedNetworkSizeLabel;
 		private System.Windows.Forms.Label ObjectsStoredLabel;
-		private System.Windows.Forms.Label LowestAvailabilityLabel;
 
 
 	}
