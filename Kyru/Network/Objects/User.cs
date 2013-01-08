@@ -54,7 +54,7 @@ namespace Kyru.Network.Objects
 			{
 				Serializer.Serialize(msThis, this);
 				Serializer.Serialize(msOther, this);
-				if (!Crypto.Hash(msThis.ToArray()).SequenceEqual(Crypto.Hash(msThis.ToArray()))) return false;
+				if (Crypto.Hash(msThis.ToArray()).SequenceEqual(Crypto.Hash(msOther.ToArray()))) return false;
 			}
 			foreach (var file in user.files)
 			{
