@@ -53,7 +53,7 @@ namespace Kyru.Network.Objects
 			using (MemoryStream msThis = new MemoryStream(), msOther = new MemoryStream())
 			{
 				Serializer.Serialize(msThis, this);
-				Serializer.Serialize(msOther, this);
+				Serializer.Serialize(msOther, user);
 				if (Crypto.Hash(msThis.ToArray()).SequenceEqual(Crypto.Hash(msOther.ToArray()))) return false;
 			}
 			foreach (var file in user.files)
