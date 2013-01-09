@@ -123,7 +123,7 @@ namespace Kyru.Network
 
 						if (request.NodeId != null && request.NodeId != incomingMessage.SenderNodeId)
 						{
-							this.Warn("In {0}, node ID from {1} does not match (expected {2}, received {3})", incomingMessage.Inspect(), endPoint, request.NodeId, incomingMessage.SenderNodeId);
+							this.Warn("In {0}, node ID from {1} does not match (expected {2}, received {3})", incomingMessage.Inspect(), endPoint, request.NodeId, (KademliaId) incomingMessage.SenderNodeId);
 						}
 						else
 						{
