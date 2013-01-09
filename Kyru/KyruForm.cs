@@ -125,7 +125,7 @@ namespace Kyru
 				}
 				try
 				{
-					using (var fs = new FileStream(fullPath, FileMode.Open))
+					using (var fs = File.OpenRead(fullPath))
 					{
 						var file = session.AddFile(fs, rootPath + path);
 						ShowFile(file);
@@ -145,7 +145,7 @@ namespace Kyru
 			dialog.Multiselect = true;
 			Thread.CurrentThread.SetApartmentState(ApartmentState.STA);
 			var result = dialog.ShowDialog();
-			if (result == DialogResult.OK) 
+			if (result == DialogResult.OK)
 				AddFiles(dialog.FileNames);
 		}
 
@@ -180,18 +180,18 @@ namespace Kyru
 			{
 				var ids = userFile.ChunkList.Select(a => (KademliaId) a).ToList();
 				session.LocalObjectStorage.RetrieveObjects(ids, error =>
-				                                                               {
-					                                                               if (error != Error.Success)
-					                                                               {
-						                                                               MessageBox.Show("Saving failed: Could not find all parts of the file. Try to connect to the network or save the file later");
-						                                                               return;
-					                                                               }
+				                                                {
+					                                                if (error != Error.Success)
+					                                                {
+						                                                MessageBox.Show("Saving failed: Could not find all parts of the file. Try to connect to the network or save the file later");
+						                                                return;
+					                                                }
 
-					                                                               using (var fs = new FileStream(dialog.FileName, FileMode.Create))
-					                                                               {
-						                                                               session.DecryptFile(userFile, fs);
-					                                                               }
-				                                                               });
+					                                                using (var fs = new FileStream(dialog.FileName, FileMode.Create))
+					                                                {
+						                                                session.DecryptFile(userFile, fs);
+					                                                }
+				                                                });
 			}
 		}
 
@@ -235,13 +235,13 @@ namespace Kyru
 		{
 			if (!e.Data.GetDataPresent(DataFormats.FileDrop)) return;
 
-			AddFiles((string[])e.Data.GetData(DataFormats.FileDrop));
+			AddFiles((string[]) e.Data.GetData(DataFormats.FileDrop));
 		}
 
 		private void virtualLocalFileTree_DragEnter(object sender, DragEventArgs e)
 		{
 			if (e.Data.GetDataPresent(DataFormats.FileDrop))
-				e.Effect = DragDropEffects.Copy; 
+				e.Effect = DragDropEffects.Copy;
 			else
 				e.Effect = DragDropEffects.None;
 		}
