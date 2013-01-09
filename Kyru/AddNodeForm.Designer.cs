@@ -43,7 +43,7 @@
 			this.btOk.Name = "btOk";
 			this.btOk.Size = new System.Drawing.Size(75, 23);
 			this.btOk.TabIndex = 2;
-			this.btOk.Text = "Add Node";
+			this.btOk.Text = "Connect";
 			this.btOk.UseVisualStyleBackColor = true;
 			this.btOk.Click += new System.EventHandler(this.btOk_Click);
 			// 
@@ -52,9 +52,9 @@
 			this.label1.AutoSize = true;
 			this.label1.Location = new System.Drawing.Point(12, 15);
 			this.label1.Name = "label1";
-			this.label1.Size = new System.Drawing.Size(27, 13);
+			this.label1.Size = new System.Drawing.Size(48, 13);
 			this.label1.TabIndex = 1;
-			this.label1.Text = "IPv4";
+			this.label1.Text = "Address";
 			// 
 			// label2
 			// 
@@ -110,7 +110,7 @@
 			this.MaximizeBox = false;
 			this.MinimizeBox = false;
 			this.Name = "AddNodeForm";
-			this.Text = "Add Node";
+			this.Text = "Connect";
 			this.ResumeLayout(false);
 			this.PerformLayout();
 
