@@ -43,7 +43,7 @@ namespace Kyru.Network
 
 		private bool Equals(NodeInformation other)
 		{
-			return Equals(NodeId, other.NodeId) && IpAddress == other.IpAddress && Port == other.Port;
+			return Equals((KademliaId)NodeId, (KademliaId)other.NodeId) && IpAddress == other.IpAddress && Port == other.Port;
 		}
 
 		public override int GetHashCode()
