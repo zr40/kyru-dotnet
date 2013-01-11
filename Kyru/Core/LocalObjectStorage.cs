@@ -69,15 +69,14 @@ namespace Kyru.Core
 		/// <param name="o">the object</param>
 		internal void StoreObject(KyruObject o, bool replicate)
 		{
-			var userUpdated = false;
 			if (o is User)
 			{
 				var oldUser = GetObject(o.ObjectId);
 				if (oldUser is User)
 				{
 					var user = o as User;
-					if (user.Merge(oldUser as User))
-						userUpdated = true;
+					if (!user.Merge(oldUser as User))
+						return;
 				}
 			}
 
@@ -89,7 +88,7 @@ namespace Kyru.Core
 				Store(o.ObjectId, stream.ToArray(), replicate);
 			}
 
-			if (userUpdated && OnUserUpdated != null)
+			if (o is User && OnUserUpdated != null)
 			{
 				OnUserUpdated(o as User);
 			}
