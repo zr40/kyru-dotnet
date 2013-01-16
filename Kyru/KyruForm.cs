@@ -60,9 +60,9 @@ namespace Kyru
 			}
 		}
 
-		internal void ShowFile(UserFile fileToShow)
+		internal void ShowFile(UserFile fileToShow, string fileName = null)
 		{
-			string fileName = session.DecryptFileName(fileToShow);
+			if (fileName == null)  fileName = session.DecryptFileName(fileToShow);
 			var dirs = fileName.Split('/');
 			TreeNode node = virtualLocalFileTree.Nodes[0];
 			for (int i = 0; i < dirs.Count(); i++)
@@ -96,7 +96,7 @@ namespace Kyru
 			{
 				var checkedFile = childNode.Tag as UserFile;
 
-				if (checkedFile == null) // File is a directory.
+				if (checkedFile == null) // File is a directory. TODO: if directory is empty after deletion, clear empty directories from virtual tree
 				{
 					if (removeShownFile(fileID, childNode))
 						return true;
@@ -128,7 +128,7 @@ namespace Kyru
 					using (var fs = File.OpenRead(fullPath))
 					{
 						var file = session.AddFile(fs, rootPath + path);
-						ShowFile(file);
+						ShowFile(file, rootPath + path);
 					}
 				}
 				catch (IOException ex)
