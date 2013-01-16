@@ -17,6 +17,26 @@ namespace Tests
 			var IV = Crypto.GenerateIV();
 			Assert.AreElementsEqual(data, Crypto.DecryptAes(Crypto.EncryptAes(data, key, IV), key, IV));
 		}
+		
+		[Test]
+		internal void TestRSA()
+		{
+			var data = new byte[32];
+			var r = new Random();
+
+			var user = new byte[64];
+			var pass = new byte[64];
+			r.NextBytes(user);
+			r.NextBytes(pass);
+
+			var rsaKeyPair = Crypto.DeriveRsaKey(user, pass);
+
+			for (int i = 0; i < 10000; i++)
+			{
+				r.NextBytes(data);
+				Assert.AreEqual(data.Length, Crypto.DecryptRsa(Crypto.EncryptRsa(data, rsaKeyPair.Public), rsaKeyPair).Length);
+			}
+		}
 
 		[Test]
 		internal void TestRSAEncryption()
