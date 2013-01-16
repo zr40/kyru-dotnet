@@ -31,11 +31,11 @@ namespace Tests
 
 			var rsaKeyPair = Crypto.DeriveRsaKey(user, pass);
 
-			for (int i = 0; i < 10000; i++)
-			{
-				r.NextBytes(data);
-				Assert.AreEqual(data.Length, Crypto.DecryptRsa(Crypto.EncryptRsa(data, rsaKeyPair.Public), rsaKeyPair).Length);
-			}
+			r.NextBytes(data);
+
+			data[data.Length-1] = 0;
+
+			Assert.AreEqual(data.Length, Crypto.DecryptRsa(Crypto.EncryptRsa(data, rsaKeyPair.Public), rsaKeyPair).Length);
 		}
 
 		[Test]
