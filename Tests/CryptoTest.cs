@@ -1,4 +1,6 @@
-﻿using Kyru.Utilities;
+﻿using System.IO;
+
+using Kyru.Utilities;
 
 using MbUnit.Framework;
 
@@ -14,8 +16,29 @@ namespace Tests
 			var key = Crypto.GenerateAesKey();
 			var data = new byte[10001];
 			new Random().NextBytes(data);
-			var IV = Crypto.GenerateIV();
-			Assert.AreElementsEqual(data, Crypto.DecryptAes(Crypto.EncryptAes(data, key, IV), key, IV));
+			var iv = Crypto.GenerateIV();
+			Assert.AreElementsEqual(data, Crypto.DecryptAes(Crypto.EncryptAes(data, key, iv), key, iv));
+		}
+
+		[Test]
+		internal void TestAESStream()
+		{
+			var key = Crypto.GenerateAesKey();
+			byte[] data, ddata;
+			data = new byte[10001];
+			new Random().NextBytes(data);
+			var iv = Crypto.GenerateIV();
+
+			using (MemoryStream ms = new MemoryStream(data), ems = new MemoryStream(), dms = new MemoryStream())
+			{
+				Crypto.EncryptAesStream(ms, ems, key, iv);
+
+				ems.Seek(0,SeekOrigin.Begin);
+				Crypto.DecryptAesStream(ems, dms, key, iv);
+				ddata = dms.ToArray();
+			}
+
+			Assert.AreElementsEqual(data, ddata);
 		}
 		
 		[Test]

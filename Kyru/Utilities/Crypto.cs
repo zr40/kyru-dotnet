@@ -23,6 +23,7 @@ namespace Kyru.Utilities
 	{
 		internal const int RsaPublicKeySize = 2048 / 8;
 		private const int Pbkdf2Iterations = 10000;
+		private const int BufferSize = 4096;
 
 		private const int AesHeaderSize = sizeof(int);
 
@@ -178,26 +179,93 @@ namespace Kyru.Utilities
 		}
 
 		/// <summary>
+		/// Encrypts data through AES with a provided EncryptionKey, because we use a null IV each key should only be used ONCE!
+		/// </summary>
+		/// <param name="input">Data to encrypt</param>
+		/// <param name="output">Stream that will receive the encrypted data </param>
+		/// <param name="encryptionKey">Key to use for encryption</param>
+		/// <param name="IV">see http://msdn.microsoft.com/en-us/library/system.security.cryptography.symmetricalgorithm.iv(v=vs.95).aspx</param>
+		/// <returns>The encrypted data</returns>
+		internal static void EncryptAesStream(Stream input, Stream output, byte[] encryptionKey, byte[] IV)
+		{
+			using (var aes = new AesCryptoServiceProvider { Padding = PaddingMode.ISO10126 })
+			using (var encryptor = aes.CreateEncryptor(encryptionKey, IV))
+			using (var ms = new MemoryStream())
+			{
+				ms.Write(BitConverter.GetBytes((int)input.Length), 0, AesHeaderSize); 
+				using (var cs = new CryptoStream(ms, encryptor, CryptoStreamMode.Write))
+				{
+					input.CopyTo(cs);
+					cs.FlushFinalBlock();
+					ms.Seek(0, SeekOrigin.Begin);
+					ms.CopyTo(output); // blame Microsoft for not giving CryptoStream a leaveOpen parameter
+					output.Flush();
+				}
+			}
+		}
+
+		/// <summary>
 		/// Decrypts AES encrypted data
 		/// </summary>
 		/// <param name="data">Data to decrypt</param>
 		/// <param name="encryptionKey">Key to decrypt the data with</param>
 		/// <returns>The decrypted data</returns>
+		/// <param name="IV">IV to decrypt the data with</param>
 		internal static byte[] DecryptAes(byte[] data, byte[] encryptionKey, byte[] IV)
 		{
 			using (var aes = new AesCryptoServiceProvider {Padding = PaddingMode.ISO10126})
 			using (var decryptor = aes.CreateDecryptor(encryptionKey, IV))
 			using (var ms = new MemoryStream(data))
+				{
+					var lengthBytes = new byte[AesHeaderSize];
+					ms.Read(lengthBytes, 0, AesHeaderSize);
+					var length = BitConverter.ToInt32(lengthBytes, 0);
+
+					using (var cs = new CryptoStream(ms, decryptor, CryptoStreamMode.Read))
+					{
+						var decryptedData = new byte[length];
+						cs.Read(decryptedData, 0, length);
+						return decryptedData;
+					}
+				}
+		}
+
+		/// <summary>
+		/// Decrypts data from one stream to another stream.
+		/// </summary>
+		/// <param name="input">Stream containing encrypted data</param>
+		/// <param name="output">Stream that will receive the decrypted data</param>
+		/// <param name="encryptionKey">Key to decrypt the data with</param>
+		/// <param name="IV">IV to decrypt the data with</param>
+		internal static void DecryptAesStream(Stream input, Stream output, byte[] encryptionKey, byte[] IV)
+		{
+			using (var aes = new AesCryptoServiceProvider {Padding = PaddingMode.ISO10126})
+			using (var decryptor = aes.CreateDecryptor(encryptionKey, IV))
 			{
 				var lengthBytes = new byte[AesHeaderSize];
-				ms.Read(lengthBytes, 0, AesHeaderSize);
+				input.Read(lengthBytes, 0, AesHeaderSize);
 				var length = BitConverter.ToInt32(lengthBytes, 0);
 
-				using (var cs = new CryptoStream(ms, decryptor, CryptoStreamMode.Read))
+				using (var cs = new CryptoStream(input, decryptor, CryptoStreamMode.Read))
 				{
-					var decryptedData = new byte[length];
-					cs.Read(decryptedData, 0, length);
-					return decryptedData;
+					long position = BufferSize;
+					var buffer = new byte[BufferSize];
+
+					while (position<length)
+					{
+						cs.Read(buffer, 0, BufferSize);
+						output.Write(buffer, 0, BufferSize);
+
+						position += BufferSize;
+					}
+
+					int offset = length % BufferSize;
+					if (offset>0)
+					{
+						cs.Read(buffer, 0, offset);
+						output.Write(buffer, 0, offset);
+					}
+					output.Flush();
 				}
 			}
 		}
